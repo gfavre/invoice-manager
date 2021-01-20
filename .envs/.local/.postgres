@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=beyondtheadmin
+POSTGRES_USER=gDjpxhRlEWdhQSwBdxoZzYzARBDGUUnX
+POSTGRES_PASSWORD=mViynBxElhlVJ7j2DZYny5EwXVXgMmUh2jA6VVQ7dxuteyW5fJYD1yqXk0BTHtUB
