@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Invoices" %}{% endblock %}
+
+{% block content %}
+  <h1>{% trans "Invoices" %}</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>{% trans "Code" %}</th>
+      <th>{% trans "Client" %}</th>
+      <th>{% trans "Date" %}</th>
+      <th>{% trans "Status" %}</th>
+      <th>{% trans "Total" %}</th>
+      <th>{% trans "Actions" %}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for invoice in invoice_list %}
+      <tr>
+        <td>{{ invoice.code }}</td>
+        <td>{{ invoice.client }}</td>
+        <td>{{ invoice.displayed_date }}</td>
+        <td>{{ invoice.get_status_display }}</td>
+        <td>{{ invoice.total }}</td>
+        <td><a href="{{ invoice.get_absolute_url }}">{% trans "View" %}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

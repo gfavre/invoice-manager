@@ -68,7 +68,11 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "colorfield",
+    "ckeditor",
     "django_celery_beat",
+    'localflavor',
+    'phonenumber_field',
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -76,7 +80,9 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "beyondtheadmin.clients.apps.ClientsConfig",
+    "beyondtheadmin.companies.apps.CompaniesConfig",
     "beyondtheadmin.invoices.apps.InvoicesConfig",
+    "beyondtheadmin.users.apps.UsersConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -307,3 +313,4 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+PHONENUMBER_DEFAULT_REGION = 'CH'

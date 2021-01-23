@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% load i18n switzerland %}
+
+{% block css %}
+  {{ block.super }}
+  <style>
+  @page {
+    size: A4;
+    margin: 11mm 17mm 17mm 17mm;
+  }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      font-weight: 300;
+
+    }
+
+    h1 {
+      font-size: 32pt;
+      font-weight: 100;
+      margin-top: 5.5cm;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: 700;
+    }
+
+    .table th {
+      background-color: {{ invoice.company.contrast_color }};
+      color: white;
+      border-right: 1px solid white;
+      padding: 4pt;
+      line-height: 12pt;
+
+    }
+
+    .table td {
+      padding: 4pt;
+      line-height: 12pt;
+    }
+
+    .table thead th {
+      text-align: center;
+    }
+
+    .table td:first-child {
+      text-align: left;
+    }
+
+    .table td, table tfoot th {
+      text-align: right;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tfoot tr:first-child td {
+      border-top: 1px solid{{ invoice.company.contrast_color }};
+    }
+
+    #company-address {
+      position: absolute;
+      top: 9.9cm;
+      font-size: 7pt;
+    }
+    #logo img {
+      height: 2cm;
+    }
+    #customer-address {
+      margin-top: 3.5cm;
+      height: 3.3cm;
+    }
+
+    #invoice-content {
+      margin-top: 0.7cm;
+    }
+
+    #bank {
+      margin-bottom: 1cm;
+    }
+
+    #signature {
+      margin-top: 1cm;
+      margin-bottom: 2cm;
+    }
+    #signature-image {
+      width:4cm;
+    }
+    #qrbill {
+      page-break-before: always;
+    }
+
+    abbr[title] {
+      border-bottom: none !important;
+      cursor: inherit !important;
+      text-decoration: none !important;
+    }
+
+    @media print {
+
+    }
+
+  </style>
+{% endblock %}
+{% block title %}{{ invoice.code }} - {% trans "Invoice" %}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-2" id="side">
+        <h1>{% trans "Invoice" %}</h1>
+        <div itemscope itemtype="http://schema.org/LocalBusiness" id="company-address">
+          <span itemprop="name">{{ invoice.company.name }}</span> <br>
+
+          <address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+            <span itemprop="streetAddress">{{ invoice.company.address }}</span><br>
+            <span itemprop="addressCountry">{{ invoice.company.country.code }}</span>-<span
+                  itemprop="postalCode">{{ invoice.company.zip_code }}</span> <span
+                  itemprop="addressLocality">{{ invoice.company.city }}</span><br>
+          </address>
+          {% if invoice.company.phone %}<span>Tél.</span>
+            <a href="{{ invoice.company.phone|phone:'RFC3966' }}" itemprop="telephone">{{ invoice.company.phone }}</a>
+            <br>{% endif %} %}
+          {% if invoice.company.email %}
+            <a href="mailto:{{ invoice.company.email }}" itemprop="email">{{ invoice.company.email }}</a><br>{% endif %}
+          {% if invoice.company.website_url %}
+            <a href="{{ invoice.company.website_url }}">{{ invoice.company.website_url }}</a><br>{% endif %}
+          {% if invoice.company.vat_id %}<span>TVA:</span> <span itemprop="vatID">{{ invoice.company.vat_id }}</span>
+            <br>{% endif %}
+          {% if invoice.company.iban %}<span>IBAN:</span> {{ invoice.company.iban|iban }}{% endif %}
+
+        </div>
+
+      </div>
+      <div class="col" id="content">
+        <div class="row justify-content-end">
+          {% if invoice.company.logo %}
+          <section class="col-12 text-right" id="logo"><img src="{{ invoice.company.logo.url }}"></section>
+          {% endif %}
+          <section class="col-6" id="customer-address">
+            <address>
+              {{ invoice.client.name }}<br>
+              {{ invoice.client.address }}<br>
+              {{ invoice.client.country.code }} - {{ invoice.client.zip_code }} {{ invoice.client.city }}
+            </address>
+            <p>{% blocktrans with place=invoice.company.city date=invoice.displayed_date|date %}{{ place }}, {{ date }}{% endblocktrans %}</p>
+          </section>
+        </div>
+        <section id="invoice-content">
+          <h3>{{ invoice.title }}</h3>
+          <p>{{ invoice.description|safe }}</p>
+          {% if invoice.period_start and invoice.period_end %}
+            <p>{% blocktrans with start=invoice.period_start|date end=invoice.period_end|date %}Work done between
+              {{ start }} and {{ end }}{% endblocktrans %}</p>
+          {% endif %}
+          <dl class="row">
+            <dt class="col-2">{% trans "Invoice ID" %}</dt>
+            <dd class="col-10">{{ invoice.code }}</dd>
+            <dt class="col-2">{% trans "Due date" %}</dt>
+            <dd class="col-10">{{ invoice.due_date }}</dd>
+
+          </dl>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>{% trans "Description" %}</th>
+              <th>{% trans "Quantity" %}</th>
+              <th>{% trans "Unit" %}</th>
+              <th>{% trans "Unit price" %}</th>
+              <th>{% trans "Cost" %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for line in invoice.lines.all %}
+              <tr>
+                <td>{{ line.description }}</td>
+                <td>{{ line.quantity }}</td>
+                <td>{{ line.get_unit_display }}</td>
+                <td>{{ line.price_per_unit|money_html }}</td>
+                <td>{{ line.total|money_html }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="4" class="text-right">{% trans "Subtotal" %}</td>
+              <td>{{ invoice.subtotal|money_html }}</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-right">{% trans "VAT" %}</td>
+              <td>{{ invoice.vat_rate|percentage }}</td>
+              <td>{{ invoice.get_vat|money_html }}</td>
+            </tr>
+            <tr>
+              <th colspan="4" class="text-right">{% trans "Total" %}</th>
+              <th>{{ invoice.get_total|money_html }}</th>
+            </tr>
+            </tfoot>
+          </table>
+        </section>
+        {% if invoice.company.iban %}
+        <section class="row" id="bank">
+          <div class="col-6">
+            {% trans "Bank details" %}
+          </div>
+          <div class="col-6">
+            {{ invoice.company }}, {{ invoice.company.zip_code }} {{ invoice.company.city }}<br>
+            {% if invoice.company.bank %}{{ invoice.company.bank }}<br>{% endif %}
+            {% if invoice.company.bic %}BIC: {{ invoice.company.bic }}<br>{% endif %}
+            {{ invoice.company.iban|iban }}
+          </div>
+        </section>
+        {% endif %}
+        {% if invoice.company.has_signature %}
+        <section class="row">
+          <div class="col-6">
+            {% trans "Thank you for your continued confidence."  %}
+          </div>
+          <div class="col-6" id="signature">
+            {% if invoice.company.signature_image %}
+              <img src="{{ invoice.company.signature_image.url }}" id="signature-image">
+            {% endif %}
+            {% if invoice.company.signature_text %}
+              <p>{{ invoice.company.signature_text }}</p>
+            {% endif %}
+          </div>
+        </section>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+  {% if invoice.qr_bill %}
+  <div id="qrbill" class="container">
+    <img src="{{ invoice.get_qrbill_url }}" style="width:100%">
+  </div>
+  {% endif %}
+
+{% endblock content %}
