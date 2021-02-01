@@ -43,7 +43,7 @@ def money(value):
 @register.filter(is_safe=True)
 def iban(value):
     if value is None:
-            return value
+        return value
     grouping = 4
     value = value.upper().replace(' ', '').replace('-', '')
     return ' '.join(value[i:i + grouping] for i in range(0, len(value), grouping))

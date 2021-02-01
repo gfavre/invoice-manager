@@ -29,5 +29,3 @@ def qrbill(request, *args, **kwargs):
     return FileResponse(buffer, content_type='image/svg+xml',
                         as_attachment=True,
                         filename='{}.svg'.format(invoice.code))
-
-
