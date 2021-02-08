@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n  %}
+{% block content %}
+  <section class="card card-header-actions mb-4">
+    <header class="card-header ">
+      {% trans "Edit company" %}
+    </header>
+    <article class="card-body">
+      <form action="{{ company.edit_url }}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include "companies/form.html" %}
+        </form>
+    </article>
+  </section>
+
+{% endblock content %}

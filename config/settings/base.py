@@ -81,6 +81,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "beyondtheadmin.clients.apps.ClientsConfig",
     "beyondtheadmin.companies.apps.CompaniesConfig",
+    "beyondtheadmin.dashboard.apps.DashboardConfig",
     "beyondtheadmin.invoices.apps.InvoicesConfig",
     "beyondtheadmin.users.apps.UsersConfig",
     # Your stuff: custom apps go here

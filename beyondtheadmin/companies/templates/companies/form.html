@@ -1,0 +1,45 @@
+{% load i18n crispy_forms_tags %}
+{{ form.media }}
+<fieldset class="border-left-info shadow">
+  <h4 class="text-info">{% trans "Contact" %}</h4>
+  {{ form.name|as_crispy_field }}
+  {{ form.address|as_crispy_field }}
+  <div class="row">
+    <div class="col-3">
+      {{ form.zip_code|as_crispy_field }}
+    </div>
+    <div class="col-6">
+      {{ form.city|as_crispy_field }}
+    </div>
+    <div class="col-3">
+      {{ form.country|as_crispy_field }}
+    </div>
+  </div>
+
+  {{ form.phone|as_crispy_field }}
+  {{ form.email|as_crispy_field }}
+  {{ form.website|as_crispy_field }}
+</fieldset>
+
+<fieldset class="border-left-warning shadow">
+  <h4 class="text-warning">{% trans "Business" %}</h4>
+  {{ form.vat_id|as_crispy_field }}
+  <div class="row">
+    <div class="col-9">
+      {{ form.bank|as_crispy_field }}
+    </div>
+    <div class="col-3">
+      {{ form.bic|as_crispy_field }}
+    </div>
+  </div>
+  {{ form.iban|as_crispy_field }}
+</fieldset>
+
+<fieldset class="border-left-primary shadow">
+  <h4 class="text-primary">{% trans "Invoice" %}</h4>
+  {{ form.logo|as_crispy_field }}
+  {{ form.contrast_color|as_crispy_field }}
+  {{ form.signature_text|as_crispy_field }}
+  {{ form.signature_image|as_crispy_field }}
+</fieldset>
+<button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>

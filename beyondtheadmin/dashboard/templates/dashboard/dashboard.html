@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+  <section class="card card-header-actions mb-4">
+    <header class="card-header ">
+      {% trans "Companies" %}
+      <a class="btn btn-sm btn-primary" type="button" href="{% url 'companies:create' %}">{% trans "Add company" %}</a>
+    </header>
+    <article class="card-body">
+      {% if not companies %}
+        <p class="lead">{% trans "You haven't defined a company yet. Please create at least one" %}</p>
+        <form action="{% url 'companies:create' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include "companies/form.html" with form=company_form %}
+        </form>
+      {% else %}
+        {% for company in companies %}
+          <div class="d-flex align-items-center justify-content-between">
+
+            <div class="d-flex align-items-center">
+              {% if company.logo %}
+              <img src="{{ company.logo.url }}" class="inline-fa" />
+                {% else %}
+                <div class="inline-fa"></div>
+              {% endif %}
+              <div class="ml-4">
+                <div class="small">{{ company.name }}</div>
+                <div class="text-xs text-muted">{{ company.zip_code }} {{ company.city }}</div>
+              </div>
+            </div>
+            <div class="ml-4 small">
+              <a href="{{ company.edit_url }}" class="btn btn-sm"><i class="icon bi-pencil"></i>  {% trans "Edit" %}</a><br>
+              <a href="{{ company.delete_url }}"  class="btn btn-sm"><i class="icon bi-trash"></i>  {% trans "Delete" %}</a><br>
+            </div>
+          </div>
+          {% if not forloop.last %}
+          <hr>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </article>
+  </section>
+
+{% endblock content %}

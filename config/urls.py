@@ -4,7 +4,9 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+
 from rest_framework.authtoken.views import obtain_auth_token
+from beyondtheadmin.dashboard.views import DashboardView
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -15,6 +17,8 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
 
     path("accounts/", include("allauth.urls")),
+    path("companies/", include("beyondtheadmin.companies.urls", namespace="companies")),
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("invoices/", include("beyondtheadmin.invoices.urls", namespace="invoices")),
     path("users/", include("beyondtheadmin.users.urls", namespace="users")),
 
