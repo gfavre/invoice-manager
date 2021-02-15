@@ -13,6 +13,10 @@ $pink: #f2dede;
 $dark-pink: #eed3d7;
 $red: #b94a48;
 
+@import "badges";
+@import "datatables";
+@import "page-header";
+
 ////////////////////////////////
 //Alerts//
 ////////////////////////////////
@@ -65,3 +69,4 @@ fieldset {
   padding-top: 0.5625rem;
   padding-bottom: 0.5625rem;
 }
+

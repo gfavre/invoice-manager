@@ -118,13 +118,14 @@
 
           <address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
             <span itemprop="streetAddress">{{ invoice.company.address }}</span><br>
-            <span itemprop="addressCountry">{{ invoice.company.country.code }}</span>-<span
+            {% if invoice.company.country %}
+            <span itemprop="addressCountry">{{ invoice.company.country.code }}</span>-{% endif %}<span
                   itemprop="postalCode">{{ invoice.company.zip_code }}</span> <span
                   itemprop="addressLocality">{{ invoice.company.city }}</span><br>
           </address>
           {% if invoice.company.phone %}<span>Tél.</span>
-            <a href="{{ invoice.company.phone|phone:'RFC3966' }}" itemprop="telephone">{{ invoice.company.phone }}</a>
-            <br>{% endif %} %}
+            <a href="{{ invoice.company.phone|phone:'RFC3966' }}" itemprop="telephone">{{ invoice.company.phone|phone }}</a>
+            <br>{% endif %}
           {% if invoice.company.email %}
             <a href="mailto:{{ invoice.company.email }}" itemprop="email">{{ invoice.company.email }}</a><br>{% endif %}
           {% if invoice.company.website_url %}

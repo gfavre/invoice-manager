@@ -1,7 +1,7 @@
 import io
 
 from django.http import FileResponse, Http404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, activate
 from django.views.generic import ListView, DetailView
 
 from ..models import Invoice
@@ -15,6 +15,11 @@ class InvoiceListView(ListView):
 class InvoiceDetailView(DetailView):
     model = Invoice
     template_name = 'invoices/detail.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        activate(self.object.client.language)
+        return super().get(request, *args, **kwargs)
 
 
 def qrbill(request, *args, **kwargs):

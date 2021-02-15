@@ -1,0 +1,28 @@
+
+.datatable {
+  font-size: 0.85rem;
+}
+@media (min-width: 768px) {
+  .datatable {
+    overflow: visible;
+  }
+}
+.datatable table.dataTable thead,
+.datatable table.dataTable tfoot {
+  /*color: #0061f2;*/
+}
+.datatable table.dataTable thead th,
+.datatable table.dataTable tfoot th {
+  font-weight: 600;
+}
+.datatable table.dataTable.table-dark thead,
+.datatable table.dataTable.table-dark tfoot {
+  color: #fff;
+}
+.datatable .btn-datatable {
+  height: 20px !important;
+  width: 20px !important;
+  font-size: 0.75rem;
+  border-radius: 0.35rem !important;
+}
+

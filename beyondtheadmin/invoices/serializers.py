@@ -30,8 +30,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = ('id', 'status', 'code', 'company', 'client', 'due_date', 'displayed_date',
                   'vat_rate',
                   'title', 'description', 'period_start', 'period_end',
-
-
                   'url', 'total', 'lines')
 
     def get_url(self, obj):
@@ -45,6 +43,7 @@ class InvoiceListSerializer(serializers.ModelSerializer):
         lookup_field='pk'
     )
     actions = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoice
@@ -79,3 +78,9 @@ class InvoiceListSerializer(serializers.ModelSerializer):
                 'icon_class': 'bi-trash'
             },
         ]
+
+    def get_status(self, obj):
+        return {
+            'label': obj.get_status_display(),
+            'value': obj.status
+        }

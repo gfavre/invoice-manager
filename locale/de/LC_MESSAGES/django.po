@@ -1,0 +1,610 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-15 11:43+0100\n"
+"PO-Revision-Date: 2021-02-15 11:46+0100\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.4.2\n"
+
+#: beyondtheadmin/clients/models.py:12 beyondtheadmin/companies/models.py:15
+msgid "Address"
+msgstr "Adresse"
+
+#: beyondtheadmin/clients/models.py:13 beyondtheadmin/companies/models.py:16
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+#: beyondtheadmin/clients/models.py:14 beyondtheadmin/companies/models.py:17
+msgid "City"
+msgstr "Ort"
+
+#: beyondtheadmin/clients/models.py:15 beyondtheadmin/companies/models.py:18
+msgid "Country"
+msgstr "Land"
+
+#: beyondtheadmin/companies/models.py:14
+msgid "Company name"
+msgstr "Firmenname"
+
+#: beyondtheadmin/companies/models.py:20
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+#: beyondtheadmin/companies/models.py:21
+msgid "Email"
+msgstr "E-Mail"
+
+#: beyondtheadmin/companies/models.py:22
+msgid "Web site"
+msgstr "Webseite"
+
+#: beyondtheadmin/companies/models.py:23
+msgid "VAT ID"
+msgstr "MwSt.-Nr."
+
+#: beyondtheadmin/companies/models.py:25
+msgid "Bank"
+msgstr "Bank"
+
+#: beyondtheadmin/companies/models.py:26
+msgid "BIC"
+msgstr "BIC"
+
+#: beyondtheadmin/companies/models.py:27
+msgid "IBAN"
+msgstr "IBAN"
+
+#: beyondtheadmin/companies/models.py:29
+msgid "Logo"
+msgstr "Logo"
+
+#: beyondtheadmin/companies/models.py:30
+msgid "Contrast color"
+msgstr "Kontrastfarbe"
+
+#: beyondtheadmin/companies/models.py:32
+msgid "Signature as text"
+msgstr "Unterschrift als Text"
+
+#: beyondtheadmin/companies/models.py:33
+msgid "Signature as image"
+msgstr "Unterschrift als Bild"
+
+#: beyondtheadmin/companies/models.py:37
+msgid "Company"
+msgstr "Firma"
+
+#: beyondtheadmin/companies/models.py:38
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:6
+msgid "Companies"
+msgstr "Unternehmen"
+
+#: beyondtheadmin/companies/templates/companies/confirm_delete.html:6
+msgid "Delete company"
+msgstr "Unternehmen löschen"
+
+#: beyondtheadmin/companies/templates/companies/confirm_delete.html:10
+#, python-format
+msgid "Are you sure you want to delete \"%(company)s\"?"
+msgstr "Sind Sie sicher, dass Sie \"%(company)s\" löschen wollen?"
+
+#: beyondtheadmin/companies/templates/companies/confirm_delete.html:14
+#: beyondtheadmin/templates/account/email_confirm.html:20
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: beyondtheadmin/companies/templates/companies/create.html:6
+msgid "Create company"
+msgstr "Unternehmen erstellen"
+
+#: beyondtheadmin/companies/templates/companies/form.html:4
+msgid "Contact"
+msgstr "Kontakt"
+
+#: beyondtheadmin/companies/templates/companies/form.html:25
+msgid "Business"
+msgstr "Geschäftlich"
+
+#: beyondtheadmin/companies/templates/companies/form.html:39
+#: beyondtheadmin/invoices/templates/invoices/detail.html:109
+#: beyondtheadmin/invoices/templates/invoices/detail.html:115
+msgid "Invoice"
+msgstr "Rechnung"
+
+#: beyondtheadmin/companies/templates/companies/form.html:45
+msgid "Submit"
+msgstr "Senden"
+
+#: beyondtheadmin/companies/templates/companies/update.html:6
+msgid "Edit company"
+msgstr "Unternehmen bearbeiten"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:7
+msgid "Add company"
+msgstr "Unternehmen hinzufügen"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:11
+msgid "You haven't defined a company yet. Please create at least one"
+msgstr ""
+"Sie haben noch keine Firma definiert. Bitte legen Sie mindestens eine an"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:32
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:69
+#: beyondtheadmin/invoices/serializers.py:69
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:34
+msgid "Delete"
+msgstr "Löschen"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:48
+msgid "Latest invoices"
+msgstr "Letzte Rechnungen"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:50
+msgid "Add Invoice"
+msgstr "Rechnung hinzufügen"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:56
+#: beyondtheadmin/invoices/templates/invoices/list.html:89
+msgid "Code"
+msgstr "Code"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:57
+#: beyondtheadmin/invoices/templates/invoices/detail.html:199
+#: beyondtheadmin/invoices/templates/invoices/list.html:95
+msgid "Total"
+msgstr "Gesamtzahl"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:58
+#: beyondtheadmin/invoices/templates/invoices/list.html:94
+msgid "Status"
+msgstr "Status"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:59
+#: beyondtheadmin/invoices/templates/invoices/list.html:96
+msgid "Actions"
+msgstr "Aktionen"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:70
+#: beyondtheadmin/invoices/serializers.py:74
+msgid "Duplicate"
+msgstr "Duplizieren"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:71
+#: beyondtheadmin/invoices/serializers.py:64
+msgid "View"
+msgstr "Anzeigen"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:80
+msgid "All invoices"
+msgstr "Alle Rechnungen"
+
+#: beyondtheadmin/invoices/models.py:18
+msgid "Draft"
+msgstr "Entwurf"
+
+#: beyondtheadmin/invoices/models.py:19
+msgid "Sent"
+msgstr "Gesendet"
+
+#: beyondtheadmin/invoices/models.py:20
+msgid "Paid"
+msgstr "Bezahlt"
+
+#: beyondtheadmin/invoices/models.py:21
+msgid "canceled"
+msgstr "abgebrochen"
+
+#: beyondtheadmin/invoices/models.py:123
+msgid "Hour"
+msgstr "Stunde"
+
+#: beyondtheadmin/invoices/models.py:124
+msgid "Number"
+msgstr "Nummer"
+
+#: beyondtheadmin/invoices/serializers.py:79
+msgid "Cancel"
+msgstr "Löschen"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:150
+#, python-format
+msgid "%(place)s, %(date)s"
+msgstr "%(place)s, %(date)s"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:157
+#, python-format
+msgid ""
+"Work done between\n"
+"              %(start)s and %(end)s"
+msgstr ""
+"Verrichtete Arbeit zwischen\n"
+"              %(start)s und %(end)s"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:161
+msgid "Invoice ID"
+msgstr "Rechnungsnummer"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:163
+#: beyondtheadmin/invoices/templates/invoices/list.html:92
+msgid "Due date"
+msgstr "Fälligkeitsdatum"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:170
+msgid "Description"
+msgstr "Beschreibung"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:171
+msgid "Quantity"
+msgstr "Menge"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:172
+msgid "Unit"
+msgstr "Einheit"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:173
+msgid "Unit price"
+msgstr "Einheitspreis"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:174
+msgid "Cost"
+msgstr "Kosten"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:190
+msgid "Subtotal"
+msgstr "Zwischensumme"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:194
+msgid "VAT"
+msgstr "MwSt."
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:208
+msgid "Bank details"
+msgstr "Bankverbindung"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:221
+msgid "Thank you for your continued confidence."
+msgstr "Wir danken Ihnen für Ihr anhaltendes Vertrauen."
+
+#: beyondtheadmin/invoices/templates/invoices/list.html:4
+#: beyondtheadmin/invoices/templates/invoices/list.html:85
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#: beyondtheadmin/invoices/templates/invoices/list.html:90
+msgid "Client"
+msgstr "Kunde"
+
+#: beyondtheadmin/invoices/templates/invoices/list.html:91
+msgid "Date"
+msgstr "Datum"
+
+#: beyondtheadmin/invoices/views/dashboard.py:24
+msgid "Invoice does not exist"
+msgstr "Rechnung ist nicht vorhanden"
+
+#: beyondtheadmin/invoices/views/dashboard.py:26
+msgid "Invoice has no QR Bill"
+msgstr "Rechnung hat keine QR-Rechnung"
+
+#: beyondtheadmin/templates/account/account_inactive.html:5
+#: beyondtheadmin/templates/account/account_inactive.html:8
+msgid "Account Inactive"
+msgstr "Konto inaktiv"
+
+#: beyondtheadmin/templates/account/account_inactive.html:10
+msgid "This account is inactive."
+msgstr "Dieses Konto ist inaktiv."
+
+#: beyondtheadmin/templates/account/email.html:7
+msgid "Account"
+msgstr "Konto"
+
+#: beyondtheadmin/templates/account/email.html:10
+msgid "E-mail Addresses"
+msgstr "E-Mail-Adresse(n)"
+
+#: beyondtheadmin/templates/account/email.html:13
+msgid "The following e-mail addresses are associated with your account:"
+msgstr "Die folgenden E-Mail-Adressen sind mit Ihren Konto verbunden:"
+
+#: beyondtheadmin/templates/account/email.html:27
+msgid "Verified"
+msgstr "Verifiziert"
+
+#: beyondtheadmin/templates/account/email.html:29
+msgid "Unverified"
+msgstr "Nicht verifiziert"
+
+#: beyondtheadmin/templates/account/email.html:31
+msgid "Primary"
+msgstr "Hauptadresse"
+
+#: beyondtheadmin/templates/account/email.html:37
+msgid "Make Primary"
+msgstr "Als Hauptadresse verwenden"
+
+#: beyondtheadmin/templates/account/email.html:38
+msgid "Re-send Verification"
+msgstr "Bestätigung wiederholen"
+
+#: beyondtheadmin/templates/account/email.html:39
+msgid "Remove"
+msgstr "Löschen"
+
+#: beyondtheadmin/templates/account/email.html:46
+msgid "Warning:"
+msgstr "Warnung:"
+
+#: beyondtheadmin/templates/account/email.html:46
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+"Sie haben noch keine E-Mail-Adresse gespeichert. Bitte fügen Sie eine E-Mail-"
+"Adresse ein, damit Sie von uns wichtige Mitteilungen erhalten, Ihr Passwort "
+"erneuern können etc."
+
+#: beyondtheadmin/templates/account/email.html:51
+msgid "Add E-mail Address"
+msgstr "E-Mail-Adresse zufügen"
+
+#: beyondtheadmin/templates/account/email.html:56
+msgid "Add E-mail"
+msgstr "E-Mail einfügen"
+
+#: beyondtheadmin/templates/account/email.html:66
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr "Wollen Sie die gewählte E-Mail-Adresse wirklich löschen?"
+
+#: beyondtheadmin/templates/account/email_confirm.html:6
+#: beyondtheadmin/templates/account/email_confirm.html:10
+msgid "Confirm E-mail Address"
+msgstr "Bitte bestätigen Sie die E-Mail-Adresse"
+
+#: beyondtheadmin/templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+"Bitte bestätigen Sie, dass <a href=\"mailto:%(email)s\">%(email)s</a> die E-"
+"Mail-Adresse folgenden Kunden ist %(user_display)s."
+
+#: beyondtheadmin/templates/account/email_confirm.html:27
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+"Die E-Mail-Bestätigunglink ist ungültig. Bitte <a href=\"%(email_url)s"
+"\">senden Sie uns eine neue E-Mail-Bestätigungsanfrage</a>."
+
+#: beyondtheadmin/templates/account/login.html:7
+#: beyondtheadmin/templates/account/login.html:11
+#: beyondtheadmin/templates/account/login.html:44
+#: beyondtheadmin/templates/base.html:71
+msgid "Sign In"
+msgstr "Anmelden"
+
+#: beyondtheadmin/templates/account/login.html:16
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign "
+"up</a>\n"
+"for a %(site_name)s account and sign in below:"
+msgstr ""
+"Bitte melden Sie sich mit einer\n"
+"Ihrer bestehenden Drittkonten an. Oder <a href=“%(signup_url)s”>registrieren "
+"Sie sich</a>\n"
+"für ein %(site_name)s-Konto und melden Sie sich unten an:"
+
+#: beyondtheadmin/templates/account/login.html:26
+msgid "or"
+msgstr "oder"
+
+#: beyondtheadmin/templates/account/login.html:33
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"<a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+"Wenn Sie noch kein Konto eingerichtet haben\n"
+"<a href=\"%(signup_url)s\">registrieren Sie sich</a> zunächst."
+
+#: beyondtheadmin/templates/account/login.html:43
+msgid "Forgot Password?"
+msgstr "Passwort vergessen?"
+
+#: beyondtheadmin/templates/account/logout.html:5
+#: beyondtheadmin/templates/account/logout.html:8
+#: beyondtheadmin/templates/account/logout.html:17
+#: beyondtheadmin/templates/base.html:62
+msgid "Sign Out"
+msgstr "Abmelden"
+
+#: beyondtheadmin/templates/account/logout.html:10
+msgid "Are you sure you want to sign out?"
+msgstr "Wollen Sie sich wirklich abmelden?"
+
+#: beyondtheadmin/templates/account/password_change.html:6
+#: beyondtheadmin/templates/account/password_change.html:9
+#: beyondtheadmin/templates/account/password_change.html:14
+#: beyondtheadmin/templates/account/password_reset_from_key.html:5
+#: beyondtheadmin/templates/account/password_reset_from_key.html:8
+#: beyondtheadmin/templates/account/password_reset_from_key_done.html:4
+#: beyondtheadmin/templates/account/password_reset_from_key_done.html:7
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: beyondtheadmin/templates/account/password_reset.html:7
+#: beyondtheadmin/templates/account/password_reset.html:11
+#: beyondtheadmin/templates/account/password_reset_done.html:6
+#: beyondtheadmin/templates/account/password_reset_done.html:9
+msgid "Password Reset"
+msgstr "Passwort zurücksetzen"
+
+#: beyondtheadmin/templates/account/password_reset.html:16
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+"Passwort vergessen? Tragen Sie bitte unten Ihre E-Mail ein. Wir senden Ihnen "
+"eine E-Mail, damit Sie Ihre E-Mail zurücksetzen können."
+
+#: beyondtheadmin/templates/account/password_reset.html:21
+msgid "Reset My Password"
+msgstr "Setzen Sie mein Passwort zurück"
+
+#: beyondtheadmin/templates/account/password_reset.html:24
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+"Bitte kontaktieren Sie uns, wenn Sie Probleme haben, Ihr Passwort "
+"zurückzusetzen."
+
+#: beyondtheadmin/templates/account/password_reset_done.html:15
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+"Wir haben eine E-Mail an Sie gesendet. Bitte kontaktieren Sie uns, falls Sie "
+"sie nicht innerhalb weniger Minuten erhalten."
+
+#: beyondtheadmin/templates/account/password_reset_from_key.html:8
+msgid "Bad Token"
+msgstr "Bad Token"
+
+#: beyondtheadmin/templates/account/password_reset_from_key.html:12
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+"Der Link um das Passwort zurückzusetzen ist ungültig, da er schon einmal "
+"verwendet wurde. Bitte <a href=\"%(passwd_reset_url)s\">senden Sie uns eine "
+"neue Anfrage</a>."
+
+#: beyondtheadmin/templates/account/password_reset_from_key.html:18
+msgid "change password"
+msgstr "Passwort ändern"
+
+#: beyondtheadmin/templates/account/password_reset_from_key.html:21
+#: beyondtheadmin/templates/account/password_reset_from_key_done.html:8
+msgid "Your password is now changed."
+msgstr "Ihr Passwort wurde geändert."
+
+#: beyondtheadmin/templates/account/password_set.html:6
+#: beyondtheadmin/templates/account/password_set.html:9
+#: beyondtheadmin/templates/account/password_set.html:14
+msgid "Set Password"
+msgstr "Passwort einrichten"
+
+#: beyondtheadmin/templates/account/signup.html:6
+msgid "Signup"
+msgstr "Anmeldung"
+
+#: beyondtheadmin/templates/account/signup.html:9
+#: beyondtheadmin/templates/account/signup.html:19
+#: beyondtheadmin/templates/base.html:67
+msgid "Sign Up"
+msgstr "Anmeldung"
+
+#: beyondtheadmin/templates/account/signup.html:11
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+"Haben Sie bereits ein Konto? Dann bitte <a href=\"%(login_url)s\">anmelden</"
+"a>."
+
+#: beyondtheadmin/templates/account/signup_closed.html:5
+#: beyondtheadmin/templates/account/signup_closed.html:8
+msgid "Sign Up Closed"
+msgstr "Anmeldefunktion geschlossen"
+
+#: beyondtheadmin/templates/account/signup_closed.html:10
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+"Es tut uns leid, die Anmeldefunktion ist im Moment nicht im Betrieb.\n"
+"Bitte versuchen Sie es später noch einmal."
+
+#: beyondtheadmin/templates/account/verification_sent.html:5
+#: beyondtheadmin/templates/account/verification_sent.html:8
+#: beyondtheadmin/templates/account/verified_email_required.html:5
+#: beyondtheadmin/templates/account/verified_email_required.html:8
+msgid "Verify Your E-mail Address"
+msgstr "Bitte bestätigen Sie ihre E-Mail-Adresse"
+
+#: beyondtheadmin/templates/account/verification_sent.html:10
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+"Wir haben Ihnen eine Bestätigungsmail gesendet. Folgen Sie dem Link, um den "
+"Anmeldeprozess abzuschliessen. Bitte kontaktieren Sie uns, falls Sie den "
+"Link nicht innerhalb einiger Minuten erhalten."
+
+#: beyondtheadmin/templates/account/verified_email_required.html:12
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your e-mail address. "
+msgstr ""
+"Identifikationsprüfung nötig. Bitte bestätigen Sie uns, dass die angegebene "
+"E-Mail-Adresse korrekt ist. "
+
+#: beyondtheadmin/templates/account/verified_email_required.html:16
+msgid ""
+"We have sent an e-mail to you for\n"
+"verification. Please click on the link inside this e-mail. Please\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+"Wir haben Ihnen eine E-Mail übermittelt. Bitte klicken Sie auf den Link des "
+"E-Mails zur Verifizierung (ihrer Anfrage). Wenn Sie keine Bestätigungsmail "
+"innerhalb weniger Minuten erhalten, kontaktieren Sie uns bitte."
+
+#: beyondtheadmin/templates/account/verified_email_required.html:20
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+"Sie können Ihre E-Mail-Adresse <a href=\"%(email_url)s\">immer noch ändern</"
+"a>."
+
+#: beyondtheadmin/templates/base.html:58
+msgid "My Profile"
+msgstr "Mein Profil"
+
+#: beyondtheadmin/users/apps.py:7
+msgid "Users"
+msgstr "Benutzer"
+
+#: beyondtheadmin/users/forms.py:17
+msgid "This username has already been taken."
+msgstr "Dieser Benutzername ist bereits vergeben."
+
+#: beyondtheadmin/users/models.py:11
+msgid "Name of User"
+msgstr "Name des Nutzers/der Nutzerin"
+
+#: beyondtheadmin/users/views.py:34
+msgid "Infos successfully updated"
+msgstr "Infos erfolgreich aktualisiert"

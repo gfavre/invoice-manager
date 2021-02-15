@@ -24,7 +24,12 @@
           "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json"
           },
+        {% elif LANGUAGE_CODE == 'de' %}
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/German.json"
+          },
         {% endif %}
+
         "columnDefs": [
           {
             "orderable": false,
@@ -39,26 +44,41 @@
               return '<ul class="list-unstyled">' + actions + '</ul>';
             },
             "className": "nobr",
-            "targets": -1
+            "targets": 'invoice-actions'
           },
-            {
+          {
             "render": function (data, type, row) {
               if (data) {
                 return '<a href="' + data.url + '">' + data.name + '</a>';
               }
             },
-            'targets': [1]
+            'targets': 'invoice-client'
           },
-
-          /*{
+          {
             "render": function (data, type, row) {
-              if (data) {
-                return '<i class="icon-ok-circled success"></i>';
+              let css_class = 'badge-primary'
+              switch (data.value) {
+                case 'draft':
+                  css_class = 'badge-warning';
+                  break;
+                case 'sent':
+                  css_class = 'badge-secondary';
+                  break;
+                case 'paid':
+                  css_class = "badge-success";
+                case 'canceled':
+                  css_class = 'bg-dark'
               }
-              return '<i class="icon-cancel-circled  danger"></i>';
+              return '<div class="badge ' + css_class + ' badge-pill">' + data.label + '</div>';
             },
-            'targets': [4]
-          },*/
+            'targets': 'invoice-status'
+          },
+          {
+            "render": function (data, type, row) {
+              return new Intl.NumberFormat('fr-CH', {style: 'currency', currency: row.client.currency}).format(data)
+            },
+            'targets': 'invoice-total'
+          },
         ],
         "lengthMenu": [10, 25, 50, 100]
       });
@@ -67,23 +87,40 @@
 {% endblock %}
 
 {% block content %}
-  <h1>{% trans "Invoices" %}</h1>
-  <table class="table" id="invoices">
-    <thead>
-    <tr>
-      <th data-data="code">{% trans "Code" %}</th>
-      <th data-data="client">{% trans "Client" %}</th>
-      <th data-data="displayed_date">{% trans "Date" %}</th>
-      <th data-data="due_date">{% trans "Due date" %}</th>
-
-      <th data-data="status">{% trans "Status" %}</th>
-      <th data-data="total">{% trans "Total" %}</th>
-      <th data-data="actions" class="d-print-none">{% trans "Actions" %}</th>
-
-    </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
-  </table>
+  <header class="page-header page-header-dark bg-gradient-primary">
+    <div class="container">
+      <div class="page-header-content pt-4">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-auto mt-4">
+            <h1 class="page-header-title">
+              {% trans "Invoices" %}
+            </h1>
+            <div class="page-header-subtitle">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="container headed-content">
+  <div class="datatable card">
+    <div class="card-body">
+    <table class="table" id="invoices">
+      <thead>
+      <tr>
+        <th data-data="code" class="invoice-code">{% trans "Code" %}</th>
+        <th data-data="client" class="invoice-client">{% trans "Client" %}</th>
+        <th data-data="displayed_date" class="invoice-displayed_date">{% trans "Date" %}</th>
+        <th data-data="due_date" class="invoice-due_date">{% trans "Due date" %}</th>
+        <th data-data="status" class="invoice-status">{% trans "Status" %}</th>
+        <th data-data="total" class="invoice-total">{% trans "Total" %}</th>
+        <th data-data="actions" class="invoice-actions d-print-none">{% trans "Actions" %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+      </div>
+  </div>
+  </section>
 {% endblock content %}

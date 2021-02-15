@@ -86,7 +86,7 @@ class Invoice(UUIDModel, StatusModel):
                 'pcode': '1272', 'city': 'Genolier',
                 'country': 'CH',
             },
-            language='fr',
+            language=self.client.language,
             due_date=self.due_date.strftime('%Y-%m-%d'),
             amount=self.get_total(),
         )
