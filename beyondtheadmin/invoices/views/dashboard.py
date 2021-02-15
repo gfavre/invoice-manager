@@ -4,8 +4,7 @@ from django.http import FileResponse, Http404
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, DetailView
 
-
-from .models import Invoice
+from ..models import Invoice
 
 
 class InvoiceListView(ListView):

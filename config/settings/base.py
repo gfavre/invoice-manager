@@ -75,10 +75,12 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',
     "rest_framework",
     "rest_framework.authtoken",
+    'rest_framework_datatables',
     "corsheaders",
 ]
 
 LOCAL_APPS = [
+    "beyondtheadmin.api.apps.ApiConfig",
     "beyondtheadmin.clients.apps.ClientsConfig",
     "beyondtheadmin.companies.apps.CompaniesConfig",
     "beyondtheadmin.dashboard.apps.DashboardConfig",
@@ -308,6 +310,16 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+            'rest_framework.renderers.BrowsableAPIRenderer',
+            'rest_framework_datatables.renderers.DatatablesRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework_datatables.filters.DatatablesFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
+    'PAGE_SIZE': 50,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup

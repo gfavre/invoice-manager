@@ -26,7 +26,7 @@ class Invoice(UUIDModel, StatusModel):
     due_date = models.DateField(null=False, blank=False)
     displayed_date = models.DateField(blank=True, null=True)
     vat_rate = models.DecimalField(max_digits=6, decimal_places=4, default=0.065, blank=True)
-    total = models.DecimalField(max_digits=6, decimal_places=2, default=0.0, blank=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, default=0.0, blank=True, editable=False)
 
     title = models.CharField(max_length=100, blank=True)
     description = RichTextField(blank=True)
@@ -46,6 +46,18 @@ class Invoice(UUIDModel, StatusModel):
         return acc
 
     def get_absolute_url(self):
+        return reverse('invoices:detail', kwargs={'pk': self.pk})
+
+    def get_api_url(self):
+        return reverse('api:invoice-detail', kwargs={'pk': self.pk})
+
+    def get_cancel_url(self):
+        return reverse('invoices:detail', kwargs={'pk': self.pk})
+
+    def get_duplicate_url(self):
+        return reverse('invoices:detail', kwargs={'pk': self.pk})
+
+    def get_edit_url(self):
         return reverse('invoices:detail', kwargs={'pk': self.pk})
 
     def get_qrbill_url(self):
@@ -90,10 +102,13 @@ class Invoice(UUIDModel, StatusModel):
         if not self.displayed_date:
             self.displayed_date = self.created
         self.total = self.get_total()
-        qr_bill = self.get_qrbill()
-        qr_io = StringIO()
-        qr_bill.as_svg(qr_io)
-        self.qr_bill = qr_io.getvalue()
+        try:
+            qr_bill = self.get_qrbill()
+            qr_io = StringIO()
+            qr_bill.as_svg(qr_io)
+            self.qr_bill = qr_io.getvalue()
+        except ValueError:
+            pass
         super().save(*args, **kwargs)
 
 
@@ -113,3 +128,9 @@ class InvoiceLine(UUIDModel):
     @property
     def total(self):
         return (self.price_per_unit * self.quantity).quantize(Decimal('.01'), rounding=ROUND_UP)
+
+    def get_api_url(self, request=None):
+        from rest_framework.reverse import reverse
+
+        return reverse('api:invoices-lines-detail', kwargs={'pk': self.pk, 'invoice_pk': self.invoice.pk},
+                       request=request)

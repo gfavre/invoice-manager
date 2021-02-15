@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n switzerland %}
 {% block content %}
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
@@ -19,8 +19,8 @@
 
             <div class="d-flex align-items-center">
               {% if company.logo %}
-              <img src="{{ company.logo.url }}" class="inline-fa" />
-                {% else %}
+                <img src="{{ company.logo.url }}" class="inline-fa"/>
+              {% else %}
                 <div class="inline-fa"></div>
               {% endif %}
               <div class="ml-4">
@@ -29,16 +29,63 @@
               </div>
             </div>
             <div class="ml-4 small">
-              <a href="{{ company.edit_url }}" class="btn btn-sm"><i class="icon bi-pencil"></i>  {% trans "Edit" %}</a><br>
-              <a href="{{ company.delete_url }}"  class="btn btn-sm"><i class="icon bi-trash"></i>  {% trans "Delete" %}</a><br>
+              <a href="{{ company.edit_url }}" class="btn btn-sm"><i class="icon bi-pencil"></i> {% trans "Edit" %}
+              </a><br>
+              <a href="{{ company.delete_url }}" class="btn btn-sm"><i class="icon bi-trash"></i> {% trans "Delete" %}
+              </a><br>
             </div>
           </div>
           {% if not forloop.last %}
-          <hr>
+            <hr>
           {% endif %}
         {% endfor %}
       {% endif %}
     </article>
   </section>
+  {% if companies %}
+    <section class="card card-header-actions mb-4">
+      <header class="card-header ">
+        {% trans "Latest invoices" %}
+        <a class="btn btn-sm btn-primary" type="button"
+           href="{% url 'companies:create' %}">{% trans "Add Invoice" %}</a>
+      </header>
+      <article class="card-body">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>{% trans "Code" %}</th>
+            <th>{% trans "Total" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Actions" %}</th>
 
+          </tr>
+          </thead>
+          {% for invoice in invoices %}
+            <tr>
+              <td>{{ invoice.code }}</td>
+              <td>{{ invoice.total|money }}</td>
+              <td>{{ invoice.get_status_display }}</td>
+              <td>
+                <a href="" class="btn btn-sm"><i class="icon bi-pencil"></i> {% trans "Edit" %}</a><br>
+                <a href="" class="btn btn-sm"><i class="icon bi-files"></i> {% trans "Duplicate" %}</a><br>
+                <a href="" class="btn btn-sm"><i class="icon bi-file-earmark-text"></i> {% trans "View" %}</a>
+              </td>
+            </tr>
+          {% endfor %}
+
+        </table>
+      </article>
+      <a class="card-footer" href="{% url 'invoices:list' %}">
+        <div class="d-flex align-items-center justify-content-between small text-body">
+          {% trans "All invoices" %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               class="feather feather-arrow-right">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+      </a>
+    </section>
+  {% endif %}
 {% endblock content %}
