@@ -1,10 +1,22 @@
+from datetime import timedelta
 import io
 
 from django.http import FileResponse, Http404
 from django.utils.translation import ugettext as _, activate
-from django.views.generic import ListView, DetailView
+from django.utils.timezone import now
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 from ..models import Invoice
+from ..forms import BaseInvoiceForm, InvoiceEditForm
+
+
+class InvoiceCreateView(CreateView):
+    model = Invoice
+    template_name = 'invoices/create.html'
+    form_class = BaseInvoiceForm
+
+    def get_success_url(self):
+        return self.object.get_edit_url()
 
 
 class InvoiceListView(ListView):
@@ -20,6 +32,18 @@ class InvoiceDetailView(DetailView):
         self.object = self.get_object()
         activate(self.object.client.language)
         return super().get(request, *args, **kwargs)
+
+
+class InvoiceUpdateView(UpdateView):
+    model = Invoice
+    template_name = 'invoices/update.html'
+    form_class = InvoiceEditForm
+
+    def get_initial(self) :
+        return {
+            'due_date': now() + timedelta(days=self.object.client.payment_delay_days),
+            'vat_rate': self.object.client.vat_rate
+        }
 
 
 def qrbill(request, *args, **kwargs):

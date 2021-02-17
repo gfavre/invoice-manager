@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags %}
+
+{% block title %}{% trans "Invoices" %}{% endblock %}
+
+
+{% block content %}
+  <header class="page-header page-header-dark bg-gradient-primary">
+    <div class="container">
+      <div class="page-header-content pt-4">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-auto mt-4">
+            <h1 class="page-header-title">
+              {% blocktrans with invoice=invoice.code %}Invoice - {{ invoice }}{% endblocktrans %}
+            </h1>
+            <div class="page-header-subtitle">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="container headed-content">
+    <div class="datatable card">
+      <div class="card-body">
+      <form action="{{ invoice.get_edit_url }}" method="post">
+        {% crispy form %}
+      </form>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

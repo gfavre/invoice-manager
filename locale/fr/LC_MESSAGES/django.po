@@ -7,32 +7,68 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-15 11:43+0100\n"
-"PO-Revision-Date: 2021-02-15 11:48+0100\n"
+"POT-Creation-Date: 2021-02-17 05:35+0100\n"
+"PO-Revision-Date: 2021-02-17 05:39+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: beyondtheadmin/clients/models.py:12 beyondtheadmin/companies/models.py:15
+#: beyondtheadmin/clients/models.py:12
+msgid "Name"
+msgstr "Nom"
+
+#: beyondtheadmin/clients/models.py:13
+msgid "Slug"
+msgstr "Slug"
+
+#: beyondtheadmin/clients/models.py:14 beyondtheadmin/companies/models.py:15
 msgid "Address"
 msgstr "Adresse"
 
-#: beyondtheadmin/clients/models.py:13 beyondtheadmin/companies/models.py:16
+#: beyondtheadmin/clients/models.py:15 beyondtheadmin/companies/models.py:16
 msgid "Postal code"
 msgstr "Code postal"
 
-#: beyondtheadmin/clients/models.py:14 beyondtheadmin/companies/models.py:17
+#: beyondtheadmin/clients/models.py:16 beyondtheadmin/companies/models.py:17
 msgid "City"
 msgstr "Localité"
 
-#: beyondtheadmin/clients/models.py:15 beyondtheadmin/companies/models.py:18
+#: beyondtheadmin/clients/models.py:17 beyondtheadmin/companies/models.py:18
 msgid "Country"
 msgstr "Pays"
+
+#: beyondtheadmin/clients/models.py:19
+msgid "Language"
+msgstr "Langue"
+
+#: beyondtheadmin/clients/models.py:22
+msgid "Currency"
+msgstr "Devise"
+
+#: beyondtheadmin/clients/models.py:23
+msgid "Payment delay"
+msgstr "Délai de paiement"
+
+#: beyondtheadmin/clients/models.py:23
+msgid "Default delay in days to due date"
+msgstr "Délai par défaut en jours jusqu'à la date d'échéance"
+
+#: beyondtheadmin/clients/models.py:24 beyondtheadmin/invoices/models.py:30
+msgid "VAT rate"
+msgstr "Taux de TVA"
+
+#: beyondtheadmin/clients/models.py:27
+msgid "Contact name"
+msgstr "Nom du contact"
+
+#: beyondtheadmin/clients/models.py:28
+msgid "Contact email"
+msgstr "E-mail de contact"
 
 #: beyondtheadmin/companies/models.py:14
 msgid "Company name"
@@ -82,7 +118,7 @@ msgstr "Signature sous forme de texte"
 msgid "Signature as image"
 msgstr "Signature sous forme d'image"
 
-#: beyondtheadmin/companies/models.py:37
+#: beyondtheadmin/companies/models.py:37 beyondtheadmin/invoices/models.py:24
 msgid "Company"
 msgstr "Société"
 
@@ -124,6 +160,7 @@ msgid "Invoice"
 msgstr "Facture"
 
 #: beyondtheadmin/companies/templates/companies/form.html:45
+#: beyondtheadmin/invoices/forms.py:18 beyondtheadmin/invoices/forms.py:30
 msgid "Submit"
 msgstr "Envoyer"
 
@@ -142,7 +179,7 @@ msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:32
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:69
-#: beyondtheadmin/invoices/serializers.py:69
+#: beyondtheadmin/invoices/serializers.py:67
 msgid "Edit"
 msgstr "Éditer"
 
@@ -159,33 +196,35 @@ msgid "Add Invoice"
 msgstr "Ajouter une facture"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:56
-#: beyondtheadmin/invoices/templates/invoices/list.html:89
+#: beyondtheadmin/invoices/models.py:27
+#: beyondtheadmin/invoices/templates/invoices/list.html:111
 msgid "Code"
 msgstr "Code"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:57
-#: beyondtheadmin/invoices/templates/invoices/detail.html:199
-#: beyondtheadmin/invoices/templates/invoices/list.html:95
+#: beyondtheadmin/invoices/models.py:31
+#: beyondtheadmin/invoices/templates/invoices/detail.html:200
+#: beyondtheadmin/invoices/templates/invoices/list.html:116
 msgid "Total"
 msgstr "Total"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:58
-#: beyondtheadmin/invoices/templates/invoices/list.html:94
+#: beyondtheadmin/invoices/templates/invoices/list.html:115
 msgid "Status"
 msgstr "Statut"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:59
-#: beyondtheadmin/invoices/templates/invoices/list.html:96
+#: beyondtheadmin/invoices/templates/invoices/list.html:117
 msgid "Actions"
 msgstr "Actions"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:70
-#: beyondtheadmin/invoices/serializers.py:74
+#: beyondtheadmin/invoices/serializers.py:72
 msgid "Duplicate"
 msgstr "Dupliquer"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:71
-#: beyondtheadmin/invoices/serializers.py:64
+#: beyondtheadmin/invoices/serializers.py:62
 msgid "View"
 msgstr "Voir"
 
@@ -209,24 +248,71 @@ msgstr "Payé"
 msgid "canceled"
 msgstr "annulée"
 
-#: beyondtheadmin/invoices/models.py:123
+#: beyondtheadmin/invoices/models.py:26
+#: beyondtheadmin/invoices/templates/invoices/list.html:112
+msgid "Client"
+msgstr "Client"
+
+#: beyondtheadmin/invoices/models.py:28
+#: beyondtheadmin/invoices/templates/invoices/detail.html:164
+#: beyondtheadmin/invoices/templates/invoices/list.html:114
+msgid "Due date"
+msgstr "Date d'échéance"
+
+#: beyondtheadmin/invoices/models.py:29
+msgid "Displayed date"
+msgstr "Date affichée"
+
+#: beyondtheadmin/invoices/models.py:33
+msgid "Title"
+msgstr "Titre"
+
+#: beyondtheadmin/invoices/models.py:34
+#: beyondtheadmin/invoices/templates/invoices/detail.html:171
+msgid "Description"
+msgstr "Description"
+
+#: beyondtheadmin/invoices/models.py:35
+msgid "Start of invoice period"
+msgstr "Début de la période de facturation"
+
+#: beyondtheadmin/invoices/models.py:36
+msgid "End of invoice period"
+msgstr "Fin de la période de facturation"
+
+#: beyondtheadmin/invoices/models.py:38
+msgid "QR Bill"
+msgstr "QR Facture"
+
+#: beyondtheadmin/invoices/models.py:129
 msgid "Hour"
 msgstr "Heure"
 
-#: beyondtheadmin/invoices/models.py:124
+#: beyondtheadmin/invoices/models.py:130
 msgid "Number"
 msgstr "Nombre"
 
-#: beyondtheadmin/invoices/serializers.py:79
+#: beyondtheadmin/invoices/serializers.py:77
 msgid "Cancel"
 msgstr "Annuler"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:150
+#: beyondtheadmin/invoices/templates/invoices/create.html:4
+#: beyondtheadmin/invoices/templates/invoices/list.html:4
+#: beyondtheadmin/invoices/templates/invoices/list.html:96
+#: beyondtheadmin/invoices/templates/invoices/update.html:4
+msgid "Invoices"
+msgstr "Factures"
+
+#: beyondtheadmin/invoices/templates/invoices/create.html:14
+msgid "Create Invoice"
+msgstr "Créer facture"
+
+#: beyondtheadmin/invoices/templates/invoices/detail.html:151
 #, python-format
 msgid "%(place)s, %(date)s"
 msgstr "%(place)s, %(date)s"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:157
+#: beyondtheadmin/invoices/templates/invoices/detail.html:158
 #, python-format
 msgid ""
 "Work done between\n"
@@ -235,69 +321,56 @@ msgstr ""
 "Le travail effectué entre\n"
 "              %(start)s et %(end)s"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:161
+#: beyondtheadmin/invoices/templates/invoices/detail.html:162
 msgid "Invoice ID"
 msgstr "Numéro de la facture"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:163
-#: beyondtheadmin/invoices/templates/invoices/list.html:92
-msgid "Due date"
-msgstr "Date d'échéance"
-
-#: beyondtheadmin/invoices/templates/invoices/detail.html:170
-msgid "Description"
-msgstr "Description"
-
-#: beyondtheadmin/invoices/templates/invoices/detail.html:171
+#: beyondtheadmin/invoices/templates/invoices/detail.html:172
 msgid "Quantity"
 msgstr "Quantité"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:172
+#: beyondtheadmin/invoices/templates/invoices/detail.html:173
 msgid "Unit"
 msgstr "Unité"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:173
+#: beyondtheadmin/invoices/templates/invoices/detail.html:174
 msgid "Unit price"
 msgstr "Prix unitaire"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:174
+#: beyondtheadmin/invoices/templates/invoices/detail.html:175
 msgid "Cost"
 msgstr "Coût"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:190
+#: beyondtheadmin/invoices/templates/invoices/detail.html:191
 msgid "Subtotal"
 msgstr "Sous-total"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:194
+#: beyondtheadmin/invoices/templates/invoices/detail.html:195
 msgid "VAT"
 msgstr "TVA"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:208
+#: beyondtheadmin/invoices/templates/invoices/detail.html:209
 msgid "Bank details"
 msgstr "Coordonnées bancaires"
 
-#: beyondtheadmin/invoices/templates/invoices/detail.html:221
+#: beyondtheadmin/invoices/templates/invoices/detail.html:222
 msgid "Thank you for your continued confidence."
 msgstr "Merci de votre confiance continue."
 
-#: beyondtheadmin/invoices/templates/invoices/list.html:4
-#: beyondtheadmin/invoices/templates/invoices/list.html:85
-msgid "Invoices"
-msgstr "Factures"
-
-#: beyondtheadmin/invoices/templates/invoices/list.html:90
-msgid "Client"
-msgstr "Client"
-
-#: beyondtheadmin/invoices/templates/invoices/list.html:91
+#: beyondtheadmin/invoices/templates/invoices/list.html:113
 msgid "Date"
 msgstr "Date"
 
-#: beyondtheadmin/invoices/views/dashboard.py:24
+#: beyondtheadmin/invoices/templates/invoices/update.html:14
+#, python-format
+msgid "Invoice - %(invoice)s"
+msgstr "Facture - %(invoice)s"
+
+#: beyondtheadmin/invoices/views/dashboard.py:53
 msgid "Invoice does not exist"
 msgstr "La facture n'existe pas"
 
-#: beyondtheadmin/invoices/views/dashboard.py:26
+#: beyondtheadmin/invoices/views/dashboard.py:55
 msgid "Invoice has no QR Bill"
 msgstr "La facture n'a pas de QR Bill"
 

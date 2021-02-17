@@ -20,20 +20,22 @@ class Invoice(UUIDModel, StatusModel):
         ('paid', _("Paid")),
         ('canceled', _("canceled")),
     )
-    company = models.ForeignKey('companies.Company', on_delete=models.PROTECT, related_name='invoices', null=True)
-    client = models.ForeignKey('clients.Client', on_delete=models.PROTECT, related_name='invoices')
-    code = models.CharField(max_length=13, editable=False)
-    due_date = models.DateField(null=False, blank=False)
-    displayed_date = models.DateField(blank=True, null=True)
-    vat_rate = models.DecimalField(max_digits=6, decimal_places=4, default=0.065, blank=True)
-    total = models.DecimalField(max_digits=6, decimal_places=2, default=0.0, blank=True, editable=False)
+    company = models.ForeignKey('companies.Company', on_delete=models.PROTECT, related_name='invoices',
+                                null=True,  blank=False, verbose_name=_("Company"))
+    client = models.ForeignKey('clients.Client', on_delete=models.PROTECT, related_name='invoices', null=False,
+                               verbose_name=_("Client"))
+    code = models.CharField(_("Code"), max_length=13, editable=False, blank=True)
+    due_date = models.DateField(_("Due date"), null=True, blank=False)
+    displayed_date = models.DateField(_("Displayed date"), blank=True, null=True)
+    vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
+    total = models.DecimalField(_("Total"), max_digits=6, decimal_places=2, default=0.0, blank=True, editable=False)
 
-    title = models.CharField(max_length=100, blank=True)
-    description = RichTextField(blank=True)
-    period_start = models.DateField(blank=True, null=True)
-    period_end = models.DateField(blank=True, null=True)
+    title = models.CharField(_("Title"), max_length=100, blank=True)
+    description = RichTextField(_("Description"), blank=True)
+    period_start = models.DateField(_("Start of invoice period"), blank=True, null=True)
+    period_end = models.DateField(_("End of invoice period"), blank=True, null=True)
 
-    qr_bill = models.TextField(blank=True, null=True)
+    qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
 
     def __str__(self):
         return self.code
@@ -58,7 +60,7 @@ class Invoice(UUIDModel, StatusModel):
         return reverse('invoices:detail', kwargs={'pk': self.pk})
 
     def get_edit_url(self):
-        return reverse('invoices:detail', kwargs={'pk': self.pk})
+        return reverse('invoices:update', kwargs={'pk': self.pk})
 
     def get_qrbill_url(self):
         return reverse('invoices:qrbill', kwargs={'pk': self.pk})
@@ -73,6 +75,8 @@ class Invoice(UUIDModel, StatusModel):
         return '{}-{}'.format(self.client.slug, Invoice.objects.filter(client=self.client).count() + 1)
 
     def get_qrbill(self):
+        if not self.due_date:
+            raise ValueError
         qr_bill = QRBill(
             account='CH56 0900 0000 2546 2510 8 ',
             debtor={
@@ -97,6 +101,7 @@ class Invoice(UUIDModel, StatusModel):
         return qr_bill
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         if not self.code:
             self.code = self.get_code()
         if not self.displayed_date:
@@ -110,6 +115,7 @@ class Invoice(UUIDModel, StatusModel):
         except ValueError:
             pass
         super().save(*args, **kwargs)
+
 
 
 class InvoiceLine(UUIDModel):
