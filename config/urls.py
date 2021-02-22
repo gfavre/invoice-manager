@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from rest_framework.authtoken.views import obtain_auth_token
 from beyondtheadmin.dashboard.views import DashboardView
-from beyondtheadmin.invoices.views.dashboard import InvoiceDetailView
+from beyondtheadmin.invoices.views.public import InvoiceDetailView
 
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False

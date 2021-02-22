@@ -1,0 +1,8 @@
+@media print {
+  #invoice-content {
+    .table td, .table th {
+      background-color: inherit !important;
+    }
+  }
+
+}

@@ -730,6 +730,11 @@ a.badge-danger-soft:focus, a.badge-danger-soft.focus {
   margin-top: -6rem !important;
 }
 
+@media print {
+  #invoice-content .table td, #invoice-content .table th {
+    background-color: inherit !important;
+  }
+}
 .alert-debug {
   background-color: #fff;
   border-color: #d6e9c6;
