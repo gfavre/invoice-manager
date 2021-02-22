@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from rest_framework.authtoken.views import obtain_auth_token
 from beyondtheadmin.dashboard.views import DashboardView
-
+from beyondtheadmin.invoices.views.dashboard import InvoiceDetailView
 
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False
@@ -36,6 +36,10 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
+    # Why is it here? invoices are translated to the client's language. We don't want to find ourselves
+    # under a case where one could change the language. Therefore it has to find place here.
+    path("invoice/<uuid:pk>/", view=InvoiceDetailView.as_view(), name="invoice-print"),
+
 ]
 
 if settings.DEBUG:

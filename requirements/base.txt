@@ -9,12 +9,12 @@ celery==4.4.6  # pyup: < 5.0,!=4.4.7  # https://github.com/celery/celery
 django-celery-beat==2.1.0  # https://github.com/celery/django-celery-beat
 django-timezone-field==4.0  # https://github.com/celery/django-celery-beat/pull/378
 flower==0.9.7  # https://github.com/mher/flower
-reportlab==3.5.59
 qrbill==0.5.2
+requests==2.25.1
 
 # Django
 # ------------------------------------------------------------------------------
-django==3.1.6
+django==3.1.7
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-model-utils==4.1.1  # https://github.com/jazzband/django-model-utils
 django-allauth==0.44.0  # https://github.com/pennersr/django-allauth
@@ -31,3 +31,5 @@ django_phonenumber_field==5.0.0
 phonenumbers==8.12.16
 django_colorfield==0.4.1
 django_localflavor==3.0.1
+django-bootstrap-datepicker-plus==3.0.5
+git+https://github.com/HireIQ/django-templatetag-handlebars.git@django30-support

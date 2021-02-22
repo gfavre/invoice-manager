@@ -25,7 +25,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 # In Windows, this must be set to your system time zone.
 TIME_ZONE = "CET"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = "fr-CH"
+LANGUAGE_CODE = "fr"
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 LANGUAGES = [
     ('fr', 'Français'),
@@ -43,6 +43,7 @@ USE_L10N = True
 USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
 LOCALE_PATHS = [str(ROOT_DIR / "locale")]
+SHORT_DATE_FORMAT = 'd.m.Y'
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -71,19 +72,21 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
-    "crispy_forms",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "colorfield",
+    'bootstrap_datepicker_plus',
     "ckeditor",
+    "colorfield",
+    "corsheaders",
+    "crispy_forms",
     "django_celery_beat",
     'localflavor',
     'phonenumber_field',
     "rest_framework",
     "rest_framework.authtoken",
     'rest_framework_datatables',
-    "corsheaders",
+    'templatetag_handlebars',  # include handlebars templates
 ]
 
 LOCAL_APPS = [
@@ -334,3 +337,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
 PHONENUMBER_DEFAULT_REGION = 'CH'
+
+PHANTOMJSCLOUD_APIKEY = env('PHANTOMJSCLOUD_APIKEY')
+PHANTOMJSCLOUD_API_URL = 'https://PhantomJsCloud.com/api/browser/v2/{}/'.format(PHANTOMJSCLOUD_APIKEY)
+

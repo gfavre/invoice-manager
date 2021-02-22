@@ -2,9 +2,10 @@ from datetime import timedelta
 import io
 
 from django.http import FileResponse, Http404
-from django.utils.translation import ugettext as _, activate
+
+from django.utils.translation import ugettext as _
 from django.utils.timezone import now
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView
 
 from ..models import Invoice
 from ..forms import BaseInvoiceForm, InvoiceEditForm
@@ -24,20 +25,15 @@ class InvoiceListView(ListView):
     template_name = 'invoices/list.html'
 
 
-class InvoiceDetailView(DetailView):
-    model = Invoice
-    template_name = 'invoices/detail.html'
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        activate(self.object.client.language)
-        return super().get(request, *args, **kwargs)
-
-
 class InvoiceUpdateView(UpdateView):
     model = Invoice
     template_name = 'invoices/update.html'
     form_class = InvoiceEditForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
     def get_initial(self) :
         return {

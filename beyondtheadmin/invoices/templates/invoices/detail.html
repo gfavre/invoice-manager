@@ -109,6 +109,11 @@
 {% block title %}{{ invoice.code }} - {% trans "Invoice" %}{% endblock %}
 
 {% block content %}
+  <div class="container d-print-none">
+  <a class="btn btn-lg" href="{{ invoice.get_absolute_url }}?pdf=1" download="">
+    <i class="bi-file-earmark-text"></i>&nbsp;{% trans "Download" %}</a>
+  </div>
+
   <div class="container">
     <div class="row">
       <div class="col-2" id="side">

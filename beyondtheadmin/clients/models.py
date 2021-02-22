@@ -22,7 +22,7 @@ class Client(UUIDModel):
     currency = models.CharField(_("Currency"), max_length=3, choices=(('CHF', 'CHF'), ('EUR', 'Euro')), default='CHF')
     payment_delay_days = models.IntegerField(_("Payment delay"), help_text=_("Default delay in days to due date"), default=30)
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
-
+    default_hourly_rate = models.DecimalField(max_digits=5, decimal_places=2, default='0.00')
 
     contact_name = models.CharField(_("Contact name"), max_length=255, blank=True)
     contact_email = models.EmailField(_("Contact email"), blank=True)

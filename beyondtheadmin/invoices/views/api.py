@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.http import Http404
 from rest_framework import viewsets
 
 from ..models import Invoice, InvoiceLine
@@ -19,5 +20,12 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
 
 class InvoiceLineViewSet(viewsets.ModelViewSet):
-    queryset = InvoiceLine.objects.all()
     serializer_class = InvoiceLineSerializer
+
+    def get_queryset(self):
+        if 'invoice_pk' not in self.kwargs:
+            raise Http404()
+        return InvoiceLine.objects.filter(invoice_id=self.kwargs['invoice_pk'])
+
+    def perform_create(self, serializer):
+        serializer.save(invoice_id=self.kwargs['invoice_pk'])

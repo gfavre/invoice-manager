@@ -24,7 +24,7 @@ class Invoice(UUIDModel, StatusModel):
                                 null=True,  blank=False, verbose_name=_("Company"))
     client = models.ForeignKey('clients.Client', on_delete=models.PROTECT, related_name='invoices', null=False,
                                verbose_name=_("Client"))
-    code = models.CharField(_("Code"), max_length=13, editable=False, blank=True)
+    code = models.CharField(_("Code"), max_length=30, editable=False, blank=True)
     due_date = models.DateField(_("Due date"), null=True, blank=False)
     displayed_date = models.DateField(_("Displayed date"), blank=True, null=True)
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
@@ -48,16 +48,16 @@ class Invoice(UUIDModel, StatusModel):
         return acc
 
     def get_absolute_url(self):
-        return reverse('invoices:detail', kwargs={'pk': self.pk})
+        return reverse('invoice-print', kwargs={'pk': self.pk})
 
     def get_api_url(self):
         return reverse('api:invoice-detail', kwargs={'pk': self.pk})
 
     def get_cancel_url(self):
-        return reverse('invoices:detail', kwargs={'pk': self.pk})
+        return reverse('invoices:update', kwargs={'pk': self.pk})
 
     def get_duplicate_url(self):
-        return reverse('invoices:detail', kwargs={'pk': self.pk})
+        return reverse('invoices:update', kwargs={'pk': self.pk})
 
     def get_edit_url(self):
         return reverse('invoices:update', kwargs={'pk': self.pk})
@@ -115,7 +115,6 @@ class Invoice(UUIDModel, StatusModel):
         except ValueError:
             pass
         super().save(*args, **kwargs)
-
 
 
 class InvoiceLine(UUIDModel):

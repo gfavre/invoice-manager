@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n crispy_forms_tags %}
+{% load i18n crispy_forms_tags  %}
 
 {% block title %}{% trans "Invoices" %}{% endblock %}
 
@@ -11,7 +11,7 @@
         <div class="row align-items-center justify-content-between">
           <div class="col-auto mt-4">
             <h1 class="page-header-title">
-              {% blocktrans with invoice=invoice.code %}Invoice - {{ invoice }}{% endblocktrans %}
+              {% blocktrans with invoice=invoice.code %}Invoice: {{ invoice }}{% endblocktrans %}
             </h1>
             <div class="page-header-subtitle">
             </div>
@@ -23,10 +23,116 @@
   <section class="container headed-content">
     <div class="datatable card">
       <div class="card-body">
-      <form action="{{ invoice.get_edit_url }}" method="post">
-        {% crispy form %}
-      </form>
+        <form action="{{ invoice.get_edit_url }}" method="post">
+          {% crispy form %}
+
+          <fieldset>
+            <legend>{% trans "lines" %}</legend>
+            <div class="lines"></div>
+          </fieldset>
+
+
+        </form>
+
+
       </div>
     </div>
   </section>
+
+
+ {% verbatim %}
+  <script id="tpl-invoice-line" type="text/x-handlebars-template">
+    <div id="item-{{ item.id }}" data-item-id="{{ item.id }}" data-item-url="{{ item.url }}" class="row">
+      <div class="col-4">
+        <label for="description-{{ item.id }}" class="form-label">
+          {% endverbatim %}{% trans "Description" %}{% verbatim %}
+        </label>
+        <textarea class="form-control description" id="description-{{ item.id }}" rows="3">{{ item.description }}</textarea>
+      </div>
+      <div class="col">
+        <label for="quantity-{{ item.id }}" class="form-label">
+          {% endverbatim %}{% trans "Quantity" %}{% verbatim %}
+        </label>
+        <input type="number" value="{{ item.quantity }}" class="form-control quantity"
+               id="quantity-{{ item.id }}">
+      </div>
+      <div class="col">
+        <label for="unit-{{ item.id }}" class="form-label">
+          {% endverbatim %}{% trans "Unit" %}{% verbatim %}
+        </label>
+        <select class="unit form-control" id="unit-{{ item.id }}">
+        {{#select item.unit}}
+          <option value="h">{% endverbatim %}{% trans "Hour" %}{% verbatim %}</option>
+          <option value="nb">{% endverbatim %}{% trans "Number" %}{% verbatim %}</option>
+        {{/select}}
+        </select>
+      </div>
+      <div class="col">
+        <label for="price_per_unit-{{ item.id }}" class="form-label">
+          {% endverbatim %}{% trans "Unit price" %}{% verbatim %}
+        </label>
+         <input type="number" value="{{ item.price_per_unit }}" class="form-control price_per_unit"
+               id="price_per_unit-{{ item.id }}">
+      </div>
+      <div class="col">
+        <label for="total-{{ item.id }}" class="form-label">
+          {% endverbatim %}{% trans "Total" %}{% verbatim %}
+        </label>
+        <span class="form-text total" id="total-{{ item.id }}">{{ item.total }}</span>
+      </div>
+      <span class="item-action">
+        <label>&nbsp;</label><br>
+        <a href="" class="remove-from-cart form-text"
+          data-api-url="{{ item.url }}">{% endverbatim %}{% trans "Delete" %}{% verbatim %}</a>
+      </span>
+    </div>
+  </script>
+  {% endverbatim %}
 {% endblock content %}
+
+{% block javascript %}
+
+  {{ block.super }}
+  {{ form.media }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+  <script>
+    jQuery(document).ready(function ($) {
+      $.ajaxSetup({
+        headers: {"X-CSRFToken": Cookies.get("csrftoken")}
+      });
+      Handlebars.registerHelper("select", function(value, options) {
+        return options.fn(this)
+          .split('\n')
+          .map(function(v) {
+            var t = 'value="' + value + '"'
+            return ! RegExp(t).test(v) ? v : v.replace(t, t + ' selected="selected"')
+          })
+          .join('\n')
+      });
+
+      const source = $("#tpl-invoice-line").html();
+      let line_tmpl = Handlebars.compile(source);
+
+      let updateLines = function (data) {
+        for (const line of data.results) {
+          var html = line_tmpl({'item': line});
+          $('.lines').append(html);
+        }
+      };
+
+      $.ajax({
+        url: "{{ invoice.get_api_url }}lines/",
+        type: 'GET',
+        success: function (response) {
+          updateLines(response);
+        },
+      })
+
+
+    });
+
+  </script>
+{% endblock %}
+
+
