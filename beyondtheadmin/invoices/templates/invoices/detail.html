@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n switzerland %}
+{% load i18n switzerland fullurl %}
 
 {% block css %}
    <!-- Use bootstrap for scaffolding -->
@@ -59,7 +59,7 @@
     }
 
     tfoot tr:first-child td {
-      border-top: 1px solid{{ invoice.company.contrast_color }};
+      border-top: 1px solid {{ invoice.company.contrast_color }};
     }
 
     #company-address {
@@ -101,10 +101,10 @@
     }
 
     @media print {
-    #invoice-content .table th{
-      background-color: {{ invoice.company.contrast_color }} !important;
+      #invoice-content .table th{
+        background-color: {{ invoice.company.contrast_color }} !important;
+      }
     }
-  }
 
 
   </style>
@@ -153,7 +153,7 @@
       <div class="col" id="content">
         <div class="row justify-content-end">
           {% if invoice.company.logo %}
-          <section class="col-12 text-right" id="logo"><img src="{{ invoice.company.logo.url }}"></section>
+          <section class="col-12 text-right" id="logo"><img src="{% buildfullurl invoice.company.logo.url %}"></section>
           {% endif %}
           <section class="col-6" id="customer-address">
             <address>
@@ -236,7 +236,7 @@
           </div>
           <div class="col-6" id="signature">
             {% if invoice.company.signature_image %}
-              <img src="{{ invoice.company.signature_image.url }}" id="signature-image">
+              <img src="{% buildfullurl invoice.company.signature_image.url %}" id="signature-image">
             {% endif %}
             {% if invoice.company.signature_text %}
               <p>{{ invoice.company.signature_text }}</p>
@@ -251,7 +251,7 @@
 
   {% if invoice.qr_bill %}
   <div id="qrbill" class="container">
-    <img src="{{ invoice.get_qrbill_url }}" style="width:100%">
+    <img src="{% buildfullurl invoice.get_qrbill_url %}" style="width:100%">
   </div>
   {% endif %}
 
