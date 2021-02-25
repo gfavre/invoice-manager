@@ -1,6 +1,7 @@
 from decimal import Decimal, ROUND_UP
 from io import StringIO
 
+from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -35,10 +36,21 @@ class Invoice(UUIDModel, StatusModel):
     period_start = models.DateField(_("Start of invoice period"), blank=True, null=True)
     period_end = models.DateField(_("End of invoice period"), blank=True, null=True)
 
+    version = models.PositiveIntegerField(_("Version"), default=1, editable=False)
+
+    pdf = models.FileField(_("PDF"), null=True, upload_to='invoices/', editable=False)
+    pdf_version = models.PositiveIntegerField(_("Version of PDF"), null=True, editable=False)
+
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
 
     def __str__(self):
         return self.code
+
+    @property
+    def latest_pdf_url(self):
+        if self.pdf_version != self.version:
+            self.generate_pdf()
+        return self.pdf.url
 
     @property
     def subtotal(self):
@@ -46,6 +58,17 @@ class Invoice(UUIDModel, StatusModel):
         for line in self.lines.all():
             acc += line.total
         return acc
+
+    def add_pdf(self, content):
+        self.pdf.save('{}.pdf'.format(self.pk), ContentFile(content), save=False)
+        self.pdf_version = self.version
+        self.save(update_version=False)
+
+    def generate_pdf(self):
+        from .pdf import generate_pdf
+        pdf = generate_pdf(self)
+        if pdf:
+            self.add_pdf(pdf)
 
     def get_absolute_url(self):
         return reverse('invoice-print', kwargs={'pk': self.pk})
@@ -100,20 +123,22 @@ class Invoice(UUIDModel, StatusModel):
         qr_bill.proc_font_info = {'font_size': 7, 'font_family': 'Helvetica'}
         return qr_bill
 
-    def save(self, *args, **kwargs):
+    def save(self, update_version=True, *args, **kwargs):
         super().save(*args, **kwargs)
         if not self.code:
             self.code = self.get_code()
         if not self.displayed_date:
             self.displayed_date = self.created
-        self.total = self.get_total()
-        try:
-            qr_bill = self.get_qrbill()
-            qr_io = StringIO()
-            qr_bill.as_svg(qr_io)
-            self.qr_bill = qr_io.getvalue()
-        except ValueError:
-            pass
+        if update_version:
+            self.total = self.get_total()
+            self.version += 1
+            try:
+                qr_bill = self.get_qrbill()
+                qr_io = StringIO()
+                qr_bill.as_svg(qr_io)
+                self.qr_bill = qr_io.getvalue()
+            except ValueError:
+                pass
         super().save(*args, **kwargs)
 
 
@@ -139,3 +164,7 @@ class InvoiceLine(UUIDModel):
 
         return reverse('api:invoices-lines-detail', kwargs={'pk': self.pk, 'invoice_pk': self.invoice.pk},
                        request=request)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.invoice.save()

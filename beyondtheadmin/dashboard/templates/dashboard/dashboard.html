@@ -68,7 +68,7 @@
               <td>
                 <a href="{{ invoice.get_edit_url }}" class="btn btn-sm"><i class="icon bi-pencil"></i> {% trans "Edit" %}</a><br>
                 <a href="" class="btn btn-sm"><i class="icon bi-files"></i> {% trans "Duplicate" %}</a><br>
-                <a href="" class="btn btn-sm"><i class="icon bi-file-earmark-text"></i> {% trans "View" %}</a>
+                <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm"><i class="icon bi-file-earmark-text"></i> {% trans "View" %}</a>
               </td>
             </tr>
           {% endfor %}
