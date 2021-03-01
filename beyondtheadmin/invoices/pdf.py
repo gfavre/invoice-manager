@@ -23,6 +23,9 @@ PHANTOMJS_CONF = {
                     'landscape': False,
                     'preferCSSPageSize': True,
                 }
+            },
+            'requestSettings': {
+                'waitInterval': 0
             }
         }
 

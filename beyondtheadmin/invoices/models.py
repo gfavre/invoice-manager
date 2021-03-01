@@ -95,7 +95,7 @@ class Invoice(UUIDModel, StatusModel):
         return self.subtotal + self.get_vat()
 
     def get_code(self):
-        return '{}-{}'.format(self.client.slug, Invoice.objects.filter(client=self.client).count() + 1)
+        return '{}-{}'.format(self.client.slug, self.client.invoice_current_count + 1)
 
     def get_qrbill(self):
         if not self.due_date:
@@ -117,16 +117,18 @@ class Invoice(UUIDModel, StatusModel):
             due_date=self.due_date.strftime('%Y-%m-%d'),
             amount=self.get_total(),
         )
-        qr_bill.title_font_info = {'font_size': '10pt', 'font_family': 'Helvetica Neue', 'font_weight': 'bold'}
-        qr_bill.font_info = {'font_size': '7pt', 'font_family': 'Helvetica Neue', 'font-weight': 300}
-        qr_bill.head_font_info = {'font_size': 8, 'font_family': 'Helvetica Neue', 'font_weight': 'bold'}
-        qr_bill.proc_font_info = {'font_size': 7, 'font_family': 'Helvetica'}
+        qr_bill.title_font_info = {'font_size': '10pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif', 'font_weight': '500'}
+        qr_bill.font_info = {'font_size': '7pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif', 'font-weight': '300'}
+        qr_bill.head_font_info = {'font_size': '8pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif', 'font_weight': '500'}
+        qr_bill.proc_font_info = {'font_size': '7pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif'}
         return qr_bill
 
     def save(self, update_version=True, *args, **kwargs):
         super().save(*args, **kwargs)
         if not self.code:
             self.code = self.get_code()
+            self.client.invoice_current_count += 1
+            self.client.save()
         if not self.displayed_date:
             self.displayed_date = self.created
         if update_version:

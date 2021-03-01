@@ -10,7 +10,6 @@ from beyondtheadmin.utils.model_utils import UUIDModel
 
 class Client(UUIDModel):
     name = models.CharField(_("Name"), max_length=255)
-    slug = models.CharField(_("Slug"), max_length=10)
     address = models.TextField(_("Address"), blank=True)
     zip_code = models.CharField(_("Postal code"), max_length=10, blank=True)
     city = models.CharField(_("City"), max_length=255, blank=True)
@@ -26,6 +25,11 @@ class Client(UUIDModel):
 
     contact_name = models.CharField(_("Contact name"), max_length=255, blank=True)
     contact_email = models.EmailField(_("Contact email"), blank=True)
+
+    slug = models.CharField(_("Slug"), max_length=10)
+    invoice_current_count = models.IntegerField(_("Current count of invoices"),
+                                                help_text=_("Used to generate invoice code"),
+                                                default=0)
 
     def __str__(self):
         return self.name
