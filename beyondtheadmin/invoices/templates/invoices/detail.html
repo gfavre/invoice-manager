@@ -1,12 +1,22 @@
-{% extends "base.html" %}
 {% load i18n switzerland fullurl %}
+<html lang="{{ invoice.client.language }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{% block title %}{{ invoice.code }} - {{ invoice.company.name }}{% endblock title %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <![endif]-->
 
-{% block css %}
+
+  {% block css %}
    <!-- Use bootstrap for scaffolding -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet">
-
   <style>
   @page {
     size: A4;
@@ -32,6 +42,11 @@
     }
     dt, th {
       font-weight: 500;
+    }
+    .table {
+      font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      font-weight: 300;
     }
 
     .table th {
@@ -96,9 +111,11 @@
     #signature-image {
       width:4cm;
     }
-    #qrbill {
-      page-break-before: always;
+    #qrbill, #qrbill svg {
+      width: 100%;
+      padding: 0;
     }
+
 
     abbr[title] {
       border-bottom: none !important;
@@ -107,26 +124,30 @@
     }
 
     @media print {
+      a:not(.btn) {
+        text-decoration: none;
+        color: #000;
+      }
       #invoice-content .table th{
         background-color: {{ invoice.company.contrast_color }} !important;
       }
+
+
     }
 
 
   </style>
-{% endblock %}
-{% block title %}{{ invoice.code }} - {% trans "Invoice" %}{% endblock %}
+{% endblock css %}
 
-{% block navigation %}
+</head>
+
+<body>
+    {% block navigation %}
   <div class="container d-print-none">
   <a class="btn btn-lg btn-primary" href="{{ invoice.get_absolute_url }}?pdf=1" download="">
     <i class="bi bi-file-earmark-text"></i>&nbsp;{% trans "Download" %}</a>
   </div>
-
-{% endblock %}
-
-{% block content %}
-
+      {% endblock %}
 
   <div class="container">
     <div class="row">
@@ -254,11 +275,10 @@
     </div>
   </div>
 
+{% if invoice.qr_bill %}
+  <section id="qrbill" class="container-fluid">
+    {{ invoice.qr_bill|safe }}
 
-  {% if invoice.qr_bill|safe %}
-  <div id="qrbill" class="container">
-    <img src="{% buildfullurl invoice.get_qrbill_url %}" style="width:100%">
-  </div>
+    <!--<img src="{% buildfullurl invoice.get_qrbill_url %}" style="width:100%">-->
+  </section>
   {% endif %}
-
-{% endblock content %}

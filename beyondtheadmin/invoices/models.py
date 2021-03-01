@@ -117,10 +117,10 @@ class Invoice(UUIDModel, StatusModel):
             due_date=self.due_date.strftime('%Y-%m-%d'),
             amount=self.get_total(),
         )
-        qr_bill.title_font_info = {'font_size': '10pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif', 'font_weight': '500'}
-        qr_bill.font_info = {'font_size': '7pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif', 'font-weight': '300'}
-        qr_bill.head_font_info = {'font_size': '8pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif', 'font_weight': '500'}
-        qr_bill.proc_font_info = {'font_size': '7pt', 'font_family': 'Helvetica Neue, helvetica, sans-serif'}
+        qr_bill.title_font_info = {'font_size': '10pt', 'font_weight': '500'}
+        qr_bill.font_info = {'font_size': '7pt', 'font-weight': '300'}
+        qr_bill.head_font_info = {'font_size': '8pt', 'font_weight': '500'}
+        qr_bill.proc_font_info = {'font_size': '7pt'}
         return qr_bill
 
     def save(self, update_version=True, *args, **kwargs):
