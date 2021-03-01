@@ -91,3 +91,10 @@ def ahv(value):
 @register.filter
 def percentage(value):
     return format(value, "%")
+
+
+@register.filter
+def timedelta(value):
+    hours = value // 1  # Integer part
+    minutes = value % 1  # decimal part
+    return '{}:{}'.format(hours, int(minutes * 60))

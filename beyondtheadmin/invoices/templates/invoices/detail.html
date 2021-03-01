@@ -198,7 +198,7 @@
             {% for line in invoice.lines.all %}
               <tr>
                 <td>{{ line.description }}</td>
-                <td>{{ line.quantity }}</td>
+                <td>{% if line.is_hours %}{{ line.quantity|timedelta }}{% else %}{{ line.quantity }}{% endif %}</td>
                 <td>{{ line.get_unit_display }}</td>
                 <td>{{ line.price_per_unit|money_html }}</td>
                 <td>{{ line.total|money_html }}</td>

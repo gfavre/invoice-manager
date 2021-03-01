@@ -319,7 +319,7 @@ msgid ""
 "              %(start)s and %(end)s"
 msgstr ""
 "Travaux effectués entre\n"
-"              %(start)s et %(end)s"
+"              le %(start)s et le %(end)s"
 
 #: beyondtheadmin/invoices/templates/invoices/detail.html:162
 msgid "Invoice ID"

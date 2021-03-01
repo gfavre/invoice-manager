@@ -158,6 +158,10 @@ class InvoiceLine(UUIDModel):
     price_per_unit = models.DecimalField(max_digits=5, decimal_places=2)
 
     @property
+    def is_hours(self):
+        return self.unit == 'h'
+
+    @property
     def total(self):
         return (self.price_per_unit * self.quantity).quantize(Decimal('.01'), rounding=ROUND_UP)
 
