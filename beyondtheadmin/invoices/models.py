@@ -60,7 +60,7 @@ class Invoice(UUIDModel, StatusModel):
         return acc
 
     def add_pdf(self, content):
-        self.pdf.save('{}.pdf'.format(self.pk), ContentFile(content), save=False)
+        self.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
         self.pdf_version = self.version
         self.save(update_version=False)
 
