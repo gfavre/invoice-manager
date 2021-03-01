@@ -86,7 +86,7 @@ class Invoice(UUIDModel, StatusModel):
         return reverse('invoices:update', kwargs={'pk': self.pk})
 
     def get_qrbill_url(self):
-        return reverse('invoices:qrbill', kwargs={'pk': self.pk})
+        return reverse('qrbill', kwargs={'pk': self.pk})
 
     def get_vat(self):
         return (self.subtotal * self.vat_rate).quantize(Decimal('.01'), rounding=ROUND_UP)
