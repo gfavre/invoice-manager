@@ -51,7 +51,7 @@ def generate_pdf(invoice: Invoice, domain_name=None, use_https=True):
         if not response.status_code == 200:
             logger.error(response.text)
             return None
-        logger.debug()
+        logger.debug(response.json())
         return response.content
     except requests.exceptions.RequestException as exc:
         logger.error(exc)
