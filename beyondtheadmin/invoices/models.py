@@ -101,7 +101,7 @@ class Invoice(UUIDModel, StatusModel):
         if not self.due_date:
             raise ValueError
         qr_bill = QRBill(
-            account='CH56 0900 0000 2546 2510 8 ',
+            account=self.company.iban,
             debtor={
                 'name': self.client.name,
                 'pcode': self.client.zip_code, 'city': self.client.city,
@@ -109,9 +109,9 @@ class Invoice(UUIDModel, StatusModel):
             },
             extra_infos=self.code,
             creditor={
-                'name': 'Beyond the Wall', 'street': 'Route de Châtel 19',
-                'pcode': '1272', 'city': 'Genolier',
-                'country': 'CH',
+                'name': self.company.name, 'street': self.company.address,
+                'pcode': self.company.zip_code, 'city': self.company.city,
+                'country': self.company.country.code,
             },
             language=self.client.language,
             due_date=self.due_date.strftime('%Y-%m-%d'),
