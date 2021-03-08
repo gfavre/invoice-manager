@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Row, Column
+from crispy_forms.layout import Layout, HTML, Submit, Row, Column, Div, Button
 
 from .models import Invoice
 
@@ -60,8 +60,20 @@ class InvoiceEditForm(forms.ModelForm):
                 Column('period_end', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
-            'vat_rate'
+            'vat_rate',
+            Div(
+                Div(
+                    HTML('<h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">{}</h5>'.format(_("Lines"))),
+                    Div(css_class='lines'),
+                    Div(
+                        Button('add', _("Add line"), css_class='btn btn-info'),
+                        css_id='add-line', css_class='pt-2'
+                    ),
+                    css_class='card-body'
+                ),
+                css_class='card border-left-info shadow mb-3'
+            ),
+            Div(
+                Submit('save', _("Save")),
+            )
         )
-
-
-        #self.helper.add_input(Submit('submit', _('Submit')))

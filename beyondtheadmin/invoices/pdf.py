@@ -13,21 +13,24 @@ from .models import Invoice
 
 logger = logging.getLogger(__name__)
 PHANTOMJS_CONF = {
-            'content': '',
-            'renderType': 'pdf',
+    'backend': 'chrome',
+    'content': '',
+    'renderType': 'pdf',
+    'omitBackground': False,
+    "renderSettings": {
+        'emulateMedia': 'print',
+        'pdfOptions': {
+            'format': 'A4',
+            'landscape': False,
+            'preferCSSPageSize': True,
             'omitBackground': False,
-            "renderSettings": {
-                'emulateMedia': 'print',
-                'pdfOptions': {
-                    'format': 'A4',
-                    'landscape': False,
-                    'preferCSSPageSize': True,
-                }
-            },
-            'requestSettings': {
-                'waitInterval': 0
-            }
         }
+    },
+    'requestSettings': {
+        'waitInterval': 0,
+        'doneWhen': [{'event': "domReady"}]
+    }
+}
 
 
 def generate_pdf(invoice: Invoice, domain_name=None, use_https=True):
@@ -56,5 +59,3 @@ def generate_pdf(invoice: Invoice, domain_name=None, use_https=True):
     except requests.exceptions.RequestException as exc:
         logger.error(exc)
         return None
-
-

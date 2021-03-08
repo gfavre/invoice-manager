@@ -12,6 +12,11 @@ class InvoiceLineSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvoiceLine
         fields = ('id', 'description', 'note', 'quantity', 'unit', 'price_per_unit', 'total', 'url')
+        extra_kwargs = {
+            'quantity': {'coerce_to_string': False},
+            'price_per_unit': {'coerce_to_string': False}
+
+        }
 
     def get_url(self, obj):
         request = self.context['request']
