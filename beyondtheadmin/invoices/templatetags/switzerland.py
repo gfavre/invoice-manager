@@ -97,4 +97,4 @@ def percentage(value):
 def timedelta(value):
     hours = value // 1  # Integer part
     minutes = value % 1  # decimal part
-    return '{}:{}'.format(hours, int(minutes * 60))
+    return '{}:{:02d}'.format(hours, int(minutes * 60))

@@ -26,30 +26,30 @@
 
       body {
         font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 9pt;
+        font-size: 11pt;
         font-weight: 300;
         position: relative;
 
       }
 
       h1 {
-        font-size: 32pt;
+        font-size: 36pt;
         font-weight: 100;
         margin-top: 5.5cm;
       }
 
       h3 {
-        font-size: 12pt;
+        font-size: 14pt;
         font-weight: 500;
       }
 
       dt, th {
-        font-weight: 500;
+        font-weight: 400;
       }
 
       .table {
         font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 9pt;
+        font-size: 11pt;
         font-weight: 300;
       }
 
@@ -89,17 +89,20 @@
 
       #company-address {
         position: absolute;
-        top: 10cm;
-        font-size: 7pt;
+        top: 12.75cm;
+        font-size: 9pt;
       }
 
       #logo img {
-        height: 2cm;
+        height: 2.5cm;
       }
 
       #customer-address {
         margin-top: 3.5cm;
-        height: 3.3cm;
+        height: 5cm;
+      }
+      #customer-address address {
+        margin-bottom: 5rem;
       }
 
       #invoice-content {
@@ -116,7 +119,7 @@
       }
 
       #signature-image {
-        width: 4cm;
+        width: 5cm;
       }
 
 
@@ -165,7 +168,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-2" id="side">
+    <div class="col-3" id="side">
       <h1>{% trans "Invoice" %}</h1>
       <div itemscope itemtype="http://schema.org/LocalBusiness" id="company-address">
         <span itemprop="name">{{ invoice.company.name }}</span> <br>
@@ -215,10 +218,10 @@
             {{ start }} and {{ end }}{% endblocktrans %}</p>
         {% endif %}
         <dl class="row">
-          <dt class="col-2">{% trans "Invoice ID" %}</dt>
-          <dd class="col-10">{{ invoice.code }}</dd>
-          <dt class="col-2">{% trans "Due date" %}</dt>
-          <dd class="col-10">{{ invoice.due_date }}</dd>
+          <dt class="col-3">{% trans "Invoice ID" %}</dt>
+          <dd class="col-9">{{ invoice.code }}</dd>
+          <dt class="col-3">{% trans "Due date" %}</dt>
+          <dd class="col-9">{{ invoice.due_date }}</dd>
 
         </dl>
         <table class="table">
