@@ -76,7 +76,7 @@
       </div>
       <span class="item-action">
         <label>&nbsp;</label><br>
-        <a href="" class="remove-from-cart form-text"
+        <a href="" class="remove-line form-text"
            data-api-url="{{ item.url }}">{% endverbatim %}{% trans "Delete" %}{% verbatim %}</a>
       </span>
     </div>
@@ -181,6 +181,18 @@
 
       $('.lines').on('change', '.invoice-line :input', function () {
         updateLine($(this).parents('.invoice-line'));
+      });
+
+      $('.lines').on('click', '.invoice-line .remove-line', function (event) {
+        event.preventDefault();
+        let $line = $(this).parents('.invoice-line');
+        $.ajax({
+          url: $(this).data('api-url'),
+          type: 'DELETE',
+          success: function (response) {
+            $line.remove();
+          }
+        });
       });
 
 
