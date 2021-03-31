@@ -155,12 +155,12 @@
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-              <a class="dropdown-item" href="{% url 'users:detail' request.user.username %}">
+              <a class="dropdown-item" href="{% url 'users:detail' username=request.user.username %}">
                                     <i class="bi bi-person-fill mr-2 text-gray-400"></i>
                 {% trans "My profile" %}
                                 </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{% url 'account_logout' %}" data-toggle="modal" data-target="#logoutModal">
+              <a class="dropdown-item" href="{% url 'account_logout' %}">
                 <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
                 {% trans "Sign Out" %}
               </a>
