@@ -5,8 +5,10 @@ from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import now
 
 from ckeditor.fields import RichTextField
+from dateutil.relativedelta import relativedelta
 from model_utils.models import StatusModel
 from model_utils import Choices
 from qrbill.bill import QRBill
@@ -47,6 +49,10 @@ class Invoice(UUIDModel, StatusModel):
         return self.code
 
     @property
+    def is_draft(self):
+        return self.status == self.STATUS.draft
+
+    @property
     def latest_pdf_url(self):
         if self.pdf_version != self.version:
             self.generate_pdf()
@@ -64,6 +70,28 @@ class Invoice(UUIDModel, StatusModel):
         self.pdf_version = self.version
         self.save(update_version=False)
 
+    def duplicate(self):
+        previous_pk = self.pk
+        self.pk = None
+        self.code = ''
+        self.displayed_date = now().date()
+        if self.period_start:
+            self.period_start = self.period_start + relativedelta(months=1)
+        if self.period_end:
+            self.period_end = self.period_end + relativedelta(months=1)
+        self.status = Invoice.STATUS.draft
+        self.version = 1
+        self.pdf = None
+        self.pdf_version = None
+        self.qr_bill = None
+        self.save()
+        assert(previous_pk != self.pk)
+        for line in InvoiceLine.objects.filter(invoice_id=previous_pk):
+            line.pk = None
+            line.invoice = self
+            line.save()
+        return self
+
     def generate_pdf(self):
         from .pdf import generate_pdf
         pdf = generate_pdf(self)
@@ -80,10 +108,13 @@ class Invoice(UUIDModel, StatusModel):
         return reverse('invoices:update', kwargs={'pk': self.pk})
 
     def get_duplicate_url(self):
-        return reverse('invoices:update', kwargs={'pk': self.pk})
+        return reverse('invoices:duplicate', kwargs={'pk': self.pk})
 
     def get_edit_url(self):
         return reverse('invoices:update', kwargs={'pk': self.pk})
+
+    def get_send_url(self):
+        return reverse('invoices:send', kwargs={'pk': self.pk})
 
     def get_qrbill_url(self):
         return reverse('qrbill', kwargs={'pk': self.pk})

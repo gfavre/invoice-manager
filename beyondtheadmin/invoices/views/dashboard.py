@@ -1,7 +1,8 @@
 from datetime import timedelta
 
+from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, RedirectView
 
 from ..models import Invoice
 from ..forms import BaseInvoiceForm, InvoiceEditForm
@@ -31,8 +32,19 @@ class InvoiceUpdateView(UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
-    def get_initial(self) :
+    def get_initial(self):
         return {
             'due_date': now() + timedelta(days=self.object.client.payment_delay_days),
             'vat_rate': self.object.client.vat_rate
         }
+
+
+class InvoiceDuplicateView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'pk'
+
+    def get_redirect_url(self, *args, **kwargs):
+        source = get_object_or_404(Invoice, pk=kwargs['pk'])
+        duplicata = source.duplicate()
+        return duplicata.get_edit_url()

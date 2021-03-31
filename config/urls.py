@@ -15,7 +15,7 @@ admin.site.enable_nav_sidebar = False
 
 
 urlpatterns = i18n_patterns(
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", DashboardView.as_view(), name="dashboard"),
     path(
       "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
@@ -24,7 +24,6 @@ urlpatterns = i18n_patterns(
 
     path("accounts/", include("allauth.urls")),
     path("companies/", include("beyondtheadmin.companies.urls", namespace="companies")),
-    path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("invoices/", include("beyondtheadmin.invoices.urls", namespace="invoices")),
     path("users/", include("beyondtheadmin.users.urls", namespace="users")),
 

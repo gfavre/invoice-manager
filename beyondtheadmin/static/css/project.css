@@ -777,4 +777,8 @@ fieldset h4 {
   padding-bottom: 0.5625rem;
 }
 
+.topbar.navbar-light .navbar-nav .nav-item .nav-link {
+  color: #3a3b45;
+}
+
 /*# sourceMappingURL=project.css.map */
