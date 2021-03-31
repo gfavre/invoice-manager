@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .badge {
   display: inline-block;
   padding: 0.25em 0.4em;
@@ -779,6 +780,16 @@ fieldset h4 {
 
 .topbar.navbar-light .navbar-nav .nav-item .nav-link {
   color: #3a3b45;
+}
+
+.sidebar #sidebarToggle::after {
+  content: "";
+  font-family: bootstrap-icons !important;
+}
+
+.sidebar.toggled #sidebarToggle::after {
+  content: "";
+  font-family: bootstrap-icons !important;
 }
 
 /*# sourceMappingURL=project.css.map */

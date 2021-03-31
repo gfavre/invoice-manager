@@ -74,3 +74,13 @@ fieldset {
 .topbar.navbar-light .navbar-nav .nav-item .nav-link {
   color: #3a3b45;
 }
+.sidebar #sidebarToggle::after {
+  content: "\f22d";
+  font-family: bootstrap-icons !important;
+
+}
+.sidebar.toggled #sidebarToggle::after {
+   content: "\f231";
+  font-family: bootstrap-icons !important;
+}
+
