@@ -146,6 +146,7 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item "><ul class="navbar-nav lang-chooser d-none d-lg-flex">{% lang_list %}</ul></li>
           <div class="topbar-divider d-none d-sm-block"></div>
+          {% if request.user.is_authenticated %}
           <!-- Nav Item - User Information -->
           <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
@@ -164,10 +165,9 @@
                 <i class="bi bi-box-arrow-right mr-2 text-gray-400"></i>
                 {% trans "Sign Out" %}
               </a>
-            </
             </div>
           </li>
-
+{% endif %}
         </ul>
 
       </nav>
