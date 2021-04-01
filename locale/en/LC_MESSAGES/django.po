@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-31 16:04+0200\n"
+"POT-Creation-Date: 2021-04-01 11:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -185,7 +185,7 @@ msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:32
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:69
-#: beyondtheadmin/invoices/serializers.py:72
+#: beyondtheadmin/invoices/serializers.py:80
 #: beyondtheadmin/invoices/templates/invoices/detail.html:176
 msgid "Edit"
 msgstr ""
@@ -205,30 +205,30 @@ msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:56
 #: beyondtheadmin/invoices/models.py:30
-#: beyondtheadmin/invoices/templates/invoices/list.html:111
+#: beyondtheadmin/invoices/templates/invoices/list.html:112
 msgid "Code"
 msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:57
 #: beyondtheadmin/invoices/models.py:34
 #: beyondtheadmin/invoices/templates/invoices/detail.html:278
-#: beyondtheadmin/invoices/templates/invoices/list.html:116
+#: beyondtheadmin/invoices/templates/invoices/list.html:117
 #: beyondtheadmin/invoices/templates/invoices/update.html:73
 msgid "Total"
 msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:58
-#: beyondtheadmin/invoices/templates/invoices/list.html:115
+#: beyondtheadmin/invoices/templates/invoices/list.html:116
 msgid "Status"
 msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:59
-#: beyondtheadmin/invoices/templates/invoices/list.html:117
+#: beyondtheadmin/invoices/templates/invoices/list.html:118
 msgid "Actions"
 msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:70
-#: beyondtheadmin/invoices/serializers.py:77
+#: beyondtheadmin/invoices/serializers.py:72
 msgid "Duplicate"
 msgstr ""
 
@@ -238,6 +238,7 @@ msgid "View"
 msgstr ""
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:80
+#: beyondtheadmin/templates/base.html:38
 msgid "All invoices"
 msgstr ""
 
@@ -249,7 +250,7 @@ msgstr ""
 msgid "Add line"
 msgstr ""
 
-#: beyondtheadmin/invoices/forms.py:77
+#: beyondtheadmin/invoices/forms.py:77 beyondtheadmin/invoices/forms.py:95
 msgid "Save"
 msgstr ""
 
@@ -270,13 +271,13 @@ msgid "canceled"
 msgstr ""
 
 #: beyondtheadmin/invoices/models.py:29
-#: beyondtheadmin/invoices/templates/invoices/list.html:112
+#: beyondtheadmin/invoices/templates/invoices/list.html:113
 msgid "Client"
 msgstr ""
 
 #: beyondtheadmin/invoices/models.py:31
 #: beyondtheadmin/invoices/templates/invoices/detail.html:242
-#: beyondtheadmin/invoices/templates/invoices/list.html:114
+#: beyondtheadmin/invoices/templates/invoices/list.html:115
 msgid "Due date"
 msgstr ""
 
@@ -318,28 +319,61 @@ msgstr ""
 msgid "QR Bill"
 msgstr ""
 
-#: beyondtheadmin/invoices/models.py:186
+#: beyondtheadmin/invoices/models.py:196
 #: beyondtheadmin/invoices/templates/invoices/update.html:57
 msgid "Hour"
 msgstr ""
 
-#: beyondtheadmin/invoices/models.py:187
+#: beyondtheadmin/invoices/models.py:197
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
 msgstr ""
 
-#: beyondtheadmin/invoices/serializers.py:82
+#: beyondtheadmin/invoices/serializers.py:85
 msgid "Cancel"
 msgstr ""
 
-#: beyondtheadmin/invoices/templates/invoices/create.html:4
-#: beyondtheadmin/invoices/templates/invoices/list.html:4
-#: beyondtheadmin/invoices/templates/invoices/list.html:96
-#: beyondtheadmin/invoices/templates/invoices/update.html:4
-#: beyondtheadmin/templates/base.html:31
-msgid "Invoices"
+#: beyondtheadmin/invoices/serializers.py:94
+#: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:14
+msgid "Payment received"
 msgstr ""
 
+#: beyondtheadmin/invoices/templates/invoices/confirm_cancel.html:4
+#: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:4
+#: beyondtheadmin/invoices/templates/invoices/confirm_print.html:4
+msgid "Send Invoice"
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/confirm_cancel.html:14
+msgid "Cancel invoice"
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/confirm_cancel.html:28
+#, python-format
+msgid ""
+"Please confirm you want to cancel invoice %(invoice)s (%(amount)s) for "
+"%(client)s."
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:28
+#, python-format
+msgid "Please confirm you've received %(amount)s from %(client)s."
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/confirm_print.html:14
+msgid "Already sent"
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/confirm_print.html:28
+msgid "Download invoice"
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/confirm_print.html:31
+#, python-format
+msgid "Please confirm you've sent the invoice directly to %(client)s."
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/create.html:4
 #: beyondtheadmin/invoices/templates/invoices/create.html:14
 msgid "Create Invoice"
 msgstr ""
@@ -409,7 +443,14 @@ msgstr ""
 msgid "Thank you for your continued confidence."
 msgstr ""
 
-#: beyondtheadmin/invoices/templates/invoices/list.html:113
+#: beyondtheadmin/invoices/templates/invoices/list.html:4
+#: beyondtheadmin/invoices/templates/invoices/list.html:97
+#: beyondtheadmin/invoices/templates/invoices/update.html:4
+#: beyondtheadmin/templates/base.html:31
+msgid "Invoices"
+msgstr ""
+
+#: beyondtheadmin/invoices/templates/invoices/list.html:114
 msgid "Date"
 msgstr ""
 
@@ -528,7 +569,7 @@ msgstr ""
 #: beyondtheadmin/templates/account/logout.html:5
 #: beyondtheadmin/templates/account/logout.html:8
 #: beyondtheadmin/templates/account/logout.html:17
-#: beyondtheadmin/templates/base.html:166
+#: beyondtheadmin/templates/base.html:105
 msgid "Sign Out"
 msgstr ""
 
@@ -663,7 +704,11 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: beyondtheadmin/templates/base.html:161
+#: beyondtheadmin/templates/base.html:44
+msgid "Add invoice"
+msgstr ""
+
+#: beyondtheadmin/templates/base.html:100
 msgid "My profile"
 msgstr ""
 
