@@ -77,3 +77,21 @@ class InvoiceEditForm(forms.ModelForm):
                 Submit('save', _("Save")),
             )
         )
+
+
+class InvoiceStatusForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+        fields = ('status',)
+        widgets = {'status': forms.HiddenInput}
+
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.include_media = False
+        self.helper.layout = Layout(
+            'status',
+            Div(
+                Submit('save', _("Save")),
+            )
+        )

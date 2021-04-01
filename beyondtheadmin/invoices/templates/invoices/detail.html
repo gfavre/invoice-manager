@@ -169,8 +169,8 @@
       <span>
       <a class="btn btn-lg btn-success" href="{{ invoice.get_send_url }}">
       <i class="bi bi-box-arrow-right"></i>&nbsp; {% trans "Send" %}</a>
-      <a class="btn btn-lg btn-success" href="{{ invoice.get_send_url }}">
-      <i class="bi bi bi-mailbox"></i>&nbsp; {% trans "Mark as sent" %}</a>
+      <a class="btn btn-lg btn-success" href="{{ invoice.get_snail_mail_url }}">
+      <i class="bi bi-mailbox"></i>&nbsp; {% trans "Mark as sent" %}</a>
       </span>
     <a class="btn btn-lg btn-secondary" href="{{ invoice.get_edit_url }}">
       <i class="bi bi-pencil"></i>&nbsp; {% trans "Edit" %}</a>

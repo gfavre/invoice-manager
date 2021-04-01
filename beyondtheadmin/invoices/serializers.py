@@ -61,28 +61,41 @@ class InvoiceListSerializer(serializers.ModelSerializer):
         return obj.get_api_url()
 
     def get_actions(self, obj):
-        return [
+        actions = [
             {
                 'url': obj.get_absolute_url(),
                 'label': _("View"),
                 'icon_class': 'bi-file-earmark-text'
             },
             {
-                'url': obj.get_edit_url(),
-                'label': _("Edit"),
-                'icon_class': 'bi-pencil'
-            },
-            {
                 'url': obj.get_duplicate_url(),
                 'label': _("Duplicate"),
                 'icon_class': 'bi-files'
             },
-            {
-                'url': obj.get_cancel_url(),
-                'label': _("Cancel"),
-                'icon_class': 'bi-trash'
-            },
         ]
+        if obj.is_draft:
+            actions += [
+                {
+                    'url': obj.get_edit_url(),
+                    'label': _("Edit"),
+                    'icon_class': 'bi-pencil'
+                },
+                {
+                    'url': obj.get_cancel_url(),
+                    'label': _("Cancel"),
+                    'icon_class': 'bi-trash'
+                },
+
+            ]
+        if obj.is_sent:
+            actions += [
+                {
+                    'url': obj.get_set_paid_url(),
+                    'label': _("Payment received"),
+                    'icon_class': 'bi-credit-card'
+                },
+            ]
+        return actions
 
     def get_status(self, obj):
         return {

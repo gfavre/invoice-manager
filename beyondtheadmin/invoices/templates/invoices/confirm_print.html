@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n crispy_forms_tags %}
 
-{% block title %}{% trans "Create Invoice" %}{% endblock %}
+{% block title %}{% trans "Send Invoice" %}{% endblock %}
 
 
 {% block content %}
@@ -11,7 +11,7 @@
         <div class="row align-items-center justify-content-between">
           <div class="col-auto mt-4">
             <h1 class="page-header-title">
-              {% trans "Create Invoice" %}
+              <i class="bi bi-mailbox"></i>&nbsp; {% trans "Already sent" %}
             </h1>
             <div class="page-header-subtitle">
             </div>
@@ -23,9 +23,17 @@
   <section class="container headed-content">
     <div class="datatable card">
       <div class="card-body">
-      <form action="{% url "invoices:create" %}" method="post">
-        {% crispy form %}
-      </form>
+
+        <a href="{{ invoice.get_absolute_url }}?pdf=1" download="">
+          <i class="bi bi-file-earmark-text"></i>&nbsp; {% trans "Download invoice" %}</a><br>
+        <p class="lead">
+
+          {% blocktrans with client=invoice.client %}Please confirm you've sent the invoice directly to {{ client }}.{% endblocktrans %}
+        </p>
+
+        <form action="{{ invoice.get_snail_mail_url }}" method="post">
+          {% crispy form %}
+        </form>
       </div>
     </div>
   </section>

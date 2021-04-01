@@ -53,6 +53,10 @@ class Invoice(UUIDModel, StatusModel):
         return self.status == self.STATUS.draft
 
     @property
+    def is_sent(self):
+        return self.status == self.STATUS.sent
+
+    @property
     def latest_pdf_url(self):
         if self.pdf_version != self.version:
             self.generate_pdf()
@@ -105,7 +109,7 @@ class Invoice(UUIDModel, StatusModel):
         return reverse('api:invoice-detail', kwargs={'pk': self.pk})
 
     def get_cancel_url(self):
-        return reverse('invoices:update', kwargs={'pk': self.pk})
+        return reverse('invoices:cancel', kwargs={'pk': self.pk})
 
     def get_duplicate_url(self):
         return reverse('invoices:duplicate', kwargs={'pk': self.pk})
@@ -113,11 +117,17 @@ class Invoice(UUIDModel, StatusModel):
     def get_edit_url(self):
         return reverse('invoices:update', kwargs={'pk': self.pk})
 
+    def get_set_paid_url(self):
+        return reverse('invoices:mark_paid', kwargs={'pk': self.pk})
+
     def get_send_url(self):
         return reverse('invoices:send', kwargs={'pk': self.pk})
 
     def get_qrbill_url(self):
         return reverse('qrbill', kwargs={'pk': self.pk})
+
+    def get_snail_mail_url(self):
+        return reverse('invoices:mark_sent', kwargs={'pk': self.pk})
 
     def get_vat(self):
         return (self.subtotal * self.vat_rate).quantize(Decimal('.01'), rounding=ROUND_UP)

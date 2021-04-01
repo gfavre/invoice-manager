@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% load i18n crispy_forms_tags %}
+{% load i18n crispy_forms_tags switzerland %}
 
-{% block title %}{% trans "Create Invoice" %}{% endblock %}
+{% block title %}{% trans "Send Invoice" %}{% endblock %}
 
 
 {% block content %}
@@ -11,9 +11,10 @@
         <div class="row align-items-center justify-content-between">
           <div class="col-auto mt-4">
             <h1 class="page-header-title">
-              {% trans "Create Invoice" %}
+              <i class="bi bi bi-credit-card"></i>&nbsp; {% trans "Cancel invoice" %}
             </h1>
             <div class="page-header-subtitle">
+              {{ invoice.code }}
             </div>
           </div>
         </div>
@@ -23,9 +24,13 @@
   <section class="container headed-content">
     <div class="datatable card">
       <div class="card-body">
-      <form action="{% url "invoices:create" %}" method="post">
-        {% crispy form %}
-      </form>
+        <p class="lead">
+        {% blocktrans with invoice=invoice.code client=invoice.client amount=invoice.total|money %}Please confirm you want to cancel invoice {{ invoice }} ({{ amount }}) for {{ client }}.{% endblocktrans %}
+        </p>
+
+        <form action="" method="post">
+          {% crispy form %}
+        </form>
       </div>
     </div>
   </section>

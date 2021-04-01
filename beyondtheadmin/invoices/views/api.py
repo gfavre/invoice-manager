@@ -11,7 +11,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
 
     def get_queryset(self):
-        return Invoice.objects.select_related('client', 'company')
+        return Invoice.objects.exclude(status=Invoice.STATUS.canceled).select_related('client', 'company')
 
     def get_serializer_class(self):
         if self.action == 'list':
