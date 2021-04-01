@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.timezone import now
-from django.views.generic import CreateView, ListView, UpdateView, RedirectView
+from django.views.generic import CreateView, ListView, UpdateView, RedirectView, TemplateView
 
 from ..models import Invoice
 from ..forms import BaseInvoiceForm, InvoiceEditForm, InvoiceStatusForm
@@ -20,10 +20,9 @@ class InvoiceCreateView(CreateView):
         return self.object.get_edit_url()
 
 
-class InvoiceListView(ListView):
+class InvoiceListView(TemplateView):
     #model = Invoice
     template_name = 'invoices/list.html'
-    queryset = Invoice.objects.exclude(status=Invoice.STATUS.canceled)
 
 
 class InvoiceUpdateView(UpdateView):
