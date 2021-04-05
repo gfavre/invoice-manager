@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-05 05:01+0200\n"
-"PO-Revision-Date: 2021-04-01 11:18+0200\n"
+"POT-Creation-Date: 2021-04-05 06:06+0200\n"
+"PO-Revision-Date: 2021-04-05 06:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -24,10 +24,8 @@ msgid "Company"
 msgstr "Société"
 
 #: beyondtheadmin/clients/forms.py:41
-#, fuzzy
-#| msgid "Contact name"
 msgid "Contact Person"
-msgstr "Nom du contact"
+msgstr "Personne de contact"
 
 #: beyondtheadmin/clients/forms.py:47
 #: beyondtheadmin/clients/templates/clients/list.html:4
@@ -118,29 +116,21 @@ msgid "Confirm"
 msgstr "Confirmer"
 
 #: beyondtheadmin/clients/templates/clients/create.html:6
-#, fuzzy
-#| msgid "Create company"
 msgid "Create client"
-msgstr "Créer la compagnie"
+msgstr "Créer un client"
 
 #: beyondtheadmin/clients/templates/clients/list.html:48
 #: beyondtheadmin/templates/base.html:52
-#, fuzzy
-#| msgid "Client"
 msgid "Clients"
-msgstr "Client"
+msgstr "Clients"
 
 #: beyondtheadmin/clients/templates/clients/list.html:62
-#, fuzzy
-#| msgid "Client"
 msgid "New client"
-msgstr "Client"
+msgstr "Nouveau client"
 
 #: beyondtheadmin/clients/templates/clients/list.html:68
-#, fuzzy
-#| msgid "Latest invoices"
 msgid "Last invoice"
-msgstr "Dernières factures"
+msgstr "Dernière facture"
 
 #: beyondtheadmin/clients/templates/clients/list.html:69
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:59
@@ -788,16 +778,12 @@ msgid "Add invoice"
 msgstr "Ajouter une facture"
 
 #: beyondtheadmin/templates/base.html:59
-#, fuzzy
-#| msgid "All invoices"
 msgid "All clients"
-msgstr "Toutes les factures"
+msgstr "Tous les clients"
 
 #: beyondtheadmin/templates/base.html:65
-#, fuzzy
-#| msgid "Add line"
 msgid "Add Client"
-msgstr "Ajouter une ligne"
+msgstr "Ajouter un client"
 
 #: beyondtheadmin/templates/base.html:112
 msgid "My profile"

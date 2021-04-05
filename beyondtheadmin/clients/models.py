@@ -46,4 +46,4 @@ class Client(UUIDModel):
         return reverse_lazy('clients:delete', kwargs={'pk': self.pk})
 
     def get_update_url(self):
-        self.get_absolute_url()
+        return self.get_absolute_url()
