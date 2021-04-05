@@ -24,6 +24,7 @@ urlpatterns = i18n_patterns(
     path(settings.ADMIN_URL, admin.site.urls),
 
     path("accounts/", include("allauth.urls")),
+    path("clients/", include("beyondtheadmin.clients.urls", namespace="clients")),
     path("companies/", include("beyondtheadmin.companies.urls", namespace="companies")),
     path("invoices/", include("beyondtheadmin.invoices.urls", namespace="invoices")),
     path("users/", include("beyondtheadmin.users.urls", namespace="users")),

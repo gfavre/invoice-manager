@@ -39,13 +39,31 @@ $red: #b94a48;
 
 fieldset {
   padding: 1rem 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
+
+  &.border-left-info legend{
+    color:#36b9cc
+  }
+  &.border-left-primary legend{
+    color: var(--blue);
+  }
+  &.border-left-success legend{
+    color: var(--success);
+  }
+  &.border-left-warning legend{
+    color: var(--yellow);
+  }
+  legend {
+    padding-top: 4rem;
+  }
 
   h4 {
     margin-bottom: 1.5rem;
   }
 }
-
+.buttonHolder {
+  margin-top: 32px;
+}
 .card:not([class*=bg-]) .card-header {
   color: #0061f2;
 }

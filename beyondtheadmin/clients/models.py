@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from django_countries.fields import CountryField
@@ -34,5 +35,15 @@ class Client(UUIDModel):
     def __str__(self):
         return self.name
 
+    @property
+    def last_invoice_date(self):
+        return self.invoices.order_by('displayed_date').last().displayed_date
+
     def get_absolute_url(self):
-        return '#'
+        return reverse_lazy('clients:update', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse_lazy('clients:delete', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        self.get_absolute_url()

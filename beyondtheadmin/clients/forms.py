@@ -1,30 +1,24 @@
 # -*- coding: utf-8 -*-
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
-
-from colorfield.widgets import ColorWidget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Layout, Fieldset, ButtonHolder, Row, Submit
 
-from .models import Company
+from .models import Client
 
 
-class CompanyForm(ModelForm):
+class ClientForm(ModelForm):
 
     class Meta:
-        model = Company
+        model = Client
         fields = '__all__'
-
-        widgets = {
-            'contrast_color': ColorWidget(),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Fieldset(
-                _("Contact"),
+                _("Company"),
                 'name',
                 'address',
                 Row(
@@ -40,35 +34,23 @@ class CompanyForm(ModelForm):
                         'city'
                     )
                 ),
-                'phone',
-                'email',
-                'website',
-                css_class='border-left-info shadow'
+                css_class='border-left-primary shadow'
 
             ),
             Fieldset(
-                _("Business"),
-                'vat_id',
-                Row(
-                    Column(
-                        'bank',
-                        css_class='col-9'
-                    ),
-                    Column(
-                        'bic',
-                        css_class='col'
-                    ),
-                ),
-                'iban',
-                css_class='border-left-warning shadow'
+                _("Contact Person"),
+                'contact_name',
+                'contact_email',
+                css_class='border-left-info shadow'
             ),
             Fieldset(
                 _("Invoices"),
-                'logo',
-                'contrast_color',
-                'signature_text',
-                'signature_image',
-                css_class='border-left-primary shadow'
+                'currency', 'vat_rate', 'default_hourly_rate',
+                'language',
+                'payment_delay_days',
+                'slug',
+                'invoice_current_count',
+                css_class='border-left-success shadow'
 
             ),
             ButtonHolder(

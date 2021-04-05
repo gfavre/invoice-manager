@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n  %}
+{% block content %}
+  <section class="card card-header-actions mb-4">
+    <header class="card-header ">
+      {% trans "Delete company" %}
+    </header>
+    <article class="card-body">
+      <p class="lead">
+        {% blocktrans with company=company %}Are you sure you want to delete "{{ company }}"?{% endblocktrans %}
+      </p>
+      <form action="{{ company.delete_url }}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
+
+        </form>
+    </article>
+  </section>
+
+{% endblock content %}

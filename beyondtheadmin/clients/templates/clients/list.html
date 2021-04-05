@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Invoices" %}{% endblock %}
+
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.23/b-1.6.5/b-html5-1.6.5/r-2.2.7/sc-2.0.3/sb-1.0.1/sp-1.2.2/sl-1.3.1/datatables.min.css"/>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script type="text/javascript"
+          src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.23/b-1.6.5/b-html5-1.6.5/r-2.2.7/sc-2.0.3/sb-1.0.1/sp-1.2.2/sl-1.3.1/datatables.min.js"></script>
+  <script>
+    $(function () {
+      let table = $("#clients").DataTable({
+        {% if LANGUAGE_CODE == 'fr' %}
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json"
+          },
+        {% elif LANGUAGE_CODE == 'de' %}
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/German.json"
+          },
+        {% endif %}
+
+        "columnDefs": [
+          {
+            "orderable": false,
+            "searchable": false,
+            "targets": [-1]
+          },
+        ],
+        "lengthMenu": [10, 25, 50, 100]
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <header class="page-header page-header-dark bg-gradient-primary">
+    <div class="container">
+      <div class="page-header-content pt-4">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-auto mt-4">
+            <h1 class="page-header-title">
+              {% trans "Clients" %}
+            </h1>
+            <div class="page-header-subtitle">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="container headed-content">
+  <div class="datatable card">
+    <div class="card-body">
+    <p>
+      <a class="btn btn-success btn-large" href="{% url 'clients:create' %}">
+      <i class="bi bi-person-plus-fill"></i>&nbsp; {% trans "New client" %}</a>
+    </p>
+    <table class="table" id="clients">
+      <thead>
+      <tr>
+        <th class="client-name">{% trans "Name" %}</th>
+        <th class="client-last-invoice-date">{% trans "Last invoice" %}</th>
+        <th data-data="actions" class="invoice-actions d-print-none">{% trans "Actions" %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for client in client_list %}
+        <tr>
+          <td>{{ client }}</td>
+          <td>{{ client.last_invoice_date }}</td>
+          <td>
+            <ul class="list-unstyled">
+              <li><a href="{{ client.get_update_url }}" class="btn btn-sm"><i class="bi bi-pencil"></i>  {% trans "Edit" %}</a></li>
+              <li><a href="{{ client.get_delete_url }}" class="btn btn-sm"><i class="bi bi-trash"></i>  {% trans "Delete" %}</a></li>
+
+            </ul>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+      </div>
+  </div>
+  </section>
+{% endblock content %}
