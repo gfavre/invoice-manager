@@ -68,6 +68,8 @@ class CompanyForm(ModelForm):
                 'contrast_color',
                 'signature_text',
                 'signature_image',
+                'email_signature',
+                'from_email',
                 css_class='border-left-primary shadow'
 
             ),

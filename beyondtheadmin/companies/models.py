@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -31,6 +32,9 @@ class Company(UUIDModel):
 
     signature_text = models.CharField(_("Signature as text"), max_length=100, blank=True)
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
+    email_signature = models.TextField(_("Email signature"), blank=True)
+    from_email = models.CharField(_("From email"), max_length=255,
+                                   default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1]))
 
     class Meta:
         ordering = ('name', 'created')

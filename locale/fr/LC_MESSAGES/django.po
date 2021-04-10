@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-05 06:06+0200\n"
-"PO-Revision-Date: 2021-04-05 06:06+0200\n"
+"POT-Creation-Date: 2021-04-10 06:15+0200\n"
+"PO-Revision-Date: 2021-04-10 06:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: beyondtheadmin/clients/forms.py:21 beyondtheadmin/companies/models.py:37
+#: beyondtheadmin/clients/forms.py:21 beyondtheadmin/companies/models.py:41
 #: beyondtheadmin/invoices/models.py:27
 msgid "Company"
 msgstr "Société"
@@ -27,7 +27,7 @@ msgstr "Société"
 msgid "Contact Person"
 msgstr "Personne de contact"
 
-#: beyondtheadmin/clients/forms.py:47
+#: beyondtheadmin/clients/forms.py:50
 #: beyondtheadmin/clients/templates/clients/list.html:4
 #: beyondtheadmin/companies/forms.py:66
 #: beyondtheadmin/invoices/templates/invoices/list.html:4
@@ -42,19 +42,19 @@ msgstr "Factures"
 msgid "Name"
 msgstr "Nom"
 
-#: beyondtheadmin/clients/models.py:14 beyondtheadmin/companies/models.py:15
+#: beyondtheadmin/clients/models.py:14 beyondtheadmin/companies/models.py:16
 msgid "Address"
 msgstr "Adresse"
 
-#: beyondtheadmin/clients/models.py:15 beyondtheadmin/companies/models.py:16
+#: beyondtheadmin/clients/models.py:15 beyondtheadmin/companies/models.py:17
 msgid "Postal code"
 msgstr "Code postal"
 
-#: beyondtheadmin/clients/models.py:16 beyondtheadmin/companies/models.py:17
+#: beyondtheadmin/clients/models.py:16 beyondtheadmin/companies/models.py:18
 msgid "City"
 msgstr "Localité"
 
-#: beyondtheadmin/clients/models.py:17 beyondtheadmin/companies/models.py:18
+#: beyondtheadmin/clients/models.py:17 beyondtheadmin/companies/models.py:19
 msgid "Country"
 msgstr "Pays"
 
@@ -79,24 +79,28 @@ msgid "VAT rate"
 msgstr "Taux de TVA"
 
 #: beyondtheadmin/clients/models.py:27
-msgid "Contact name"
-msgstr "Nom du contact"
+msgid "Contact first name"
+msgstr "Prénom du contact"
 
 #: beyondtheadmin/clients/models.py:28
+msgid "Contact last name"
+msgstr "Nom du contact"
+
+#: beyondtheadmin/clients/models.py:30
 msgid "Contact email"
 msgstr "E-mail de contact"
 
-#: beyondtheadmin/clients/models.py:30
+#: beyondtheadmin/clients/models.py:32
 msgid "Slug"
 msgstr "Slug"
 
-#: beyondtheadmin/clients/models.py:31
-msgid "Current count of invoices"
-msgstr "Décompte actuel de factures"
-
-#: beyondtheadmin/clients/models.py:32
+#: beyondtheadmin/clients/models.py:32 beyondtheadmin/clients/models.py:34
 msgid "Used to generate invoice code"
 msgstr "Utilisé pour générer le code de la facture"
+
+#: beyondtheadmin/clients/models.py:33
+msgid "Current count of invoices"
+msgstr "Décompte actuel de factures"
 
 #: beyondtheadmin/clients/templates/clients/confirm_delete.html:6
 #: beyondtheadmin/companies/templates/companies/confirm_delete.html:6
@@ -165,55 +169,63 @@ msgstr "Contact"
 msgid "Business"
 msgstr "Entreprise"
 
-#: beyondtheadmin/companies/models.py:14
+#: beyondtheadmin/companies/models.py:15
 msgid "Company name"
 msgstr "Nom de l'entreprise"
 
-#: beyondtheadmin/companies/models.py:20
+#: beyondtheadmin/companies/models.py:21
 msgid "Phone number"
 msgstr "Numéro de téléphone"
 
-#: beyondtheadmin/companies/models.py:21
+#: beyondtheadmin/companies/models.py:22
 msgid "Email"
 msgstr "Email"
 
-#: beyondtheadmin/companies/models.py:22
+#: beyondtheadmin/companies/models.py:23
 msgid "Web site"
 msgstr "Site Web"
 
-#: beyondtheadmin/companies/models.py:23
+#: beyondtheadmin/companies/models.py:24
 msgid "VAT ID"
 msgstr "N° de TVA"
 
-#: beyondtheadmin/companies/models.py:25
+#: beyondtheadmin/companies/models.py:26
 msgid "Bank"
 msgstr "Banque"
 
-#: beyondtheadmin/companies/models.py:26
+#: beyondtheadmin/companies/models.py:27
 msgid "BIC"
 msgstr "BIC"
 
-#: beyondtheadmin/companies/models.py:27
+#: beyondtheadmin/companies/models.py:28
 msgid "IBAN"
 msgstr "IBAN"
 
-#: beyondtheadmin/companies/models.py:29
+#: beyondtheadmin/companies/models.py:30
 msgid "Logo"
 msgstr "Logo"
 
-#: beyondtheadmin/companies/models.py:30
+#: beyondtheadmin/companies/models.py:31
 msgid "Contrast color"
 msgstr "Couleur de contraste"
 
-#: beyondtheadmin/companies/models.py:32
+#: beyondtheadmin/companies/models.py:33
 msgid "Signature as text"
 msgstr "Signature sous forme de texte"
 
-#: beyondtheadmin/companies/models.py:33
+#: beyondtheadmin/companies/models.py:34
 msgid "Signature as image"
 msgstr "Signature sous forme d'image"
 
-#: beyondtheadmin/companies/models.py:38
+#: beyondtheadmin/companies/models.py:35
+msgid "Email signature"
+msgstr "Signature e-mail"
+
+#: beyondtheadmin/companies/models.py:36
+msgid "From email"
+msgstr "Email de l’expéditeur"
+
+#: beyondtheadmin/companies/models.py:42
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:6
 msgid "Companies"
 msgstr "Entreprises"
@@ -286,6 +298,7 @@ msgid "Add line"
 msgstr "Ajouter une ligne"
 
 #: beyondtheadmin/invoices/forms.py:77 beyondtheadmin/invoices/forms.py:95
+#: beyondtheadmin/invoices/forms.py:114
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -365,10 +378,15 @@ msgid "Number"
 msgstr "Nombre"
 
 #: beyondtheadmin/invoices/serializers.py:85
+#: beyondtheadmin/invoices/templates/invoices/detail.html:171
+msgid "Send"
+msgstr "Envoyer"
+
+#: beyondtheadmin/invoices/serializers.py:90
 msgid "Cancel"
 msgstr "Annuler"
 
-#: beyondtheadmin/invoices/serializers.py:94
+#: beyondtheadmin/invoices/serializers.py:99
 #: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:14
 msgid "Payment received"
 msgstr "Paiement reçu"
@@ -376,6 +394,7 @@ msgstr "Paiement reçu"
 #: beyondtheadmin/invoices/templates/invoices/confirm_cancel.html:4
 #: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:4
 #: beyondtheadmin/invoices/templates/invoices/confirm_print.html:4
+#: beyondtheadmin/invoices/templates/invoices/send.html:4
 msgid "Send Invoice"
 msgstr "Envoyer la facture"
 
@@ -395,7 +414,7 @@ msgstr ""
 #: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:28
 #, python-format
 msgid "Please confirm you've received %(amount)s from %(client)s."
-msgstr "Veuillez confirmer que vous avez reçu des %(amount)s de %(client)s."
+msgstr "Veuillez confirmer que vous avez reçu %(amount)s de %(client)s."
 
 #: beyondtheadmin/invoices/templates/invoices/confirm_print.html:14
 msgid "Already sent"
@@ -419,10 +438,6 @@ msgstr "Créer facture"
 #: beyondtheadmin/invoices/templates/invoices/detail.html:166
 msgid "Download"
 msgstr "Télécharger"
-
-#: beyondtheadmin/invoices/templates/invoices/detail.html:171
-msgid "Send"
-msgstr "Envoyer"
 
 #: beyondtheadmin/invoices/templates/invoices/detail.html:173
 msgid "Mark as sent"
@@ -493,10 +508,66 @@ msgstr "Merci de votre confiance continue."
 msgid "Date"
 msgstr "Date"
 
+#: beyondtheadmin/invoices/templates/invoices/mail_message.txt:1
+#, python-format
+msgid ""
+"Dear %(contact_first_name)s,\n"
+"\n"
+"I hope you are well. Please see invoice %(invoice_nb)s attached. The invoice "
+"is due by %(due_date)s.\n"
+"\n"
+"Please don’t hesitate to get in touch if you have any questions, or would "
+"like to clarify anything.\n"
+"\n"
+"Best regards,\n"
+"%(your_name)s\n"
+msgstr ""
+"Cher %(contact_first_name)s,\n"
+"\n"
+"J'espère que tu vas bien. Tu trouveras en pièce jointe la facture "
+"%(invoice_nb)s. La date d'échéance est le %(due_date)s.\n"
+"\n"
+"N'hésite pas à me contacter si tu as des questions, ou si tu souhaites "
+"clarifier quelque chose.\n"
+"\n"
+"Cordialement,\n"
+"%(your_name)s\n"
+
+#: beyondtheadmin/invoices/templates/invoices/mail_subject.txt:1
+#, python-format
+msgid "Invoice %(invoice_nb)s from %(company)s"
+msgstr "Facture %(invoice_nb)s de %(company)s"
+
+#: beyondtheadmin/invoices/templates/invoices/send.html:14
+msgid "Send invoice"
+msgstr "Envoyer la facture"
+
+#: beyondtheadmin/invoices/templates/invoices/send.html:28
+#, python-format
+msgid ""
+"Please confirm you\n"
+"            want to send invoice %(invoice)s (%(amount)s) to %(client)s."
+msgstr ""
+"Veuillez confirmer que vous\n"
+"            voulez envoyer la facture %(invoice)s (%(amount)s) à %(client)s."
+
+#: beyondtheadmin/invoices/templates/invoices/send.html:35
+msgid "To"
+msgstr "Destinataire"
+
+#: beyondtheadmin/invoices/templates/invoices/send.html:43
+msgid "Attachment"
+msgstr "Pièce jointe"
+
 #: beyondtheadmin/invoices/templates/invoices/update.html:14
 #, python-format
 msgid "Invoice: %(invoice)s"
 msgstr "Facture: %(invoice)s"
+
+#: beyondtheadmin/invoices/views/dashboard.py:127
+#, python-format
+msgid "Your invoice has been sent to %(email)s"
+msgstr "Votre facture a été envoyée à %(email)s"
 
 #: beyondtheadmin/invoices/views/public.py:37
 msgid "Invoice does not exist"

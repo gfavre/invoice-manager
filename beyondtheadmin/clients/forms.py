@@ -39,17 +39,26 @@ class ClientForm(ModelForm):
             ),
             Fieldset(
                 _("Contact Person"),
-                'contact_name',
+                Row(
+                    Column('contact_first_name'),
+                    Column('contact_last_name'),
+                ),
                 'contact_email',
                 css_class='border-left-info shadow'
             ),
             Fieldset(
                 _("Invoices"),
-                'currency', 'vat_rate', 'default_hourly_rate',
+                Row(
+                    Column('currency'),
+                    Column('vat_rate'),
+                    Column('default_hourly_rate'),
+                ),
                 'language',
                 'payment_delay_days',
-                'slug',
-                'invoice_current_count',
+                Row(
+                    Column('slug'),
+                    Column('invoice_current_count'),
+                ),
                 css_class='border-left-success shadow'
 
             ),

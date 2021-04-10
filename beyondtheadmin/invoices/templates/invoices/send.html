@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags switzerland %}
+
+{% block title %}{% trans "Send Invoice" %}{% endblock %}
+
+
+{% block content %}
+  <header class="page-header page-header-dark bg-gradient-primary">
+    <div class="container">
+      <div class="page-header-content pt-4">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-auto mt-4 mb-4">
+            <h1 class="page-header-title">
+              <i class="bi bi bi-credit-card"></i>&nbsp; {% trans "Send invoice" %}
+            </h1>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="container headed-content">
+    <div class="datatable card">
+      <div class="card-body">
+        <p class="lead">
+          {% blocktrans with invoice=invoice.code client=invoice.client amount=invoice.total|money %}Please confirm you
+            want to send invoice {{ invoice }} ({{ amount }}) to {{ client }}.{% endblocktrans %}
+        </p>
+
+        <form action="{{ invoice.get_send_url }}" method="post">
+          {% csrf_token %}
+          <div class="mb-3 row">
+            <label for="recipient" class="col-sm-2 col-form-label">{% trans "To" %}</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="recipient"
+                     value="{{ invoice.client.full_contact_email }}">
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="recipient" class="col-sm-2 col-form-label">{% trans "Attachment" %}</label>
+            <div class="col-sm-10">
+              <a href="{{ invoice.get_absolute_url }}?pdf=1" download="" class="form-control-plaintext"><i
+                  class="bi bi-file-earmark-text"></i>&nbsp; {% trans "Invoice" %}</a>
+            </div>
+          </div>
+
+
+          {% crispy form %}
+
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

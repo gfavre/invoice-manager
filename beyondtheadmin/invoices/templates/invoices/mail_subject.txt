@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktrans with invoice_nb=invoice.code company=invoice.company %}Invoice {{ invoice_nb }} from {{ company }}{% endblocktrans %}

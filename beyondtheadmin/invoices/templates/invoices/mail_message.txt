@@ -1,0 +1,10 @@
+{% load i18n %}{% blocktrans with contact_first_name=invoice.client.contact_first_name contact_last_name=invoice.client.contact_last_name invoice_nb=invoice.code due_date=invoice.due_date|date your_name=invoice.company.signature_text %}Dear {{ contact_first_name }},
+
+I hope you are well. Please see invoice {{ invoice_nb }} attached. The invoice is due by {{ due_date }}.
+
+Please don’t hesitate to get in touch if you have any questions, or would like to clarify anything.
+
+Best regards,
+{{ your_name }}
+{% endblocktrans %}
+{{ invoice.company.email_signature }}

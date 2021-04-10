@@ -184,6 +184,11 @@ class Invoice(UUIDModel, StatusModel):
                 pass
         super().save(*args, **kwargs)
 
+    def set_sent(self):
+        self.status = self.STATUS.sent
+        self.save(update_fields=["status"])
+
+
 
 class InvoiceLine(UUIDModel):
     invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, related_name='lines')

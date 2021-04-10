@@ -95,3 +95,22 @@ class InvoiceStatusForm(forms.ModelForm):
                 Submit('save', _("Save")),
             )
         )
+
+
+class EmailForm(forms.Form):
+    subject = forms.CharField(max_length=255)
+    message = forms.CharField(widget=forms.Textarea)
+
+    def __init__(self, *args, request=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.include_media = False
+
+        self.helper.layout = Layout(
+            'subject',
+            'message',
+            Div(
+                Submit('save', _("Save")),
+            ),
+        )

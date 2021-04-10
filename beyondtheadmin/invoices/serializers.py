@@ -81,6 +81,11 @@ class InvoiceListSerializer(serializers.ModelSerializer):
                     'icon_class': 'bi-pencil'
                 },
                 {
+                    'url': obj.get_send_url(),
+                    'label': _("Send"),
+                    'icon_class': 'bi-box-arrow-right'
+                },
+                {
                     'url': obj.get_cancel_url(),
                     'label': _("Cancel"),
                     'icon_class': 'bi-trash'

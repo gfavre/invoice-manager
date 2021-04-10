@@ -24,10 +24,12 @@ class Client(UUIDModel):
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
     default_hourly_rate = models.DecimalField(max_digits=5, decimal_places=2, default='0.00')
 
-    contact_name = models.CharField(_("Contact name"), max_length=255, blank=True)
+    contact_first_name = models.CharField(_("Contact first name"), max_length=255, blank=True)
+    contact_last_name = models.CharField(_("Contact last name"), max_length=255, blank=True)
+
     contact_email = models.EmailField(_("Contact email"), blank=True)
 
-    slug = models.CharField(_("Slug"), max_length=10)
+    slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=10)
     invoice_current_count = models.IntegerField(_("Current count of invoices"),
                                                 help_text=_("Used to generate invoice code"),
                                                 default=0)
@@ -36,8 +38,20 @@ class Client(UUIDModel):
         return self.name
 
     @property
+    def contact_fullname(self):
+        if self.contact_last_name:
+            return "{} {}".format(self.contact_first_name, self.contact_last_name)
+        return self.contact_first_name
+
+    @property
+    def full_contact_email(self):
+        if self.contact_fullname:
+            return "{} <{}>".format(self.contact_fullname, self.contact_email)
+
+    @property
     def last_invoice_date(self):
         return self.invoices.order_by('displayed_date').last().displayed_date
+
 
     def get_absolute_url(self):
         return reverse_lazy('clients:update', kwargs={'pk': self.pk})

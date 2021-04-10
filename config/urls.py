@@ -13,7 +13,6 @@ from beyondtheadmin.invoices.views.public import InvoiceDetailView, qrbill
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 
-
 urlpatterns = i18n_patterns(
 
     path("", DashboardView.as_view(), name="dashboard"),
@@ -29,7 +28,8 @@ urlpatterns = i18n_patterns(
     path("invoices/", include("beyondtheadmin.invoices.urls", namespace="invoices")),
     path("users/", include("beyondtheadmin.users.urls", namespace="users")),
 
-    prefix_default_language=False) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    prefix_default_language=False
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
 urlpatterns += [

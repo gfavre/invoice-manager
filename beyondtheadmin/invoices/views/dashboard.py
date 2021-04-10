@@ -1,13 +1,18 @@
 from datetime import timedelta
 
+from django.contrib import messages
+from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.timezone import now
-from django.views.generic import CreateView, ListView, UpdateView, RedirectView, TemplateView
+from django.utils.translation import activate, get_language, ugettext_lazy as _
+from django.views.generic import CreateView, FormView, UpdateView, RedirectView, TemplateView
+from django.views.generic.detail import SingleObjectMixin
 
 from ..models import Invoice
-from ..forms import BaseInvoiceForm, InvoiceEditForm, InvoiceStatusForm
+from ..forms import BaseInvoiceForm, EmailForm, InvoiceEditForm, InvoiceStatusForm
 
 
 class InvoiceCreateView(CreateView):
@@ -21,7 +26,6 @@ class InvoiceCreateView(CreateView):
 
 
 class InvoiceListView(TemplateView):
-    #model = Invoice
     template_name = 'invoices/list.html'
 
 
@@ -85,7 +89,6 @@ class InvoiceSnailMailUpdateView(UpdateView):
         return reverse('invoices:list')
 
 
-
 class InvoiceDuplicateView(RedirectView):
     permanent = False
     query_string = True
@@ -95,3 +98,46 @@ class InvoiceDuplicateView(RedirectView):
         source = get_object_or_404(Invoice, pk=kwargs['pk'])
         duplicata = source.duplicate()
         return duplicata.get_edit_url()
+
+
+class InvoiceSendMailView(SingleObjectMixin, FormView):
+    """
+    GET: Form with mail text and invoice as PDF
+    POST: send
+    """
+    model = Invoice
+    form_class = EmailForm
+    template_name = 'invoices/send.html'
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests: instantiate a blank version of the form."""
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('invoices:list')
+
+    def form_valid(self, form):
+        invoice = self.get_object()
+        email = EmailMessage(
+            subject=form.cleaned_data.get('subject'),
+            body=form.cleaned_data.get('message'),
+            from_email=invoice.company.from_email,
+            to=[invoice.client.full_contact_email]
+        )
+        email.attach_file(invoice.pdf.path, 'application/pdf')
+        email.send()
+        invoice.set_sent()
+        messages.info(self.request,
+                      message=_("Your invoice has been sent to %(email)s") % {'email': invoice.client.contact_email})
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_initial(self):
+        invoice = self.get_object()
+        current_lang = get_language()
+        activate(invoice.client.language)
+        initial = super().get_initial()
+        initial['subject'] = render_to_string('invoices/mail_subject.txt', {'invoice': invoice})
+        initial['message'] = render_to_string('invoices/mail_message.txt', {'invoice': invoice})
+        activate(current_lang)
+        return initial
