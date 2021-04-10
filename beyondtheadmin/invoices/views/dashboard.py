@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -15,7 +16,7 @@ from ..models import Invoice
 from ..forms import BaseInvoiceForm, EmailForm, InvoiceEditForm, InvoiceStatusForm
 
 
-class InvoiceCreateView(CreateView):
+class InvoiceCreateView(LoginRequiredMixin, CreateView):
     model = Invoice
     template_name = 'invoices/create.html'
     form_class = BaseInvoiceForm
@@ -25,11 +26,11 @@ class InvoiceCreateView(CreateView):
         return self.object.get_edit_url()
 
 
-class InvoiceListView(TemplateView):
+class InvoiceListView(LoginRequiredMixin, TemplateView):
     template_name = 'invoices/list.html'
 
 
-class InvoiceUpdateView(UpdateView):
+class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = 'invoices/update.html'
     form_class = InvoiceEditForm
@@ -47,7 +48,7 @@ class InvoiceUpdateView(UpdateView):
         }
 
 
-class InvoiceCancelView(UpdateView):
+class InvoiceCancelView(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = 'invoices/confirm_cancel.html'
     form_class = InvoiceStatusForm
@@ -61,7 +62,7 @@ class InvoiceCancelView(UpdateView):
         return reverse('invoices:list')
 
 
-class InvoiceMarkPaidView(UpdateView):
+class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = 'invoices/confirm_paid.html'
     form_class = InvoiceStatusForm
@@ -75,7 +76,7 @@ class InvoiceMarkPaidView(UpdateView):
         return reverse('invoices:list')
 
 
-class InvoiceSnailMailUpdateView(UpdateView):
+class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = 'invoices/confirm_print.html'
     form_class = InvoiceStatusForm
@@ -89,7 +90,7 @@ class InvoiceSnailMailUpdateView(UpdateView):
         return reverse('invoices:list')
 
 
-class InvoiceDuplicateView(RedirectView):
+class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = 'pk'
@@ -100,7 +101,7 @@ class InvoiceDuplicateView(RedirectView):
         return duplicata.get_edit_url()
 
 
-class InvoiceSendMailView(SingleObjectMixin, FormView):
+class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
     """
     GET: Form with mail text and invoice as PDF
     POST: send
