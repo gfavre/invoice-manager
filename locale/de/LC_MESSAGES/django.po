@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-10 06:15+0200\n"
-"PO-Revision-Date: 2021-04-05 05:05+0200\n"
+"POT-Creation-Date: 2021-04-10 06:50+0200\n"
+"PO-Revision-Date: 2021-04-10 06:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -78,17 +78,17 @@ msgstr "Verzug in Tagen bis zur Fälligkeit"
 msgid "VAT rate"
 msgstr "MwSt.-Satz"
 
+#: beyondtheadmin/clients/models.py:25
+msgid "Default hourly rate"
+msgstr "Standard-Stundensatz"
+
 #: beyondtheadmin/clients/models.py:27
-#, fuzzy
-#| msgid "Contact name"
 msgid "Contact first name"
-msgstr "Kontakt Name"
+msgstr "Kontakt Vorname"
 
 #: beyondtheadmin/clients/models.py:28
-#, fuzzy
-#| msgid "Contact name"
 msgid "Contact last name"
-msgstr "Kontakt Name"
+msgstr "Kontakt Nachname"
 
 #: beyondtheadmin/clients/models.py:30
 msgid "Contact email"
@@ -223,13 +223,11 @@ msgstr "Unterschrift als Bild"
 
 #: beyondtheadmin/companies/models.py:35
 msgid "Email signature"
-msgstr ""
+msgstr "E-Mail-Signatur"
 
 #: beyondtheadmin/companies/models.py:36
-#, fuzzy
-#| msgid "Contact email"
 msgid "From email"
-msgstr "Kontakt E-Mail"
+msgstr "E-Mailadresse des Absenders"
 
 #: beyondtheadmin/companies/models.py:42
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:6
@@ -373,12 +371,12 @@ msgstr "Version von PDF"
 msgid "QR Bill"
 msgstr "QR-Rechnung"
 
-#: beyondtheadmin/invoices/models.py:196
+#: beyondtheadmin/invoices/models.py:201
 #: beyondtheadmin/invoices/templates/invoices/update.html:57
 msgid "Hour"
 msgstr "Stunde"
 
-#: beyondtheadmin/invoices/models.py:197
+#: beyondtheadmin/invoices/models.py:202
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
 msgstr "Nummer"
@@ -452,6 +450,7 @@ msgid "Mark as sent"
 msgstr "Als gesendet markieren"
 
 #: beyondtheadmin/invoices/templates/invoices/detail.html:191
+#: beyondtheadmin/invoices/templates/invoices/send.html:44
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -530,48 +529,53 @@ msgid ""
 "Best regards,\n"
 "%(your_name)s\n"
 msgstr ""
+"Sehr geehrte %(contact_first_name)s,\n"
+"\n"
+"Ich hoffe, es geht Ihnen gut. Bitte sehen Sie die beigefügte Rechnung "
+"%(invoice_nb)s. Die Rechnung ist fällig bis %(due_date)s.\n"
+"\n"
+"Bitte zögern Sie nicht, sich zu melden, wenn Sie Fragen haben oder etwas "
+"klären möchten.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"%(your_name)s\n"
 
 #: beyondtheadmin/invoices/templates/invoices/mail_subject.txt:1
-#, fuzzy, python-format
-#| msgid "Invoice: %(invoice)s"
+#, python-format
 msgid "Invoice %(invoice_nb)s from %(company)s"
-msgstr "Rechnung: %(invoice)s"
+msgstr "Rechnung %(invoice_nb)s von %(company)s"
 
 #: beyondtheadmin/invoices/templates/invoices/send.html:14
-#, fuzzy
-#| msgid "Send Invoice"
 msgid "Send invoice"
 msgstr "Rechnung senden"
 
-#: beyondtheadmin/invoices/templates/invoices/send.html:28
-#, fuzzy, python-format
-#| msgid ""
-#| "Please confirm you want to cancel invoice %(invoice)s (%(amount)s) for "
-#| "%(client)s."
+#: beyondtheadmin/invoices/templates/invoices/send.html:26
+#, python-format
 msgid ""
 "Please confirm you\n"
 "            want to send invoice %(invoice)s (%(amount)s) to %(client)s."
 msgstr ""
-"Bitte bestätigen Sie, dass Sie die Rechnung %(invoice)s (%(amount)s) für "
-"%(client)s stornieren möchten."
+"Bitte bestätigen Sie, dass Sie\n"
+"            die Rechnung %(invoice)s (%(amount)s) an %(client)s senden "
+"möchten."
 
-#: beyondtheadmin/invoices/templates/invoices/send.html:35
+#: beyondtheadmin/invoices/templates/invoices/send.html:33
 msgid "To"
-msgstr ""
+msgstr "Empfänger"
 
-#: beyondtheadmin/invoices/templates/invoices/send.html:43
+#: beyondtheadmin/invoices/templates/invoices/send.html:41
 msgid "Attachment"
-msgstr ""
+msgstr "Anhang"
 
 #: beyondtheadmin/invoices/templates/invoices/update.html:14
 #, python-format
 msgid "Invoice: %(invoice)s"
 msgstr "Rechnung: %(invoice)s"
 
-#: beyondtheadmin/invoices/views/dashboard.py:127
+#: beyondtheadmin/invoices/views/dashboard.py:133
 #, python-format
 msgid "Your invoice has been sent to %(email)s"
-msgstr ""
+msgstr "Ihre Rechnung wurde an %(email)s gesendet"
 
 #: beyondtheadmin/invoices/views/public.py:37
 msgid "Invoice does not exist"

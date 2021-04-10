@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-10 06:15+0200\n"
-"PO-Revision-Date: 2021-04-10 06:16+0200\n"
+"POT-Creation-Date: 2021-04-10 06:50+0200\n"
+"PO-Revision-Date: 2021-04-10 06:51+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -77,6 +77,10 @@ msgstr "Délai par défaut en jours jusqu'à la date d'échéance"
 #: beyondtheadmin/clients/models.py:24 beyondtheadmin/invoices/models.py:33
 msgid "VAT rate"
 msgstr "Taux de TVA"
+
+#: beyondtheadmin/clients/models.py:25
+msgid "Default hourly rate"
+msgstr "Tarif horaire par défaut"
 
 #: beyondtheadmin/clients/models.py:27
 msgid "Contact first name"
@@ -367,12 +371,12 @@ msgstr "Version du PDF"
 msgid "QR Bill"
 msgstr "QR Facture"
 
-#: beyondtheadmin/invoices/models.py:196
+#: beyondtheadmin/invoices/models.py:201
 #: beyondtheadmin/invoices/templates/invoices/update.html:57
 msgid "Hour"
 msgstr "Heure"
 
-#: beyondtheadmin/invoices/models.py:197
+#: beyondtheadmin/invoices/models.py:202
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
 msgstr "Nombre"
@@ -444,6 +448,7 @@ msgid "Mark as sent"
 msgstr "Marquer comme envoyé"
 
 #: beyondtheadmin/invoices/templates/invoices/detail.html:191
+#: beyondtheadmin/invoices/templates/invoices/send.html:44
 msgid "Invoice"
 msgstr "Facture"
 
@@ -542,7 +547,7 @@ msgstr "Facture %(invoice_nb)s de %(company)s"
 msgid "Send invoice"
 msgstr "Envoyer la facture"
 
-#: beyondtheadmin/invoices/templates/invoices/send.html:28
+#: beyondtheadmin/invoices/templates/invoices/send.html:26
 #, python-format
 msgid ""
 "Please confirm you\n"
@@ -551,11 +556,11 @@ msgstr ""
 "Veuillez confirmer que vous\n"
 "            voulez envoyer la facture %(invoice)s (%(amount)s) à %(client)s."
 
-#: beyondtheadmin/invoices/templates/invoices/send.html:35
+#: beyondtheadmin/invoices/templates/invoices/send.html:33
 msgid "To"
 msgstr "Destinataire"
 
-#: beyondtheadmin/invoices/templates/invoices/send.html:43
+#: beyondtheadmin/invoices/templates/invoices/send.html:41
 msgid "Attachment"
 msgstr "Pièce jointe"
 
@@ -564,7 +569,7 @@ msgstr "Pièce jointe"
 msgid "Invoice: %(invoice)s"
 msgstr "Facture: %(invoice)s"
 
-#: beyondtheadmin/invoices/views/dashboard.py:127
+#: beyondtheadmin/invoices/views/dashboard.py:133
 #, python-format
 msgid "Your invoice has been sent to %(email)s"
 msgstr "Votre facture a été envoyée à %(email)s"
