@@ -50,8 +50,10 @@ class Client(UUIDModel):
 
     @property
     def last_invoice_date(self):
-        return self.invoices.order_by('displayed_date').last().displayed_date
-
+        last_invoice = self.invoices.order_by('displayed_date').last()
+        if last_invoice:
+            return last_invoice.displayed_date
+        return None
 
     def get_absolute_url(self):
         return reverse_lazy('clients:update', kwargs={'pk': self.pk})
