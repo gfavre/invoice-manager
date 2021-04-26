@@ -45,6 +45,9 @@ class Invoice(UUIDModel, StatusModel):
 
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
 
+    class Meta:
+        order = ('created',)
+
     def __str__(self):
         return self.code
 
@@ -202,6 +205,9 @@ class InvoiceLine(UUIDModel):
         ('nb', _("Number"))
     ))
     price_per_unit = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        ordering = ('created', )
 
     @property
     def is_hours(self):
