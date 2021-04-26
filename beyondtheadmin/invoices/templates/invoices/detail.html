@@ -222,7 +222,7 @@
         <section class="col-6" id="customer-address">
           <address>
             {{ invoice.client.name }}<br>
-            {{ invoice.client.address }}<br>
+            {{ invoice.client.address | linebreaksbr }}<br>
             {{ invoice.client.country.code }} - {{ invoice.client.zip_code }} {{ invoice.client.city }}
           </address>
           <p>{% blocktrans with place=invoice.company.city date=invoice.displayed_date|date %}{{ place }},
