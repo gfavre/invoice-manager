@@ -73,7 +73,7 @@
       {% for client in client_list %}
         <tr>
           <td>{{ client }}</td>
-          <td>{{ client.last_invoice_date|default: "n/a" }}</td>
+          <td>{{ client.last_invoice_date|default:"n/a" }}</td>
           <td>
             <ul class="list-unstyled">
               <li><a href="{{ client.get_update_url }}" class="btn btn-sm"><i class="bi bi-pencil"></i>  {% trans "Edit" %}</a></li>
