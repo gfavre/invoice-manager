@@ -81,6 +81,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "crispy_forms",
     "django_celery_beat",
+    'django_countries',
     'localflavor',
     'phonenumber_field',
     "rest_framework",
@@ -341,3 +342,6 @@ PHONENUMBER_DEFAULT_REGION = 'CH'
 PHANTOMJSCLOUD_APIKEY = env('PHANTOMJSCLOUD_APIKEY')
 PHANTOMJSCLOUD_API_URL = 'https://PhantomJsCloud.com/api/browser/v2/{}/'.format(PHANTOMJSCLOUD_APIKEY)
 
+COUNTRIES_FIRST = ('CH',)
+COUNTRIES_FIRST_REPEAT = True
+COUNTRIES_FIRST_BREAK = '---'

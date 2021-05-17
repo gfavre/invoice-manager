@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Layout, Fieldset, ButtonHolder, Row, Submit
 
@@ -63,7 +64,7 @@ class ClientForm(ModelForm):
 
             ),
             ButtonHolder(
-                Submit('submit', 'Submit', css_class='button white')
+                Submit('submit', _("Save"), css_class='button white')
             )
         )
 

@@ -34,8 +34,8 @@ class Client(UUIDModel):
                                                 help_text=_("Used to generate invoice code"),
                                                 default=0)
 
-    def __str__(self):
-        return self.name
+    class Meta:
+        ordering = ('name', 'country')
 
     @property
     def contact_fullname(self):
@@ -63,3 +63,6 @@ class Client(UUIDModel):
 
     def get_update_url(self):
         return self.get_absolute_url()
+
+    def __str__(self):
+        return self.name

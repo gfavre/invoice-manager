@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-10 06:50+0200\n"
+"POT-Creation-Date: 2021-05-17 15:56+0200\n"
 "PO-Revision-Date: 2021-04-10 06:51+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,16 +18,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: beyondtheadmin/clients/forms.py:21 beyondtheadmin/companies/models.py:41
+#: beyondtheadmin/clients/forms.py:22 beyondtheadmin/companies/models.py:41
 #: beyondtheadmin/invoices/models.py:27
 msgid "Company"
 msgstr "Société"
 
-#: beyondtheadmin/clients/forms.py:41
+#: beyondtheadmin/clients/forms.py:42
 msgid "Contact Person"
 msgstr "Personne de contact"
 
-#: beyondtheadmin/clients/forms.py:50
+#: beyondtheadmin/clients/forms.py:51
 #: beyondtheadmin/clients/templates/clients/list.html:4
 #: beyondtheadmin/companies/forms.py:66
 #: beyondtheadmin/invoices/templates/invoices/list.html:4
@@ -36,6 +36,11 @@ msgstr "Personne de contact"
 #: beyondtheadmin/templates/base.html:31
 msgid "Invoices"
 msgstr "Factures"
+
+#: beyondtheadmin/clients/forms.py:67 beyondtheadmin/invoices/forms.py:77
+#: beyondtheadmin/invoices/forms.py:95 beyondtheadmin/invoices/forms.py:114
+msgid "Save"
+msgstr "Enregistrer"
 
 #: beyondtheadmin/clients/models.py:13
 #: beyondtheadmin/clients/templates/clients/list.html:67
@@ -301,11 +306,6 @@ msgstr "Lignes"
 msgid "Add line"
 msgstr "Ajouter une ligne"
 
-#: beyondtheadmin/invoices/forms.py:77 beyondtheadmin/invoices/forms.py:95
-#: beyondtheadmin/invoices/forms.py:114
-msgid "Save"
-msgstr "Enregistrer"
-
 #: beyondtheadmin/invoices/models.py:21
 msgid "Draft"
 msgstr "Brouillon"
@@ -371,12 +371,12 @@ msgstr "Version du PDF"
 msgid "QR Bill"
 msgstr "QR Facture"
 
-#: beyondtheadmin/invoices/models.py:201
+#: beyondtheadmin/invoices/models.py:204
 #: beyondtheadmin/invoices/templates/invoices/update.html:57
 msgid "Hour"
 msgstr "Heure"
 
-#: beyondtheadmin/invoices/models.py:202
+#: beyondtheadmin/invoices/models.py:205
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
 msgstr "Nombre"
@@ -569,7 +569,7 @@ msgstr "Pièce jointe"
 msgid "Invoice: %(invoice)s"
 msgstr "Facture: %(invoice)s"
 
-#: beyondtheadmin/invoices/views/dashboard.py:133
+#: beyondtheadmin/invoices/views/dashboard.py:135
 #, python-format
 msgid "Your invoice has been sent to %(email)s"
 msgstr "Votre facture a été envoyée à %(email)s"
