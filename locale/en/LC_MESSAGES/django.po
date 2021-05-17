@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-17 15:56+0200\n"
+"POT-Creation-Date: 2021-05-17 16:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgid "Invoices"
 msgstr ""
 
 #: beyondtheadmin/clients/forms.py:67 beyondtheadmin/invoices/forms.py:77
-#: beyondtheadmin/invoices/forms.py:95 beyondtheadmin/invoices/forms.py:114
+#: beyondtheadmin/invoices/forms.py:95
 msgid "Save"
 msgstr ""
 
@@ -305,6 +305,12 @@ msgstr ""
 msgid "Add line"
 msgstr ""
 
+#: beyondtheadmin/invoices/forms.py:114
+#: beyondtheadmin/invoices/serializers.py:85
+#: beyondtheadmin/invoices/templates/invoices/detail.html:171
+msgid "Send"
+msgstr ""
+
 #: beyondtheadmin/invoices/models.py:21
 msgid "Draft"
 msgstr ""
@@ -378,11 +384,6 @@ msgstr ""
 #: beyondtheadmin/invoices/models.py:205
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
-msgstr ""
-
-#: beyondtheadmin/invoices/serializers.py:85
-#: beyondtheadmin/invoices/templates/invoices/detail.html:171
-msgid "Send"
 msgstr ""
 
 #: beyondtheadmin/invoices/serializers.py:90

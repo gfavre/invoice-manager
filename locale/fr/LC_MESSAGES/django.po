@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-17 15:56+0200\n"
+"POT-Creation-Date: 2021-05-17 16:22+0200\n"
 "PO-Revision-Date: 2021-04-10 06:51+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -38,7 +38,7 @@ msgid "Invoices"
 msgstr "Factures"
 
 #: beyondtheadmin/clients/forms.py:67 beyondtheadmin/invoices/forms.py:77
-#: beyondtheadmin/invoices/forms.py:95 beyondtheadmin/invoices/forms.py:114
+#: beyondtheadmin/invoices/forms.py:95
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -306,6 +306,12 @@ msgstr "Lignes"
 msgid "Add line"
 msgstr "Ajouter une ligne"
 
+#: beyondtheadmin/invoices/forms.py:114
+#: beyondtheadmin/invoices/serializers.py:85
+#: beyondtheadmin/invoices/templates/invoices/detail.html:171
+msgid "Send"
+msgstr "Envoyer"
+
 #: beyondtheadmin/invoices/models.py:21
 msgid "Draft"
 msgstr "Brouillon"
@@ -380,11 +386,6 @@ msgstr "Heure"
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
 msgstr "Nombre"
-
-#: beyondtheadmin/invoices/serializers.py:85
-#: beyondtheadmin/invoices/templates/invoices/detail.html:171
-msgid "Send"
-msgstr "Envoyer"
 
 #: beyondtheadmin/invoices/serializers.py:90
 msgid "Cancel"

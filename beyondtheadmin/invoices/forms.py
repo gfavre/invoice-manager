@@ -111,6 +111,6 @@ class EmailForm(forms.Form):
             'subject',
             'message',
             Div(
-                Submit('save', _("Save")),
+                Submit('save', _("Send")),
             ),
         )
