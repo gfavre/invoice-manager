@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-17 16:22+0200\n"
-"PO-Revision-Date: 2021-04-10 06:51+0200\n"
+"POT-Creation-Date: 2021-06-05 22:55+0200\n"
+"PO-Revision-Date: 2021-06-05 22:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.4.3\n"
 
 #: beyondtheadmin/clients/forms.py:22 beyondtheadmin/companies/models.py:41
 #: beyondtheadmin/invoices/models.py:27
@@ -146,21 +146,21 @@ msgid "Last invoice"
 msgstr "Dernière facture"
 
 #: beyondtheadmin/clients/templates/clients/list.html:69
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:59
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:75
 #: beyondtheadmin/invoices/templates/invoices/list.html:118
 msgid "Actions"
 msgstr "Actions"
 
 #: beyondtheadmin/clients/templates/clients/list.html:79
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:32
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:69
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:48
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:86
 #: beyondtheadmin/invoices/serializers.py:80
 #: beyondtheadmin/invoices/templates/invoices/detail.html:176
 msgid "Edit"
 msgstr "Éditer"
 
 #: beyondtheadmin/clients/templates/clients/list.html:80
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:34
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:50
 #: beyondtheadmin/invoices/templates/invoices/update.html:80
 msgid "Delete"
 msgstr "Supprimer"
@@ -235,7 +235,7 @@ msgid "From email"
 msgstr "Email de l’expéditeur"
 
 #: beyondtheadmin/companies/models.py:42
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:6
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:22
 msgid "Companies"
 msgstr "Entreprises"
 
@@ -243,30 +243,35 @@ msgstr "Entreprises"
 msgid "Create company"
 msgstr "Créer la compagnie"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:7
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:6
+#: beyondtheadmin/dashboard/views.py:54
+msgid "Earnings"
+msgstr "Revenus"
+
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:23
 msgid "Add company"
 msgstr "Ajouter une société"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:11
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:27
 msgid "You haven't defined a company yet. Please create at least one"
 msgstr ""
 "Vous n'avez pas encore défini une entreprise. Veuillez créer au moins une"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:48
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:64
 msgid "Latest invoices"
 msgstr "Dernières factures"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:50
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:66
 msgid "Add Invoice"
 msgstr "Ajouter une facture"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:56
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:72
 #: beyondtheadmin/invoices/models.py:30
 #: beyondtheadmin/invoices/templates/invoices/list.html:112
 msgid "Code"
 msgstr "Code"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:57
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:73
 #: beyondtheadmin/invoices/models.py:34
 #: beyondtheadmin/invoices/templates/invoices/detail.html:278
 #: beyondtheadmin/invoices/templates/invoices/list.html:117
@@ -274,22 +279,22 @@ msgstr "Code"
 msgid "Total"
 msgstr "Total"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:58
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:74
 #: beyondtheadmin/invoices/templates/invoices/list.html:116
 msgid "Status"
 msgstr "Statut"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:70
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:88
 #: beyondtheadmin/invoices/serializers.py:72
 msgid "Duplicate"
 msgstr "Dupliquer"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:71
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:90
 #: beyondtheadmin/invoices/serializers.py:67
 msgid "View"
 msgstr "Voir"
 
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:80
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:99
 #: beyondtheadmin/templates/base.html:38
 msgid "All invoices"
 msgstr "Toutes les factures"
