@@ -33,7 +33,6 @@ class Month(Func):
 
 class ProfitView(APIView):
     def get(self, request, format=None):
-        breakpoint()
         year = self.request.query_params.get('year', '')
         try:
             year = int(year)
