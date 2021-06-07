@@ -27,11 +27,11 @@ class Invoice(UUIDModel, StatusModel):
                                 null=True,  blank=False, verbose_name=_("Company"))
     client = models.ForeignKey('clients.Client', on_delete=models.PROTECT, related_name='invoices', null=False,
                                verbose_name=_("Client"))
-    code = models.CharField(_("Code"), max_length=30, editable=False, blank=True)
+    code = models.CharField(_("Code"), max_length=30, blank=True)
     due_date = models.DateField(_("Due date"), null=True, blank=False)
     displayed_date = models.DateField(_("Displayed date"), blank=True, null=True)
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
-    total = models.DecimalField(_("Total"), max_digits=6, decimal_places=2, default=0.0, blank=True, editable=False)
+    total = models.DecimalField(_("Total"), max_digits=7, decimal_places=2, default=0.0, blank=True, editable=False)
 
     title = models.CharField(_("Title"), max_length=100, blank=True)
     description = RichTextField(_("Description"), blank=True)
@@ -192,19 +192,18 @@ class Invoice(UUIDModel, StatusModel):
         self.save(update_fields=["status"])
 
 
-
 class InvoiceLine(UUIDModel):
     invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, related_name='lines')
 
     description = models.TextField()
     note = models.TextField(blank=True)
 
-    quantity = models.DecimalField(max_digits=5, decimal_places=2)
+    quantity = models.DecimalField(max_digits=7, decimal_places=2)
     unit = models.CharField(max_length=10, choices=Choices(
         ('h', _("Hour")),
         ('nb', _("Number"))
     ))
-    price_per_unit = models.DecimalField(max_digits=5, decimal_places=2)
+    price_per_unit = models.DecimalField(max_digits=7, decimal_places=2)
 
     class Meta:
         ordering = ('created', )
