@@ -23,4 +23,6 @@ class InvoiceAdmin(admin.ModelAdmin):
         'total',
         'qr_bill'
     )
+    list_display = ('code', 'total', 'displayed_date', 'due_date', 'status')
+
     inlines = [InvoiceLineInline]

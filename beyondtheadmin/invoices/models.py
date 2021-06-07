@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal, ROUND_UP
 from io import StringIO
 
@@ -52,12 +53,26 @@ class Invoice(UUIDModel, StatusModel):
         return self.code
 
     @property
+    def due_datetime(self):
+        if self.due_date:
+            return datetime.datetime(self.due_date.year, self.due_date.month, self.due_date.day)
+        return None
+
+    @property
     def is_draft(self):
         return self.status == self.STATUS.draft
 
     @property
     def is_sent(self):
         return self.status == self.STATUS.sent
+
+    @property
+    def is_paid(self):
+        return self.status == self.STATUS.paid
+
+    @property
+    def is_overdue(self):
+        return self.status == self.STATUS.sent and self.due_date < now().date()
 
     @property
     def latest_pdf_url(self):

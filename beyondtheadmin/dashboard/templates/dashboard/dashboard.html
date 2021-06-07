@@ -1,22 +1,37 @@
 {% extends 'base.html' %}
-{% load i18n switzerland %}
+{% load i18n switzerland humanize %}
 {% block content %}
   <section class="card shadow mb-4">
-  <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Earnings" %}</h6>
-                                </div>
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">{% trans "Earnings" %}</h6>
+    </div>
     <div class="row">
-    <div class="col-9">
-      <canvas id="earnings" style="position: relative; height: 15rem; width: 100%"></canvas>
-    </div>
-    <div class="col-3 align-middle" >
-      <div class="h5 font-weight-bold text-success text-uppercase mb-5">
-        <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span>  <i class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
+      <div class="col-9">
+        <canvas id="earnings" style="position: relative; height: 15rem; width: 100%"></canvas>
       </div>
-      <div id="yearly_total" class="h4 mb-0 font-weight-bold text-gray-800"></div>
-    </div>
+      <div class="col-3 align-middle text-center" >
+        <div class="h5 font-weight-bold text-primary text-uppercase mb-5 mt-5">
+          <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span>  <i class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
+        </div>
+        <div id="yearly_total" class="h3 mb-0 font-weight-bold text-gray-800"></div>
       </div>
+    </div>
   </section>
+
+  <section class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">{% trans "Open Invoices" %}</h6>
+    </div>
+    <div class="row">
+      <div class="col-9">
+        <canvas id="open-invoices" style="position: relative; height: 5rem; width: 100%"></canvas>
+      </div>
+      <div class="col-3 align-middle text-center" >
+        <div id="open-total" class="h3 mt-3 font-weight-bold text-gray-800"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
       {% trans "Companies" %}
@@ -69,25 +84,34 @@
         <table class="table">
           <thead>
           <tr>
-            <th>{% trans "Code" %}</th>
-            <th>{% trans "Total" %}</th>
-            <th>{% trans "Status" %}</th>
+            <th>{% trans "Client" %}<span class="d-none d-lg-inline">/ {% trans "Code" %}</span></th>
+            <th class="d-none d-sm-table-cell">{% trans "Due date" %}</th>
+            <th>{% trans "Amount" %}<span class="d-none d-lg-inline">/ {% trans "Status" %}</span></th>
             <th>{% trans "Actions" %}</th>
 
           </tr>
           </thead>
           {% for invoice in invoices %}
             <tr>
-              <td>{{ invoice.code }}</td>
-              <td>{{ invoice.total|money }}</td>
-              <td>{{ invoice.get_status_display }}</td>
+              <td class="border-left-{% if invoice.is_paid %}success{% elif invoice.is_overdue %}danger{% elif invoice.is_sent %}primary{% else %}secondary{% endif %}">
+                {{ invoice.client }}<br><small>{{ invoice.code }}</small>
+              </td>
+            <td class="d-none d-sm-table-cell">{{ invoice.due_date|date }}<br>
+              {% if invoice.due_date and not invoice.is_paid %}
+              <small class="d-none d-sm-inline">{{ invoice.due_datetime | naturaltime }}</small>
+              {% endif %}
+            </td>
+              <td>
+                {{ invoice.total|money }}<br>
+                <small>{{ invoice.get_status_display }}</small>
+              </td>
               <td>
                 <a href="{{ invoice.get_edit_url }}" class="btn btn-sm"><i
-                    class="icon bi-pencil"></i> {% trans "Edit" %}</a><br>
+                    class="icon bi-pencil"></i><span class="d-none d-lg-inline"> {% trans "Edit" %}</span></a><br>
                 <a href="{{ invoice.get_duplicate_url }}" class="btn btn-sm"><i
-                    class="icon bi-files"></i> {% trans "Duplicate" %}</a><br>
+                    class="icon bi-files"></i><span class="d-none d-lg-inline"> {% trans "Duplicate" %}</span></a><br>
                 <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm"><i
-                    class="icon bi-file-earmark-text"></i> {% trans "View" %}</a>
+                    class="icon bi-file-earmark-text"></i><span class="d-none d-lg-inline"> {% trans "View" %}</span></a>
               </td>
             </tr>
           {% endfor %}
@@ -111,7 +135,7 @@
 
 {% block javascript %}
   {{ block.super }}
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datasource@0.1.0"></script>
   <script>
     jQuery(document).ready(function ($) {
@@ -120,7 +144,7 @@
         headers: {"X-CSRFToken": "{{ csrf_token }}"}
       });
 
-      function number_format(number, decimals, dec_point, thousands_sep) {
+      let number_format = function (number, decimals, dec_point, thousands_sep) {
         // *     example: number_format(1234.56, 2, ',', ' ');
         // *     return: '1 234,56'
         number = (number + '').replace(',', '').replace(' ', '');
@@ -145,8 +169,9 @@
         return s.join(dec);
       }
 
-      let ctx = document.getElementById('earnings').getContext('2d');
       let updateEarnings = function (year) {
+              let ctx = document.getElementById('earnings').getContext('2d');
+
          $.ajax({
         url: "{% url 'api:earnings' %}",
         data: {'year': year },
@@ -241,12 +266,10 @@
             }
           });
         }
-
       })
-      }
+      };
 
-              const currentYear = new Date().getUTCFullYear();
-      console.log(currentYear)
+      const currentYear = new Date().getUTCFullYear();
 
       updateEarnings($('#revenue-year').text());
       $('#revenue-left').click(function (){
@@ -269,6 +292,105 @@
           $('#revenue-right').hide()
         }
       });
+
+
+      let updateOpenInvoices = function (){
+         let ctx = document.getElementById('open-invoices').getContext('2d');
+          $.ajax({
+            url: "{% url 'api:opened-invoices' %}",
+            type: 'get',
+            success: function (response) {
+              $('#open-total').text('CHF ' + number_format(response.total))
+              let chart = new Chart(ctx, {
+                    type: 'horizontalBar',
+
+                    data: {
+                      datasets: [
+                        {
+                          data: [response.waiting],
+                          label: "{% trans 'Waiting' %}",
+                           borderColor: 'rgba(78, 115, 223, 1)',
+                          borderWidth: 1,
+                          backgroundColor: 'rgba(78, 115, 223, 0.5)'
+                        },
+                        {
+                          data: [response.overdue],
+                          label: "{% trans 'Overdue' %}",
+                           borderColor: 'rgba(231,74,59,1)',
+                          borderWidth: 1,
+
+                          backgroundColor: 'rgba(231,74,59,0.5)'
+
+
+                        }
+                      ]
+                    },
+                    options: {
+                      legend: {
+                        display: false,
+                      },
+                      tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: true,
+                caretPadding: -10,
+        callbacks: {
+          label: function (tooltipItem, data){
+              let label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += 'CHF ' + number_format(tooltipItem.xLabel);
+
+                        return label
+          },
+          title: function (){return ''},
+        }
+      },
+
+                      scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                fontFamily: "Nunito, sans-serif",
+                                fontSize:11,
+                            },
+                            scaleLabel:{
+                                display:false
+                            },
+                            gridLines: {
+                            },
+                            stacked: true
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display:false,
+                                color: "#fff",
+                                zeroLineColor: "#fff",
+                                zeroLineWidth: 0
+                            },
+                            ticks: {
+                                fontFamily: "Nunito, sans-serif",
+                                fontSize:11,
+                            },
+                            stacked: true
+                        }]
+                    },
+                    }
+                  }
+              )
+            }
+          })
+      };
+
+      updateOpenInvoices()
+
 
     });
   </script>
