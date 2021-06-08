@@ -47,7 +47,7 @@ class Invoice(UUIDModel, StatusModel):
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
 
     class Meta:
-        ordering = ('displayed_date',)
+        ordering = ('due_date',)
 
     def __str__(self):
         return self.code
