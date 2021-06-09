@@ -9,9 +9,10 @@
       <div class="col-9">
         <canvas id="earnings" style="position: relative; height: 15rem; width: 100%"></canvas>
       </div>
-      <div class="col-3 align-middle text-center" >
+      <div class="col-3 align-middle text-center">
         <div class="h5 font-weight-bold text-primary text-uppercase mb-5 mt-5">
-          <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span>  <i class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
+          <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span> <i
+            class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
         </div>
         <div id="yearly_total" class="h3 mb-0 font-weight-bold text-gray-800"></div>
       </div>
@@ -26,7 +27,7 @@
       <div class="col-9">
         <canvas id="open-invoices" style="position: relative; height: 5rem; width: 100%"></canvas>
       </div>
-      <div class="col-3 align-middle text-center" >
+      <div class="col-3 align-middle text-center">
         <div id="open-total" class="h3 mt-3 font-weight-bold text-gray-800"></div>
       </div>
     </div>
@@ -77,8 +78,8 @@
     <section class="card card-header-actions mb-4">
       <header class="card-header ">
         {% trans "Latest invoices" %}
-        <a class="btn btn-sm btn-primary" type="button"
-           href="{% url 'invoices:create' %}">{% trans "Add Invoice" %}</a>
+        <a class="btn btn-sm btn-primary btn-primary-soft" type="button"
+           href="{% url 'invoices:create' %}">{% trans "New Invoice" %}</a>
       </header>
       <article class="card-body">
         <table class="table">
@@ -96,11 +97,11 @@
               <td class="border-left-{% if invoice.is_paid %}success{% elif invoice.is_overdue %}danger{% elif invoice.is_sent %}primary{% else %}secondary{% endif %}">
                 {{ invoice.client }}<br><small>{{ invoice.code }}</small>
               </td>
-            <td class="d-none d-sm-table-cell">{{ invoice.due_date|date }}<br>
-              {% if invoice.due_date and not invoice.is_paid %}
-              <small class="d-none d-sm-inline">{{ invoice.due_datetime | naturaltime }}</small>
-              {% endif %}
-            </td>
+              <td class="d-none d-sm-table-cell">{{ invoice.due_date|date }}<br>
+                {% if invoice.due_date and not invoice.is_paid %}
+                  <small class="d-none d-sm-inline">{{ invoice.due_datetime | naturaltime }}</small>
+                {% endif %}
+              </td>
               <td>
                 {{ invoice.total|money }}<br>
                 <small>{{ invoice.get_status_display }}</small>
@@ -111,7 +112,8 @@
                 <a href="{{ invoice.get_duplicate_url }}" class="btn btn-sm"><i
                     class="icon bi-files"></i><span class="d-none d-lg-inline"> {% trans "Duplicate" %}</span></a><br>
                 <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm"><i
-                    class="icon bi-file-earmark-text"></i><span class="d-none d-lg-inline"> {% trans "View" %}</span></a>
+                    class="icon bi-file-earmark-text"></i><span
+                    class="d-none d-lg-inline"> {% trans "View" %}</span></a>
               </td>
             </tr>
           {% endfor %}
@@ -149,14 +151,14 @@
         // *     return: '1 234,56'
         number = (number + '').replace(',', '').replace(' ', '');
         let n = !isFinite(+number) ? 0 : +number,
-          prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-          sep = (typeof thousands_sep === 'undefined') ? "'" : thousands_sep,
-          dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-          s = '',
-          toFixedFix = function(n, prec) {
-            let k = Math.pow(10, prec);
-            return '' + Math.round(n * k) / k;
-          };
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+            sep = (typeof thousands_sep === 'undefined') ? "'" : thousands_sep,
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+            s = '',
+            toFixedFix = function (n, prec) {
+              let k = Math.pow(10, prec);
+              return '' + Math.round(n * k) / k;
+            };
         // Fix for IE parseFloat(0.55).toFixed(0) = 0;
         s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
         if (s[0].length > 3) {
@@ -170,109 +172,109 @@
       }
 
       let updateEarnings = function (year) {
-              let ctx = document.getElementById('earnings').getContext('2d');
+        let ctx = document.getElementById('earnings').getContext('2d');
 
-         $.ajax({
-        url: "{% url 'api:earnings' %}",
-        data: {'year': year },
-        type: 'get',
-        success: function (response) {
-          $('#yearly_total').text('CHF ' + number_format(response.total))
-          let chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: response.monthly_sums.labels,
-              datasets: [{
-                label: response.monthly_sums.datasets[0].label,
-                data: response.monthly_sums.datasets[0].data,
-                lineTension: 0.3,
-                backgroundColor: "rgba(78, 115, 223, 0.05)",
-                borderColor: "rgba(78, 115, 223, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointBorderColor: "rgba(78, 115, 223, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-              }]
-            },
-            options: {
-              maintainAspectRatio: false,
-              layout: {
-                padding: {
-                  left: 10,
-                  right: 25,
-                  top: 25,
-                  bottom: 0
-                }
+        $.ajax({
+          url: "{% url 'api:earnings' %}",
+          data: {'year': year},
+          type: 'get',
+          success: function (response) {
+            $('#yearly_total').text('CHF ' + number_format(response.total))
+            let chart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: response.monthly_sums.labels,
+                datasets: [{
+                  label: response.monthly_sums.datasets[0].label,
+                  data: response.monthly_sums.datasets[0].data,
+                  lineTension: 0.3,
+                  backgroundColor: "rgba(78, 115, 223, 0.05)",
+                  borderColor: "rgba(78, 115, 223, 1)",
+                  pointRadius: 3,
+                  pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                  pointBorderColor: "rgba(78, 115, 223, 1)",
+                  pointHoverRadius: 3,
+                  pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                  pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                  pointHitRadius: 10,
+                  pointBorderWidth: 2,
+                }]
               },
-              scales: {
-                xAxes: [{
-                  time: {
-                    unit: 'date'
-                  },
-                  gridLines: {
-                    display: false,
-                    drawBorder: false
-                  },
-                  ticks: {
-                    maxTicksLimit: 7
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
                   }
-                }],
-                yAxes: [{
-                  ticks: {
-                    maxTicksLimit: 5,
-                    padding: 10,
-                    // Include a dollar sign in the ticks
-                    callback: function (value, index, values) {
-                      return 'CHF ' + number_format(value);
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'date'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 7
                     }
-                  },
-                  gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: false,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2]
-                  }
-                }],
-              },
-              legend: {
-                display: false
-              },
-              tooltips: {
-                backgroundColor: "rgb(255,255,255)",
-                bodyFontColor: "#858796",
-                titleMarginBottom: 10,
-                titleFontColor: '#6e707e',
-                titleFontSize: 14,
-                borderColor: '#dddfeb',
-                borderWidth: 1,
-                xPadding: 15,
-                yPadding: 15,
-                displayColors: false,
-                intersect: false,
-                mode: 'index',
-                caretPadding: 10,
-                callbacks: {
-                  label: function (tooltipItem, chart) {
-                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                    return datasetLabel + ': CHF ' + number_format(tooltipItem.yLabel);
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      maxTicksLimit: 5,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function (value, index, values) {
+                        return 'CHF ' + number_format(value);
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }],
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  intersect: false,
+                  mode: 'index',
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function (tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': CHF ' + number_format(tooltipItem.yLabel);
+                    }
                   }
                 }
               }
-            }
-          });
-        }
-      })
+            });
+          }
+        })
       };
 
       const currentYear = new Date().getUTCFullYear();
 
       updateEarnings($('#revenue-year').text());
-      $('#revenue-left').click(function (){
+      $('#revenue-left').click(function () {
         let newYear = parseInt($('#revenue-year').text()) - 1;
         updateEarnings(newYear);
         $('#revenue-year').text(newYear);
@@ -282,7 +284,7 @@
           $('#revenue-right').hide()
         }
       });
-      $('#revenue-right').click(function (){
+      $('#revenue-right').click(function () {
         let newYear = parseInt($('#revenue-year').text()) + 1;
         updateEarnings(newYear);
         $('#revenue-year').text(newYear);
@@ -294,99 +296,100 @@
       });
 
 
-      let updateOpenInvoices = function (){
-         let ctx = document.getElementById('open-invoices').getContext('2d');
-          $.ajax({
-            url: "{% url 'api:opened-invoices' %}",
-            type: 'get',
-            success: function (response) {
-              $('#open-total').text('CHF ' + number_format(response.total))
-              let chart = new Chart(ctx, {
-                    type: 'horizontalBar',
+      let updateOpenInvoices = function () {
+        let ctx = document.getElementById('open-invoices').getContext('2d');
+        $.ajax({
+          url: "{% url 'api:opened-invoices' %}",
+          type: 'get',
+          success: function (response) {
+            $('#open-total').text('CHF ' + number_format(response.total))
+            let chart = new Chart(ctx, {
+                  type: 'horizontalBar',
 
-                    data: {
-                      datasets: [
-                        {
-                          data: [response.waiting],
-                          label: "{% trans 'Waiting' %}",
-                           borderColor: 'rgba(78, 115, 223, 1)',
-                          borderWidth: 1,
-                          backgroundColor: 'rgba(78, 115, 223, 0.5)'
-                        },
-                        {
-                          data: [response.overdue],
-                          label: "{% trans 'Overdue' %}",
-                           borderColor: 'rgba(231,74,59,1)',
-                          borderWidth: 1,
-
-                          backgroundColor: 'rgba(231,74,59,0.5)'
-
-
-                        }
-                      ]
-                    },
-                    options: {
-                      legend: {
-                        display: false,
+                  data: {
+                    datasets: [
+                      {
+                        data: [response.waiting],
+                        label: "{% trans 'Waiting' %}",
+                        borderColor: 'rgba(78, 115, 223, 1)',
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(78, 115, 223, 0.5)'
                       },
-                      tooltips: {
-                        backgroundColor: "rgb(255,255,255)",
-                bodyFontColor: "#858796",
+                      {
+                        data: [response.overdue],
+                        label: "{% trans 'Overdue' %}",
+                        borderColor: 'rgba(231,74,59,1)',
+                        borderWidth: 1,
 
-                borderColor: '#dddfeb',
-                borderWidth: 1,
-                xPadding: 15,
-                yPadding: 15,
-                displayColors: true,
-                caretPadding: -10,
-        callbacks: {
-          label: function (tooltipItem, data){
-              let label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        backgroundColor: 'rgba(231,74,59,0.5)'
 
-                        if (label) {
-                            label += ': ';
-                        }
-                        label += 'CHF ' + number_format(tooltipItem.xLabel);
 
-                        return label
-          },
-          title: function (){return ''},
-        }
-      },
-
-                      scales: {
-                        xAxes: [{
-                            ticks: {
-                                beginAtZero:true,
-                                fontFamily: "Nunito, sans-serif",
-                                fontSize:11,
-                            },
-                            scaleLabel:{
-                                display:false
-                            },
-                            gridLines: {
-                            },
-                            stacked: true
-                        }],
-                        yAxes: [{
-                            gridLines: {
-                                display:false,
-                                color: "#fff",
-                                zeroLineColor: "#fff",
-                                zeroLineWidth: 0
-                            },
-                            ticks: {
-                                fontFamily: "Nunito, sans-serif",
-                                fontSize:11,
-                            },
-                            stacked: true
-                        }]
+                      }
+                    ]
+                  },
+                  options: {
+                    legend: {
+                      display: false,
                     },
-                    }
+                    tooltips: {
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: true,
+                      caretPadding: -10,
+                      callbacks: {
+                        label: function (tooltipItem, data) {
+                          let label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                          if (label) {
+                            label += ': ';
+                          }
+                          label += 'CHF ' + number_format(tooltipItem.xLabel);
+
+                          return label
+                        },
+                        title: function () {
+                          return ''
+                        },
+                      }
+                    },
+
+                    scales: {
+                      xAxes: [{
+                        ticks: {
+                          beginAtZero: true,
+                          fontFamily: "Nunito, sans-serif",
+                          fontSize: 11,
+                        },
+                        scaleLabel: {
+                          display: false
+                        },
+                        gridLines: {},
+                        stacked: true
+                      }],
+                      yAxes: [{
+                        gridLines: {
+                          display: false,
+                          color: "#fff",
+                          zeroLineColor: "#fff",
+                          zeroLineWidth: 0
+                        },
+                        ticks: {
+                          fontFamily: "Nunito, sans-serif",
+                          fontSize: 11,
+                        },
+                        stacked: true
+                      }]
+                    },
                   }
-              )
-            }
-          })
+                }
+            )
+          }
+        })
       };
 
       updateOpenInvoices()

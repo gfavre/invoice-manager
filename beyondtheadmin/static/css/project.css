@@ -811,4 +811,9 @@ fieldset h4 {
   font-family: bootstrap-icons !important;
 }
 
+.btn-primary-soft {
+  background-color: #dae7fb;
+  border-color: #dae7fb;
+}
+
 /*# sourceMappingURL=project.css.map */

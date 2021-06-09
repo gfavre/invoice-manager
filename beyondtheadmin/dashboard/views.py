@@ -22,7 +22,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['companies'] = Company.objects.all()
         context['company_form'] = CompanyForm()
 
-        context['invoices'] = Invoice.objects.all()
+        context['invoices'] = Invoice.objects.all()[:5]
         return context
 
 
