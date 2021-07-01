@@ -21,7 +21,8 @@ class InvoiceAdmin(admin.ModelAdmin):
         'description',
         'vat_rate',
         'total',
-        'qr_bill'
+        'qr_bill',
+        'pdf', 'pdf_version'
     )
     list_display = ('code', 'total', 'displayed_date', 'due_date', 'status')
 
