@@ -9,7 +9,7 @@ class InvoiceLineInline(admin.TabularInline):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    readonly_fields = ['status_changed', 'total']
+    readonly_fields = ['status_changed', 'total', 'pdf', 'pdf_version']
     fields = (
         ('status', 'status_changed'),
         ('company', 'client'),
