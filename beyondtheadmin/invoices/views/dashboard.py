@@ -126,8 +126,9 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
             from_email=invoice.company.from_email,
             to=[invoice.client.full_contact_email]
         )
-        if not invoice.pdf:
+        if not invoice.pdf or invoice.pdf_version != invoice.version:
             invoice.generate_pdf()
+
         email.attach_file(invoice.pdf.path, 'application/pdf')
         email.send()
         invoice.set_sent()

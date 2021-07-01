@@ -129,32 +129,14 @@ class Invoice(UUIDModel, StatusModel):
     def get_cancel_url(self):
         return reverse('invoices:cancel', kwargs={'pk': self.pk})
 
+    def get_code(self):
+        return '{}-{}'.format(self.client.slug, self.client.invoice_current_count + 1)
+
     def get_duplicate_url(self):
         return reverse('invoices:duplicate', kwargs={'pk': self.pk})
 
     def get_edit_url(self):
         return reverse('invoices:update', kwargs={'pk': self.pk})
-
-    def get_set_paid_url(self):
-        return reverse('invoices:mark_paid', kwargs={'pk': self.pk})
-
-    def get_send_url(self):
-        return reverse('invoices:send', kwargs={'pk': self.pk})
-
-    def get_qrbill_url(self):
-        return reverse('qrbill', kwargs={'pk': self.pk})
-
-    def get_snail_mail_url(self):
-        return reverse('invoices:mark_sent', kwargs={'pk': self.pk})
-
-    def get_vat(self):
-        return (self.subtotal * self.vat_rate).quantize(Decimal('.01'), rounding=ROUND_UP)
-
-    def get_total(self):
-        return self.subtotal + self.get_vat()
-
-    def get_code(self):
-        return '{}-{}'.format(self.client.slug, self.client.invoice_current_count + 1)
 
     def get_qrbill(self):
         if not self.due_date:
@@ -181,6 +163,24 @@ class Invoice(UUIDModel, StatusModel):
         qr_bill.head_font_info = {'font_size': '7.5pt', 'font_weight': '500'}
         qr_bill.proc_font_info = {'font_size': '7.5pt'}
         return qr_bill
+
+    def get_qrbill_url(self):
+        return reverse('qrbill', kwargs={'pk': self.pk})
+
+    def get_set_paid_url(self):
+        return reverse('invoices:mark_paid', kwargs={'pk': self.pk})
+
+    def get_send_url(self):
+        return reverse('invoices:send', kwargs={'pk': self.pk})
+
+    def get_snail_mail_url(self):
+        return reverse('invoices:mark_sent', kwargs={'pk': self.pk})
+
+    def get_total(self):
+        return self.subtotal + self.get_vat()
+
+    def get_vat(self):
+        return (self.subtotal * self.vat_rate).quantize(Decimal('.01'), rounding=ROUND_UP)
 
     def save(self, update_version=True, *args, **kwargs):
         super().save(*args, **kwargs)
