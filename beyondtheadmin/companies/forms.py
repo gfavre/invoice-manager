@@ -70,6 +70,7 @@ class CompanyForm(ModelForm):
                 'signature_image',
                 'email_signature',
                 'from_email',
+                'bcc_email',
                 css_class='border-left-primary shadow'
 
             ),

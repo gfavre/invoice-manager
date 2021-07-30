@@ -35,6 +35,9 @@ class Company(UUIDModel):
     email_signature = models.TextField(_("Email signature"), blank=True)
     from_email = models.CharField(_("From email"), max_length=255,
                                    default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1]))
+    bcc_email = models.EmailField(_("Copy of invoices"),
+                                  help_text=_("Email address that will receive every sent invoice in bcc"),
+                                  blank=True)
 
     class Meta:
         ordering = ('name', 'created')

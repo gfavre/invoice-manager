@@ -120,11 +120,15 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         invoice = self.get_object()
+        bcc = []
+        if invoice.company.bcc_email:
+            bcc.append(invoice.company.bcc_email)
         email = EmailMessage(
             subject=form.cleaned_data.get('subject'),
             body=form.cleaned_data.get('message'),
             from_email=invoice.company.from_email,
-            to=[invoice.client.full_contact_email]
+            to=[invoice.client.full_contact_email],
+            bcc=bcc
         )
         if not invoice.pdf or invoice.pdf_version != invoice.version:
             invoice.generate_pdf()
