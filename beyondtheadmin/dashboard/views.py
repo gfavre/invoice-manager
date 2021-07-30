@@ -36,7 +36,7 @@ class OpenedInvoicesView(APIView):
     def get(self, request, format=None):
         current_date = now()
         waiting_invoices = Invoice.sent.filter(due_date__gte=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
-        overdue_invoices = Invoice.sent.filter(due_date__lte=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
+        overdue_invoices = Invoice.sent.filter(due_date__lt=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
         return Response({
             'total': waiting_invoices + overdue_invoices,
             'waiting': waiting_invoices,
