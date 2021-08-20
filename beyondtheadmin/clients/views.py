@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -11,6 +12,11 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     form_class = ClientForm
     template_name = 'clients/create.html'
     success_url = reverse_lazy('clients:list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.users.add(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):

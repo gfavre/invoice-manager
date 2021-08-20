@@ -205,6 +205,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
+                "beyondtheadmin.dashboard.context_processors.add_companies_to_context",
                 "beyondtheadmin.utils.context_processors.settings_context",
             ],
         },

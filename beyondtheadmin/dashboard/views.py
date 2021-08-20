@@ -19,10 +19,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['companies'] = Company.objects.all()
+        context['companies'] = Company.objects.filter(users=self.request.user)
         context['company_form'] = CompanyForm()
 
-        context['invoices'] = Invoice.objects.order_by('-due_date')[:5]
+        context['invoices'] = Invoice.objects.filter(company__users=self.request.user).order_by('-due_date')[:5]
         return context
 
 
@@ -35,8 +35,8 @@ class Month(Func):
 class OpenedInvoicesView(APIView):
     def get(self, request, format=None):
         current_date = now()
-        waiting_invoices = Invoice.sent.filter(due_date__gte=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
-        overdue_invoices = Invoice.sent.filter(due_date__lt=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
+        waiting_invoices = Invoice.sent.filter(company__users=self.request.user, due_date__gte=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
+        overdue_invoices = Invoice.sent.filter(company__users=self.request.user, due_date__lt=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
         return Response({
             'total': waiting_invoices + overdue_invoices,
             'waiting': waiting_invoices,
@@ -53,7 +53,7 @@ class ProfitView(APIView):
             year = None
         if year is None:
             year = now().year
-        invoices = Invoice.objects.filter(displayed_date__year=year)\
+        invoices = Invoice.objects.filter(company__users=self.request.user, displayed_date__year=year)\
                                   .annotate(month=Month('displayed_date'))\
                                   .values('month')\
                                   .annotate(monthly_total=Sum('total'))\

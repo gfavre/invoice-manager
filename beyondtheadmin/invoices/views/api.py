@@ -11,7 +11,9 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
 
     def get_queryset(self):
-        return Invoice.objects.exclude(status=Invoice.STATUS.canceled).select_related('client', 'company')
+        return Invoice.objects.filter(company__users=self.request.user)\
+                              .exclude(status=Invoice.STATUS.canceled)\
+                              .select_related('client', 'company')
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -25,7 +27,8 @@ class InvoiceLineViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if 'invoice_pk' not in self.kwargs:
             raise Http404()
-        return InvoiceLine.objects.filter(invoice_id=self.kwargs['invoice_pk'])
+        return InvoiceLine.objects.filter(company__users=self.request.user,
+                                          invoice_id=self.kwargs['invoice_pk'])
 
     def perform_create(self, serializer):
         serializer.save(invoice_id=self.kwargs['invoice_pk'])

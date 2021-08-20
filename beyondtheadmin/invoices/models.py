@@ -15,6 +15,7 @@ from model_utils import Choices
 from qrbill.bill import QRBill
 
 from beyondtheadmin.utils.model_utils import UUIDModel
+from beyondtheadmin.companies.models import CompanyClient
 
 
 class Invoice(UUIDModel, StatusModel):
@@ -51,6 +52,11 @@ class Invoice(UUIDModel, StatusModel):
 
     def __str__(self):
         return self.code
+
+    @property
+    def company_client(self):
+        cc, __ = CompanyClient.objects.get_or_create(client=self.client, company=self.company)
+        return cc
 
     @property
     def due_datetime(self):
@@ -130,7 +136,7 @@ class Invoice(UUIDModel, StatusModel):
         return reverse('invoices:cancel', kwargs={'pk': self.pk})
 
     def get_code(self):
-        return '{}-{}'.format(self.client.slug, self.client.invoice_current_count + 1)
+        return '{}-{}'.format(self.client.slug, self.company_client.invoice_current_count + 1)
 
     def get_duplicate_url(self):
         return reverse('invoices:duplicate', kwargs={'pk': self.pk})
@@ -186,8 +192,8 @@ class Invoice(UUIDModel, StatusModel):
         super().save(*args, **kwargs)
         if not self.code:
             self.code = self.get_code()
-            self.client.invoice_current_count += 1
-            self.client.save()
+            self.company_client.invoice_current_count += 1
+            self.company_client.save()
         if not self.displayed_date:
             self.displayed_date = self.created
         if update_version:
