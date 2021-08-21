@@ -5,12 +5,20 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 from django_countries.fields import CountryField
+from model_utils import Choices
 
 from beyondtheadmin.utils.model_utils import UUIDModel
 
 
 class Client(UUIDModel):
-    name = models.CharField(_("Name"), max_length=255)
+    TYPES = Choices(('company', _("Company")), ('person', _("Person")))
+    client_type = models.CharField(_("Client type"), choices=TYPES, default=TYPES.company, max_length=10)
+
+    company_name = models.CharField(_("Name"), max_length=255, blank=True)
+
+    contact_first_name = models.CharField(_("Contact first name"), max_length=255, blank=True)
+    contact_last_name = models.CharField(_("Contact last name"), max_length=255, blank=True)
+
     address = models.TextField(_("Address"), blank=True)
     zip_code = models.CharField(_("Postal code"), max_length=10, blank=True)
     city = models.CharField(_("City"), max_length=255, blank=True)
@@ -23,10 +31,6 @@ class Client(UUIDModel):
     payment_delay_days = models.IntegerField(_("Payment delay"), help_text=_("Default delay in days to due date"), default=30)
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
     default_hourly_rate = models.DecimalField(_("Default hourly rate"), max_digits=5, decimal_places=2, default='0.00')
-
-    contact_first_name = models.CharField(_("Contact first name"), max_length=255, blank=True)
-    contact_last_name = models.CharField(_("Contact last name"), max_length=255, blank=True)
-
     contact_email = models.EmailField(_("Contact email"), blank=True)
 
     slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=10)
@@ -35,7 +39,7 @@ class Client(UUIDModel):
                                                 default=0)
 
     class Meta:
-        ordering = ('name', 'country')
+        ordering = ('company_name', 'contact_last_name', 'country')
 
     @property
     def contact_fullname(self):
@@ -65,4 +69,4 @@ class Client(UUIDModel):
         return self.get_absolute_url()
 
     def __str__(self):
-        return self.name
+        return self.client_type == self.TYPES.company and self.company_name or self.contact_fullname

@@ -2,6 +2,7 @@
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
+from crispy_forms.bootstrap import InlineRadios
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Layout, Fieldset, ButtonHolder, Row, Submit
 
@@ -19,10 +20,10 @@ class ClientForm(ModelForm):
         self.helper = FormHelper()
 
         self.helper.layout = Layout(
-
+            InlineRadios('client_type'),
             Fieldset(
                 _("Company"),
-                'name',
+                'company_name',
                 'address',
                 Row(
                     Column(
