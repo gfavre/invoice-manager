@@ -22,7 +22,7 @@ class Client(UUIDModel):
     address = models.TextField(_("Address"), blank=True)
     zip_code = models.CharField(_("Postal code"), max_length=10, blank=True)
     city = models.CharField(_("City"), max_length=255, blank=True)
-    country = CountryField(_("Country"), blank=True, null=True)
+    country = CountryField(_("Country"), blank=True, null=True, default='CH')
 
     language = models.CharField(_("Language"), max_length=2,
                                 choices=(('en', 'English'), ('de', 'Deutsch'), ('fr', 'Français'), ('it', 'Italiano')),
