@@ -39,6 +39,9 @@ class Company(UUIDModel):
     bcc_email = models.EmailField(_("Copy of invoices"),
                                   help_text=_("Email address that will receive every sent invoice in bcc"),
                                   blank=True)
+    thanks = models.TextField(
+        _("Thanks"), blank=True,
+        help_text=_("Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language"))
 
     class Meta:
         ordering = ('name', 'created')

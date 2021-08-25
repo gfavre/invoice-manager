@@ -31,6 +31,9 @@
         position: relative;
 
       }
+      a:link, a:visited, a:hover, a:active {
+        color: {{ invoice.company.contrast_color }};
+      }
 
       h1 {
         font-size: 36pt;
@@ -297,7 +300,7 @@
       {% if invoice.company.has_signature %}
         <section class="row">
           <div class="col-6">
-            {% trans "Thank you for your continued confidence." %}
+            {% if company.thanks %}{{ company.thanks }}{% else %}{% trans "Thank you for your continued confidence." %}{% endif %}
           </div>
           <div class="col-6" id="signature">
             {% if invoice.company.signature_image %}
