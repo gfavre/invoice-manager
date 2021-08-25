@@ -31,32 +31,32 @@
         position: relative;
 
       }
-      a:link, a:visited, a:hover, a:active {
+      .invoice a:link, .invoice a:visited, .invoice a:hover, .invoice a:active {
         color: {{ invoice.company.contrast_color }};
       }
 
-      h1 {
+      .invoice h1 {
         font-size: 36pt;
         font-weight: 100;
         margin-top: 5.5cm;
       }
 
-      h3 {
+      .invoice h3 {
         font-size: 14pt;
         font-weight: 500;
       }
 
-      dt, th {
+      .invoice dt, th {
         font-weight: 400;
       }
 
-      .table {
+      .invoice .table {
         font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 11pt;
         font-weight: 300;
       }
 
-      .table th {
+      .invoice .table th {
         background-color: {{ invoice.company.contrast_color }};
         color: white;
         border-right: 0.5px solid white;
@@ -65,28 +65,28 @@
 
       }
 
-      .table td {
+      .invoice .table td {
         padding: 4pt;
         line-height: 12pt;
       }
 
-      .table thead th {
+      .invoice .table thead th {
         text-align: center;
       }
 
-      .table td:first-child {
+      .invoice .table td:first-child {
         text-align: left;
       }
 
-      .table td, table tfoot th {
+      .invoice .table td, table tfoot th {
         text-align: right;
       }
 
-      .table tbody tr:nth-child(even) {
+      .invoice .table tbody tr:nth-child(even) {
         background-color: #f2f2f2;
       }
 
-      tfoot tr:first-child td {
+      .invoice tfoot tr:first-child td {
         border-top: 1px solid{{ invoice.company.contrast_color }};
       }
 
@@ -132,7 +132,7 @@
       }
 
 
-      abbr[title] {
+      .invoice abbr[title] {
         border-bottom: none !important;
         cursor: inherit !important;
         text-decoration: none !important;
@@ -188,7 +188,7 @@
 
 {% endblock %}
 
-<div class="container">
+<div class="container invoice">
   <div class="row">
     <div class="col-3" id="side">
       <h1>{% trans "Invoice" %}</h1>
