@@ -27,6 +27,8 @@ class InvoiceDetailView(DetailView):
         """output: filelike object"""
         from django.http import HttpResponseRedirect
         # noinspection PyUnresolvedReferences
+        if not self.object.pdf or self.object.pdf_version != self.object.version:
+            self.object.generate_pdf()
         return HttpResponseRedirect(self.object.latest_pdf_url)
 
 
