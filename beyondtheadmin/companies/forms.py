@@ -49,6 +49,7 @@ class CompanyForm(ModelForm):
             Fieldset(
                 _("Business"),
                 'vat_id',
+                'name_for_bank',
                 Row(
                     Column(
                         'bank',
