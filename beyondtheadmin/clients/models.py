@@ -42,6 +42,12 @@ class Client(UUIDModel):
         ordering = ('company_name', 'contact_last_name', 'country')
 
     @property
+    def name(self):
+        if self.is_company:
+            return self.company_name
+        return self.contact_fullname
+
+    @property
     def contact_fullname(self):
         if self.contact_last_name:
             return "{} {}".format(self.contact_first_name, self.contact_last_name)
@@ -53,11 +59,21 @@ class Client(UUIDModel):
             return "{} <{}>".format(self.contact_fullname, self.contact_email)
 
     @property
+    def is_company(self):
+        return self.client_type == self.TYPES.company
+
+    @property
+    def is_person(self):
+        return self.client_type == self.TYPES.person
+
+    @property
     def last_invoice_date(self):
         last_invoice = self.invoices.order_by('displayed_date').last()
         if last_invoice:
             return last_invoice.displayed_date
         return None
+
+
 
     def get_absolute_url(self):
         return reverse_lazy('clients:update', kwargs={'pk': self.pk})

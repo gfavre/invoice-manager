@@ -27,8 +27,7 @@ class InvoiceLineViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if 'invoice_pk' not in self.kwargs:
             raise Http404()
-        return InvoiceLine.objects.filter(company__users=self.request.user,
-                                          invoice_id=self.kwargs['invoice_pk'])
+        return InvoiceLine.objects.filter(invoice_id=self.kwargs['invoice_pk'])
 
     def perform_create(self, serializer):
         serializer.save(invoice_id=self.kwargs['invoice_pk'])
