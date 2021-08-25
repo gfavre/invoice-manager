@@ -24,6 +24,7 @@ class Company(UUIDModel):
     website = models.URLField(_("Web site"), blank=True)
     vat_id = models.CharField(_("VAT ID"), blank=True, max_length=20)
 
+    name_for_bank = models.CharField(_("Bank account name"), max_length=255, blank=True)
     bank = models.TextField(_("Bank"), blank=True)
     bic = BICField(_("BIC"), blank=True)
     iban = IBANField(_("IBAN"), blank=True)
@@ -52,6 +53,10 @@ class Company(UUIDModel):
         return self.name
 
     @property
+    def bank_account_name(self):
+        return self.name_for_bank or self.name
+
+    @property
     def delete_url(self):
         return reverse('companies:delete', kwargs={'pk': self.pk})
 
@@ -59,12 +64,14 @@ class Company(UUIDModel):
     def edit_url(self):
         return reverse('companies:update', kwargs={'pk': self.pk})
 
-    def get_absolute_url(self):
-        return self.edit_url
-
     @property
     def has_signature(self):
         return bool(self.signature_text or self.signature_image)
+
+    def get_absolute_url(self):
+        return self.edit_url
+
+
 
 
 class CompanyClient(TimeStampedModel):

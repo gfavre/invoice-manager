@@ -156,7 +156,7 @@ class Invoice(UUIDModel, StatusModel):
             },
             extra_infos=self.code,
             creditor={
-                'name': self.company.name, 'street': self.company.address,
+                'name': self.company.bank_account_name, 'street': self.company.address,
                 'pcode': self.company.zip_code, 'city': self.company.city,
                 'country': self.company.country.code,
             },

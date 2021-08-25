@@ -290,7 +290,7 @@
             {% trans "Bank details" %}
           </div>
           <div class="col-6">
-            {{ invoice.company }}, {{ invoice.company.zip_code }} {{ invoice.company.city }}<br>
+            {{ invoice.company.bank_account_name }}, {{ invoice.company.zip_code }} {{ invoice.company.city }}<br>
             {% if invoice.company.bank %}{{ invoice.company.bank }}<br>{% endif %}
             {% if invoice.company.bic %}BIC: {{ invoice.company.bic }}<br>{% endif %}
             {{ invoice.company.iban|iban }}
