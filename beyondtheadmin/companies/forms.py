@@ -71,6 +71,7 @@ class CompanyForm(ModelForm):
                 'email_signature',
                 'from_email',
                 'bcc_email',
+                'thanks',
                 css_class='border-left-primary shadow'
 
             ),
