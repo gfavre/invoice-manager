@@ -40,12 +40,14 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
+    # noinspection PyUnresolvedReferences
     def get_initial(self):
-        # noinspection PyUnresolvedReferences
-        return {
-            'due_date': now() + timedelta(days=self.object.client.payment_delay_days),
-            'vat_rate': self.object.client.vat_rate
-        }
+        initial = {}
+        if not self.object.due_date:
+            initial['due_date'] = now() + timedelta(days=self.object.client.payment_delay_days),
+        if not self.object.vat_rate:
+            initial['vat_rate'] = self.object.client.vat_rate
+        return initial
 
 
 class InvoiceCancelView(LoginRequiredMixin, UpdateView):
