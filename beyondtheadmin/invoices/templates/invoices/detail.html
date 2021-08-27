@@ -300,7 +300,7 @@
       {% if invoice.company.has_signature %}
         <section class="row">
           <div class="col-6">
-            {% if company.thanks %}{{ company.thanks }}{% else %}{% trans "Thank you for your continued confidence." %}{% endif %}
+            {% if invoice.company.thanks %}{{ invoice.company.thanks }}{% else %}{% trans "Thank you for your continued confidence." %}{% endif %}
           </div>
           <div class="col-6" id="signature">
             {% if invoice.company.signature_image %}
