@@ -242,4 +242,4 @@ class InvoiceLine(UUIDModel):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.invoice.save()
+        self.invoice.save(generate_code=False)
