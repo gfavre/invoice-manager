@@ -112,7 +112,7 @@ class Invoice(UUIDModel, StatusModel):
         self.pdf = None
         self.pdf_version = None
         self.qr_bill = None
-        self.save()
+        self.save(generate_code=False)
         assert(previous_pk != self.pk)
         for line in InvoiceLine.objects.filter(invoice_id=previous_pk):
             line.pk = None
@@ -164,10 +164,7 @@ class Invoice(UUIDModel, StatusModel):
             due_date=self.due_date.strftime('%Y-%m-%d'),
             amount=self.get_total(),
         )
-        #qr_bill.title_font_info = {'font_size': '11pt', 'font_weight': '500'}
-        #qr_bill.font_info = {'font_size': '8pt', 'font-weight': '300'}
-        #qr_bill.head_font_info = {'font_size': '7.5pt', 'font_weight': '500'}
-        #qr_bill.proc_font_info = {'font_size': '7.5pt'}
+
         return qr_bill
 
     def get_qrbill_url(self):
@@ -188,9 +185,9 @@ class Invoice(UUIDModel, StatusModel):
     def get_vat(self):
         return (self.subtotal * self.vat_rate).quantize(Decimal('.01'), rounding=ROUND_UP)
 
-    def save(self, update_version=True, *args, **kwargs):
+    def save(self, update_version=True, generate_code=True, *args, **kwargs):
         super().save(*args, **kwargs)
-        if not self.code:
+        if not self.code and generate_code:
             self.code = self.get_code()
             self.company_client.invoice_current_count += 1
             self.company_client.save()
