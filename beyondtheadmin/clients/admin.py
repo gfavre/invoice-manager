@@ -5,4 +5,5 @@ from .models import Client
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('client_type', )
+    list_display =('__str__', 'invoice_current_count')
