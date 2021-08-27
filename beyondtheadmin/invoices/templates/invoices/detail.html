@@ -94,7 +94,7 @@
       #company-address {
         position: absolute;
         top: 12.75cm;
-        font-size: 9pt;
+        font-size: 10pt;
       }
 
       #logo img {
@@ -227,7 +227,7 @@
           <a href="{{ invoice.company.website_url }}">{{ invoice.company.website_url }}</a><br>{% endif %}
         {% if invoice.company.vat_id %}<span>TVA:</span> <span itemprop="vatID">{{ invoice.company.vat_id }}</span>
           <br>{% endif %}
-        {% if invoice.company.iban %}<span>IBAN:</span> {{ invoice.company.iban|iban }}{% endif %}
+        {% if invoice.company.iban %}{{ invoice.company.iban|iban }}{% endif %}
 
       </div>
 
