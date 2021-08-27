@@ -27,9 +27,11 @@ PHANTOMJS_CONF = {
         }
     },
     'requestSettings': {
-        'waitInterval': 0,
+        'waitInterval': 400,
         'resourceTimeout': 2000,
-        'doneWhen': [{'event': "domReady"}]
+        'resourceWait': 2000,
+
+        'doneWhen': [{'event': "load"}]
     }
 }
 
