@@ -45,7 +45,7 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
         initial = {}
         if not self.object.due_date:
             initial['due_date'] = now() + timedelta(days=self.object.client.payment_delay_days),
-        if not self.object.vat_rate:
+        if self.object.vat_rate is None:
             initial['vat_rate'] = self.object.client.vat_rate
         return initial
 
