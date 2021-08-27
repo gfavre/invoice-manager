@@ -9,7 +9,7 @@ celery==4.4.6  # pyup: < 5.0,!=4.4.7  # https://github.com/celery/celery
 django-celery-beat==2.1.0  # https://github.com/celery/django-celery-beat
 django-timezone-field==4.0  # https://github.com/celery/django-celery-beat/pull/378
 flower==0.9.7  # https://github.com/mher/flower
-qrbill==0.5.2
+qrbill==0.6.1
 requests==2.25.1
 
 # Django

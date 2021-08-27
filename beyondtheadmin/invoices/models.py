@@ -164,10 +164,10 @@ class Invoice(UUIDModel, StatusModel):
             due_date=self.due_date.strftime('%Y-%m-%d'),
             amount=self.get_total(),
         )
-        qr_bill.title_font_info = {'font_size': '11pt', 'font_weight': '500'}
-        qr_bill.font_info = {'font_size': '8pt', 'font-weight': '300'}
-        qr_bill.head_font_info = {'font_size': '7.5pt', 'font_weight': '500'}
-        qr_bill.proc_font_info = {'font_size': '7.5pt'}
+        #qr_bill.title_font_info = {'font_size': '11pt', 'font_weight': '500'}
+        #qr_bill.font_info = {'font_size': '8pt', 'font-weight': '300'}
+        #qr_bill.head_font_info = {'font_size': '7.5pt', 'font_weight': '500'}
+        #qr_bill.proc_font_info = {'font_size': '7.5pt'}
         return qr_bill
 
     def get_qrbill_url(self):
@@ -202,7 +202,7 @@ class Invoice(UUIDModel, StatusModel):
             try:
                 qr_bill = self.get_qrbill()
                 qr_io = StringIO()
-                qr_bill.as_svg(qr_io)
+                qr_bill.as_svg(qr_io, full_page=False)
                 self.qr_bill = qr_io.getvalue()
             except ValueError:
                 pass
