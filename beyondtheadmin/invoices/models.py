@@ -47,6 +47,8 @@ class Invoice(UUIDModel, StatusModel):
 
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
 
+    _company_client = None
+
     class Meta:
         ordering = ('-due_date',)
 
@@ -55,8 +57,10 @@ class Invoice(UUIDModel, StatusModel):
 
     @property
     def company_client(self):
-        cc, __ = CompanyClient.objects.get_or_create(client=self.client, company=self.company)
-        return cc
+        if not self._company_client:
+            cc, __ = CompanyClient.objects.get_or_create(client=self.client, company=self.company)
+            self._company_client = cc
+        return self._company_client
 
     @property
     def due_datetime(self):
