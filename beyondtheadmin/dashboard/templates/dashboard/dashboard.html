@@ -82,11 +82,10 @@
            href="{% url 'invoices:create' %}">{% trans "New Invoice" %}</a>
       </header>
       <article class="card-body">
-        <table class="table">
-          <thead>
-          <tr>
+        <table class="table small">
+          <thead >
+          <tr class="d-none d-lg-table-row">
             <th>{% trans "Client" %}<span class="d-none d-lg-inline">/ {% trans "Code" %}</span></th>
-            <th class="d-none d-sm-table-cell">{% trans "Due date" %}</th>
             <th class="d-none d-sm-table-cell">{% trans "Due date" %}</th>
             <th>{% trans "Amount" %}<span class="d-none d-lg-inline">/ {% trans "Status" %}</span></th>
             <th>{% trans "Actions" %}</th>
@@ -96,7 +95,8 @@
           {% for invoice in invoices %}
             <tr>
               <td class="border-left-{% if invoice.is_paid %}success{% elif invoice.is_overdue %}danger{% elif invoice.is_sent %}primary{% else %}secondary{% endif %}">
-                {{ invoice.client }}<br><small>{{ invoice.code }}</small>
+                <span class="d-none d-lg-inline">{{ invoice.client }}<br></span>
+                {{ invoice.code }}
               </td>
               <td class="d-none d-sm-table-cell">{{ invoice.due_date|date }}<br>
                 {% if invoice.due_date and not invoice.is_paid %}
