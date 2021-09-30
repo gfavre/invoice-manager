@@ -6,15 +6,15 @@
       <h6 class="m-0 font-weight-bold text-primary">{% trans "Earnings" %}</h6>
     </div>
     <div class="row">
-      <div class="col-9">
+      <div class="col-lg-9">
         <canvas id="earnings" style="position: relative; height: 15rem; width: 100%"></canvas>
       </div>
-      <div class="col-3 align-middle text-center">
-        <div class="h5 font-weight-bold text-primary text-uppercase mb-5 mt-5">
+      <div class="col-lg-3 align-middle text-center">
+        <div class="h5 font-weight-bold text-primary text-uppercase mb-lg-5 mt-lg-5">
           <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span> <i
             class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
         </div>
-        <div id="yearly_total" class="h3 mb-0 font-weight-bold text-gray-800"></div>
+        <div id="yearly_total" class="h3  font-weight-bold text-gray-800"></div>
       </div>
     </div>
   </section>
@@ -24,10 +24,10 @@
       <h6 class="m-0 font-weight-bold text-primary">{% trans "Open Invoices" %}</h6>
     </div>
     <div class="row">
-      <div class="col-9">
+      <div class="col-lg-9">
         <canvas id="open-invoices" style="position: relative; height: 5rem; width: 100%"></canvas>
       </div>
-      <div class="col-3 align-middle text-center">
+      <div class="col-lg-3 align-middle text-center">
         <div id="open-total" class="h3 mt-3 font-weight-bold text-gray-800"></div>
       </div>
     </div>
