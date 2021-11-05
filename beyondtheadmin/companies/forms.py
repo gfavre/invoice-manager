@@ -77,7 +77,7 @@ class CompanyForm(ModelForm):
 
             ),
             ButtonHolder(
-                Submit('submit', 'Submit', css_class='button white')
+                Submit('submit', _("Save"), css_class='button white')
             )
         )
 

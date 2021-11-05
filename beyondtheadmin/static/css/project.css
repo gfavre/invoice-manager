@@ -579,6 +579,9 @@ a.badge-danger-soft:focus, a.badge-danger-soft.focus {
 .datatable {
   font-size: 0.85rem;
 }
+.datatable thead th {
+  border-top-width: 0;
+}
 
 @media (min-width: 768px) {
   .datatable {
@@ -814,6 +817,13 @@ fieldset h4 {
 .btn-primary-soft {
   background-color: #dae7fb;
   border-color: #dae7fb;
+}
+
+.bg-login-image {
+  background-image: url("../images/anne-nygard-OtqaCE_SEMI-unsplash.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /*# sourceMappingURL=project.css.map */

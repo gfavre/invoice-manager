@@ -105,3 +105,12 @@ fieldset {
   background-color: #dae7fb;
   border-color: #dae7fb;
 }
+
+.bg-login-image {
+  background-image: url("../images/anne-nygard-OtqaCE_SEMI-unsplash.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  //background-attachment: fixed;
+  //height: 100vh;
+}

@@ -65,8 +65,19 @@ class Company(UUIDModel):
         return reverse('companies:update', kwargs={'pk': self.pk})
 
     @property
+    def open_invoices_api_url(self):
+        return reverse('api:open-invoices-per-company', kwargs={'company_pk': self.pk})
+
+    @property
     def has_signature(self):
         return bool(self.signature_text or self.signature_image)
+
+    def open_invoices(self):
+        from beyondtheadmin.invoices.models import Invoice
+        return Invoice.visible.filter(company=self).select_related('client')
+
+    def latest_open_invoices(self):
+        return self.open_invoices().order_by('-due_date')[:5]
 
     def get_absolute_url(self):
         return self.edit_url
@@ -81,3 +92,9 @@ class CompanyClient(TimeStampedModel):
 
     def __str__(self):
         return f'{self.client} - {self.company}'
+
+    class Meta:
+        ordering = ('company', 'client')
+        unique_together = ('client', 'company')
+        verbose_name = _("Company client")
+        verbose_name_plural = _("Company clients")

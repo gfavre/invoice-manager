@@ -24,6 +24,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('', include(invoices_router.urls)),
     path('earnings', ProfitView.as_view(), name='earnings'),
-    path('opened-invoices', OpenedInvoicesView.as_view(), name='opened-invoices')
+    path('opened-invoices/<str:company_pk>', OpenedInvoicesView.as_view(), name='open-invoices-per-company'),
+    path('opened-invoices', OpenedInvoicesView.as_view(), name='open-invoices')
+
 ]
 

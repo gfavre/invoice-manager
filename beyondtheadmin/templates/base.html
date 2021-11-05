@@ -55,11 +55,17 @@
     {% for company in companies %}
       <li class="nav-item">
       <a class="nav-link" href="{{ company.get_absolute_url }}" >
-        <i class="bi bi-building"></i>
+        <i class="bi bi-journal"></i>
         <span>{{ company }}</span>
       </a>
     </li>
-        {% endfor %}
+    {% endfor %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'companies:create' %}" >
+        <i class="bi bi-journal-plus"></i>
+        <span>{% trans "Add company" %}</span>
+      </a>
+    </li>
 
       <!-- Divider -->
     <hr class="sidebar-divider">

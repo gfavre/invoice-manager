@@ -21,8 +21,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['companies'] = Company.objects.filter(users=self.request.user)
         context['company_form'] = CompanyForm()
-
-        context['invoices'] = Invoice.objects.filter(company__users=self.request.user).order_by('-due_date')[:5]
+        context['invoices'] = Invoice.objects.filter(company__users=self.request.user)\
+                                             .exclude(status__in=(Invoice.STATUS.canceled, Invoice.STATUS.draft)) \
+                                             .select_related('client', 'company')\
+                                             .order_by('-due_date')[:5]
         return context
 
 
@@ -33,10 +35,19 @@ class Month(Func):
 
 
 class OpenedInvoicesView(APIView):
-    def get(self, request, format=None):
+    def get(self, request, company_pk=None, format=None):
         current_date = now()
-        waiting_invoices = Invoice.sent.filter(company__users=self.request.user, due_date__gte=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
-        overdue_invoices = Invoice.sent.filter(company__users=self.request.user, due_date__lt=current_date).aggregate(total=Sum('total')).get('total', 0) or 0
+        waiting_invoices_qs = Invoice.sent.filter(due_date__gte=current_date)
+        overdue_invoices_qs = Invoice.sent.filter(due_date__lt=current_date)
+        try:
+            company_obj = Company.objects.get(pk=company_pk, users=request.user)
+            waiting_invoices_qs = waiting_invoices_qs.filter(company=company_obj)
+            overdue_invoices_qs = overdue_invoices_qs.filter(company=company_obj)
+        except (Company.DoesNotExist, ValueError):
+            waiting_invoices_qs = waiting_invoices_qs.filter(company__users=self.request.user)
+            overdue_invoices_qs = overdue_invoices_qs.filter(company__users=self.request.user)
+        waiting_invoices = waiting_invoices_qs.aggregate(total=Sum('total')).get('total', 0) or 0
+        overdue_invoices = overdue_invoices_qs.aggregate(total=Sum('total')).get('total', 0) or 0
         return Response({
             'total': waiting_invoices + overdue_invoices,
             'waiting': waiting_invoices,

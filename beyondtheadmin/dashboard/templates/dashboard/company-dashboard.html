@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load i18n switzerland humanize %}
+{% block content %}
+
+<section class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">{% trans "Open Invoices" %}</h6>
+  </div>
+  <div class="row">
+    <div class="col-lg-9">
+      <canvas id="open-invoices" style="position: relative; height: 5rem; width: 100%"></canvas>
+    </div>
+    <div class="col-lg-3 align-middle text-center">
+      <div id="open-total" class="h3 mt-3 font-weight-bold text-gray-800"></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">{% trans "Earnings" %}</h6>
+    </div>
+    <div class="row">
+      <div class="col-lg-9">
+        <canvas id="earnings" style="position: relative; height: 15rem; width: 100%"></canvas>
+      </div>
+      <div class="col-lg-3 align-middle text-center">
+        <div class="h5 font-weight-bold text-primary text-uppercase mb-lg-5 mt-lg-5">
+          <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span> <i
+          class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
+        </div>
+        <div id="yearly_total" class="h3  font-weight-bold text-gray-800"></div>
+      </div>
+    </div>
+  </section>
+
+
+{% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datasource@0.1.0"></script>
+<script>
+jQuery(document).ready(function ($) {
+  $.ajaxSetup({
+    headers: {"X-CSRFToken": "{{ csrf_token }}"}
+  });
+  let number_format = function (number, decimals, dec_point, thousands_sep) {
+        // *     example: number_format(1234.56, 2, ',', ' ');
+        // *     return: '1 234,56'
+        number = (number + '').replace(',', '').replace(' ', '');
+        let n = !isFinite(+number) ? 0 : +number,
+          prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+          sep = (typeof thousands_sep === 'undefined') ? "'" : thousands_sep,
+          dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+          s = '',
+          toFixedFix = function (n, prec) {
+            let k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+          };
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+          s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+          s[1] = s[1] || '';
+          s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+      }
+
+  let updateEarnings = function (year) {
+    let ctx = document.getElementById('earnings').getContext('2d');
+    $.ajax({
+      url: "{% url 'api:earnings' %}",
+      data: {'year': year},
+      type: 'get',
+      success: function (response) {
+        $('#yearly_total').text('CHF ' + number_format(response.total))
+        let chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: response.monthly_sums.labels,
+            datasets: [{
+              label: response.monthly_sums.datasets[0].label,
+              data: response.monthly_sums.datasets[0].data,
+              lineTension: 0.3,
+              backgroundColor: "rgba(78, 115, 223, 0.05)",
+              borderColor: "rgba(78, 115, 223, 1)",
+              pointRadius: 3,
+              pointBackgroundColor: "rgba(78, 115, 223, 1)",
+              pointBorderColor: "rgba(78, 115, 223, 1)",
+              pointHoverRadius: 3,
+              pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+              pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+              pointHitRadius: 10,
+              pointBorderWidth: 2,
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                time: {
+                  unit: 'date'
+                },
+                gridLines: {
+                  display: false,
+                  drawBorder: false
+                },
+                ticks: {
+                  maxTicksLimit: 7
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  maxTicksLimit: 5,
+                  padding: 10,
+                  // Include a dollar sign in the ticks
+                  callback: function (value, index, values) {
+                    return 'CHF ' + number_format(value);
+                  }
+                },
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  borderDash: [2],
+                  zeroLineBorderDash: [2]
+                }
+              }],
+            },
+            legend: {
+              display: false
+            },
+            tooltips: {
+              backgroundColor: "rgb(255,255,255)",
+              bodyFontColor: "#858796",
+              titleMarginBottom: 10,
+              titleFontColor: '#6e707e',
+              titleFontSize: 14,
+              borderColor: '#dddfeb',
+              borderWidth: 1,
+              xPadding: 15,
+              yPadding: 15,
+              displayColors: false,
+              intersect: false,
+              mode: 'index',
+              caretPadding: 10,
+              callbacks: {
+                label: function (tooltipItem, chart) {
+                  var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                  return datasetLabel + ': CHF ' + number_format(tooltipItem.yLabel);
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  };
+
+  const currentYear = new Date().getUTCFullYear();
+
+  updateEarnings($('#revenue-year').text());
+
+  $('#revenue-left').click(function () {
+    let newYear = parseInt($('#revenue-year').text()) - 1;
+    updateEarnings(newYear);
+    $('#revenue-year').text(newYear);
+    if (newYear < currentYear) {
+      $('#revenue-right').show()
+    } else {
+      $('#revenue-right').hide()
+    }
+  });
+
+  $('#revenue-right').click(function () {
+    let newYear = parseInt($('#revenue-year').text()) + 1;
+    updateEarnings(newYear);
+    $('#revenue-year').text(newYear);
+    if (newYear < currentYear) {
+      $('#revenue-right').show()
+    } else {
+      $('#revenue-right').hide()
+    }
+  });
+});
+</script>
+{% endblock %}

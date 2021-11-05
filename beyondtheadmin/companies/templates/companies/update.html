@@ -11,6 +11,8 @@
           {% include "companies/form.html" %}
         </form>
     </article>
+   <a href="{{ company.delete_url }}" class="btn btn-sm btn-danger"><i
+              class="icon bi-trash"></i> {% trans "Delete" %}</a>
   </section>
 
 {% endblock content %}

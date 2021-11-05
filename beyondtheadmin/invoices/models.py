@@ -10,12 +10,18 @@ from django.utils.timezone import now
 
 from ckeditor.fields import RichTextField
 from dateutil.relativedelta import relativedelta
+from model_utils.managers import QueryManager
 from model_utils.models import StatusModel
 from model_utils import Choices
 from qrbill.bill import QRBill
 
 from beyondtheadmin.utils.model_utils import UUIDModel
 from beyondtheadmin.companies.models import CompanyClient
+
+
+class OpenInvoiceManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status__in=(Invoice.STATUS.sent, Invoice.STATUS.paid))
 
 
 class Invoice(UUIDModel, StatusModel):
@@ -48,6 +54,9 @@ class Invoice(UUIDModel, StatusModel):
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
 
     _company_client = None
+
+    objects = models.Manager()
+    visible = OpenInvoiceManager()
 
     class Meta:
         ordering = ('-due_date',)
@@ -208,6 +217,18 @@ class Invoice(UUIDModel, StatusModel):
             except ValueError:
                 pass
         super().save(*args, **kwargs)
+
+    def set_canceled(self):
+        self.status = self.STATUS.canceled
+        self.save(update_fields=["status"])
+
+    def set_draft(self):
+        self.status = self.STATUS.draft
+        self.save(update_fields=["status"])
+
+    def set_paid(self):
+        self.status = self.STATUS.paid
+        self.save(update_fields=["status"])
 
     def set_sent(self):
         self.status = self.STATUS.sent

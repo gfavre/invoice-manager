@@ -1,6 +1,9 @@
 
 .datatable {
   font-size: 0.85rem;
+  thead th {
+    border-top-width: 0;
+  }
 }
 @media (min-width: 768px) {
   .datatable {
