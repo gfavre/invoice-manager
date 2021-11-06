@@ -21,10 +21,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['companies'] = Company.objects.filter(users=self.request.user)
         context['company_form'] = CompanyForm()
-        context['invoices'] = Invoice.objects.filter(company__users=self.request.user)\
-                                             .exclude(status__in=(Invoice.STATUS.canceled, Invoice.STATUS.draft)) \
-                                             .select_related('client', 'company')\
-                                             .order_by('-due_date')[:5]
+
         return context
 
 

@@ -67,7 +67,7 @@
 
               </tr>
               </thead>
-              {% for invoice in company.open_invoices %}
+              {% for invoice in company.open_invoices|slice:":5" %}
                 <tr>
                   <td
                     class="border-left-{% if invoice.is_paid %}success{% elif invoice.is_overdue %}danger{% elif invoice.is_sent %}primary{% else %}secondary{% endif %}">
