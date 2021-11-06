@@ -87,16 +87,16 @@
                       <a href="{{ invoice.get_set_paid_url }}" class="btn btn-sm">
                         <i class="icon bi-credit-card"></i>
                         <span
-                          class="d-lg-none d-xl-inline">&nbsp;{% trans "Payment received" context "compact" %}</span>
+                          class="d-inline d-sm-none d-xl-inline">&nbsp;{% trans "Payment received" context "compact" %}</span>
                       </a><br>
                     {% endif %}
                     <a href="{{ invoice.get_duplicate_url }}" class="btn btn-sm">
                       <i class="icon bi-files"></i>
-                      <span class="d-lg-none d-xl-inline">&nbsp;{% trans "Duplicate" %}</span>
+                      <span class="d-inline d-sm-none d-xl-inline">&nbsp;{% trans "Duplicate" %}</span>
                     </a><br>
                     <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm">
                       <i class="icon bi-file-earmark-text"></i>
-                      <span class="d-lg-none d-xl-inline">&nbsp;{% trans "View" %}</span>
+                      <span class="d-inline d-sm-none d-xl-inline">&nbsp;{% trans "View" %}</span>
                     </a>
                   </td>
                 </tr>
@@ -123,74 +123,6 @@
     {% endfor %}
   </div>
 
-
-
-
-  {% if companies %}
-    <section class="card card-header-actions mb-4">
-      <header class="card-header ">
-        {% trans "Latest invoices" %}
-        <a class="btn btn-sm btn-primary btn-primary-soft" type="button"
-           href="{% url 'invoices:create' %}">{% trans "New Invoice" %}</a>
-      </header>
-      <article class="card-body">
-        <table class="table small">
-          <thead>
-          <tr class="d-none d-lg-table-row">
-            <th>{% trans "Client" %}<span class="d-none d-lg-inline">/ {% trans "Code" %}</span></th>
-            <th class="d-none d-sm-table-cell">{% trans "Due date" %}</th>
-            <th>{% trans "Amount" %}<span class="d-none d-lg-inline">/ {% trans "Status" %}</span></th>
-            <th>{% trans "Actions" %}</th>
-
-          </tr>
-          </thead>
-          {% for invoice in invoices %}
-            <tr>
-              <td
-                class="border-left-{% if invoice.is_paid %}success{% elif invoice.is_overdue %}danger{% elif invoice.is_sent %}primary{% else %}secondary{% endif %}">
-                <span class="d-none d-lg-inline">{{ invoice.client }}<br></span>
-                {{ invoice.code }}
-              </td>
-              <td class="d-none d-sm-table-cell">{{ invoice.due_date|date }}<br>
-                {% if invoice.due_date and not invoice.is_paid %}
-                  <small class="d-none d-sm-inline">{{ invoice.due_datetime | naturaltime }}</small>
-                {% endif %}
-              </td>
-              <td>
-                {{ invoice.total|money }}<br>
-                <small>{{ invoice.get_status_display }}</small>
-              </td>
-              <td>
-                {% if invoice.is_sent %}
-                  <a href="{{ invoice.get_set_paid_url }}" class="btn btn-sm">
-                    <i class="icon bi-credit-card"></i>
-                    <span class="d-none d-lg-inline">{% trans "Payment received" %}</span>
-                  </a><br>
-                {% endif %}
-                <a href="{{ invoice.get_duplicate_url }}" class="btn btn-sm"><i
-                  class="icon bi-files"></i><span class="d-none d-lg-inline"> {% trans "Duplicate" %}</span></a><br>
-                <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm"><i
-                  class="icon bi-file-earmark-text"></i><span
-                  class="d-none d-lg-inline"> {% trans "View" %}</span></a>
-              </td>
-            </tr>
-          {% endfor %}
-
-        </table>
-      </article>
-      <a class="card-footer" href="{% url 'invoices:list' %}">
-        <div class="d-flex align-items-center justify-content-between small text-body">
-          {% trans "All invoices" %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-               class="feather feather-arrow-right">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </div>
-      </a>
-    </section>
-  {% endif %}
 {% endblock content %}
 
 {% block javascript %}
