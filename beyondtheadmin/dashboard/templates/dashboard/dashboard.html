@@ -31,7 +31,7 @@
               class="icon bi-pencil"></i> {% trans "Edit" %}</a>
 
           </header>
-          <article class="card-body">
+          <article class="card-body p-2 p-sm-2">
             <div class="row mb-4">
               <div class="col">
                 <div class="small">{{ company.name }}</div>
@@ -48,14 +48,15 @@
             <hr/>
             <h5 class="h6">{% trans "Open invoices" %}</h5>
             <main class="row open-invoices" data-url="{{ company.open_invoices_api_url }}">
-              <div class="col-9 col-lg-8 col-xl-9">
+              <div class="col-6 col-sm-9 col-lg-8 col-xl-9">
                 <canvas style="position: relative; height: 3rem; width: 100%"></canvas>
               </div>
-              <div class="col-3 col-lg-4 col-xl-3 align-middle text-center">
+              <div class="col-6 col-sm-3 col-lg-4 col-xl-3 align-middle text-center">
                 <div class="open-total h5 m font-weight-bold text-gray-800"></div>
               </div>
             </main>
-
+          </article>
+          <article class="pl-0 pr-0 pl-sm-2 pr-sm-2">
             <table class="table small">
               <thead>
               <tr class="d-lg-none d-xl-table-row">
@@ -82,7 +83,7 @@
                     {{ invoice.total|money }}<br>
                     <small>{{ invoice.get_status_display }}</small>
                   </td>
-                  <td>
+                  <td class="text-nowrap">
                     {% if invoice.is_sent %}
                       <a href="{{ invoice.get_set_paid_url }}" class="btn btn-sm">
                         <i class="icon bi-credit-card"></i>
@@ -94,7 +95,7 @@
                       <i class="icon bi-files"></i>
                       <span class="d-inline d-sm-none d-xl-inline">&nbsp;{% trans "Duplicate" %}</span>
                     </a><br>
-                    <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm">
+                    <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm no-">
                       <i class="icon bi-file-earmark-text"></i>
                       <span class="d-inline d-sm-none d-xl-inline">&nbsp;{% trans "View" %}</span>
                     </a>
@@ -103,9 +104,8 @@
               {% endfor %}
 
             </table>
-
-
           </article>
+
           <a class="card-footer" href="{% url 'invoices:list' %}">
             <div class="d-flex align-items-center justify-content-between small text-body">
               {% trans "All invoices" %}
