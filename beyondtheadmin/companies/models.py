@@ -53,6 +53,10 @@ class Company(UUIDModel):
         return self.name
 
     @property
+    def all_invoices_api_url(self):
+        return reverse('api:company-invoices', kwargs={'company_pk': self.pk})
+
+    @property
     def bank_account_name(self):
         return self.name_for_bank or self.name
 
@@ -61,16 +65,35 @@ class Company(UUIDModel):
         return reverse('companies:delete', kwargs={'pk': self.pk})
 
     @property
+    def earnings_api_url(self):
+        return reverse('api:earnings-per-company', kwargs={'company_pk': self.pk})
+
+    @property
+    def detail_url(self):
+        return reverse('companies:detail', kwargs={'pk': self.pk})
+
+    @property
     def edit_url(self):
         return reverse('companies:update', kwargs={'pk': self.pk})
+
+    @property
+    def has_signature(self):
+        return bool(self.signature_text or self.signature_image)
 
     @property
     def open_invoices_api_url(self):
         return reverse('api:open-invoices-per-company', kwargs={'company_pk': self.pk})
 
     @property
-    def has_signature(self):
-        return bool(self.signature_text or self.signature_image)
+    def single_line_address(self):
+        output = []
+        if self.address:
+            output.append(self.address)
+        if self.zip_code:
+            output.append(f'{self.zip_code} {self.city}')
+        if self.country:
+            output.append(self.country.name)
+        return ', '.join(output)
 
     def open_invoices(self):
         from beyondtheadmin.invoices.models import Invoice
@@ -80,7 +103,7 @@ class Company(UUIDModel):
         return self.open_invoices().order_by('-due_date')[:5]
 
     def get_absolute_url(self):
-        return self.edit_url
+        return self.detail_url
 
 
 class CompanyClient(TimeStampedModel):

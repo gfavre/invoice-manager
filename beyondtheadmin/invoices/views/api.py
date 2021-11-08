@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.http import Http404
-from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
 
+from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from beyondtheadmin.companies.models import Company
 from ..models import Invoice, InvoiceLine
 from ..serializers import InvoiceSerializer, InvoiceListSerializer, InvoiceLineSerializer
 
@@ -19,6 +24,20 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return InvoiceListSerializer
         return self.serializer_class
+
+
+class CompanyInvoiceListView(APIView):
+    serializer_class = InvoiceListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, company_pk=None):
+        company_obj = get_object_or_404(Company, pk=company_pk, users=request.user)
+        invoices_qs = Invoice.objects.filter(company=company_obj).select_related('client')
+        context = {'request': request}
+        return Response(InvoiceListSerializer(invoices_qs, many=True, context=context).data)
+
+
+
 
 
 class InvoiceLineViewSet(viewsets.ModelViewSet):

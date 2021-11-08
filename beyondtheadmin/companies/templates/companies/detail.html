@@ -1,0 +1,471 @@
+{% extends 'base.html' %}
+{% load i18n switzerland humanize %}
+{% block content %}
+<header class="page-header page-header-dark bg-gradient-primary pb-10">
+  <div class="container-xl px-4">
+    <div class="page-header-content pt-4">
+      <div class="row align-items-center justify-content-between">
+        <div class="col-auto mt-4">
+          <h1 class="page-header-title">
+            <div class="page-header-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                   class="feather feather-activity">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+            {{ company.name }}
+          </h1>
+          <div class="page-header-subtitle">
+            {{ company.single_line_address }}
+            {% if company.vat_id %} - {{ company.vat_id }}{% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</header>
+<div class="row">
+  <div class="col-md-6 ">
+    <section class="card card-header-actions shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{% trans "Company infos" %}</h6>
+        <a href="{{ company.edit_url }}" class="btn btn-sm btn-primary"><i
+          class="icon bi-pencil"></i> {% trans "Edit" %}</a>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            {% if company.vat_id %}
+              <p>{{ company.vat_id }}</p>
+            {% endif %}
+            <address>
+              {{ company.name }}<br>
+              {{ company.address }}<br>
+              {{ company.zip_code }} {{ company.city }}<br>
+              {{ company.country.name }}
+            </address>
+            {{ company.phone|phone }}<br>
+            <a href="{{ company.website }}">{{ company.website }}</a><br>
+
+            <a href="mailto:{{ company.email }}">{{ company.email }}</a><br>
+
+            <hr>
+
+            {% if company.bank %}
+              {{ company.bank }}<br>
+            {% endif %}
+            {% if company.iban %}
+              {{ company.iban|iban }}<br>
+            {% endif %}
+
+          </div>
+          <div class="col">{% if company.logo %}<img src="{{ company.logo.url }}" width="200px;">{% endif %}</div>
+
+        </div>
+
+
+      </div>
+    </section>
+  </div>
+
+  <div class="col-md-6 ">
+    <section class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{% trans "Earnings" %}</h6>
+      </div>
+      <div class="row">
+        <div class="col-lg-9">
+          <canvas id="earnings" style="position: relative; height: 15rem; width: 100%"></canvas>
+        </div>
+        <div class="col-lg-3 align-middle text-center">
+          <div class="h5 font-weight-bold text-primary text-uppercase mb-lg-5 mt-lg-5">
+            <i class="bi bi-caret-left" id="revenue-left"></i> <span id="revenue-year">{% now "Y" %}</span> <i
+            class="bi bi-caret-right" id="revenue-right" style="display: none"></i>
+          </div>
+          <div id="yearly_total" class="h3  font-weight-bold text-gray-800"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="col-md-6">
+    <section class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">{% trans "Open Invoices" %}</h6>
+      </div>
+      <div class="row open-invoices" data-url="{{ company.open_invoices_api_url }}">
+        <div class="col-lg-9">
+          <canvas id="open-invoices" style="position: relative; height: 5rem; width: 100%"></canvas>
+        </div>
+        <div class="col-lg-3 align-middle text-center">
+          <div class="open-total h3 mt-3 font-weight-bold text-gray-800"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<section class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">{% trans "All Invoices" %}</h6>
+  </div>
+  <table class="table" id="invoices">
+      <thead>
+      <tr>
+        <th data-data="code" class="invoice-code">{% trans "Code" %}</th>
+        <th data-data="client" class="invoice-client">{% trans "Client" %}</th>
+        <th data-data="displayed_date" class="invoice-displayed_date">{% trans "Date" %}</th>
+        <th data-data="due_date" class="invoice-due_date">{% trans "Due date" %}</th>
+        <th data-data="status" class="invoice-status">{% trans "Status" %}</th>
+        <th data-data="total" class="invoice-total">{% trans "Total" %}</th>
+        <th data-data="actions" class="invoice-actions d-print-none">{% trans "Actions" %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+</section>
+
+
+
+
+{% endblock content %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datasource@0.1.0"></script>
+  <script>
+    jQuery(document).ready(function ($) {
+      $.ajaxSetup({
+        headers: {"X-CSRFToken": "{{ csrf_token }}"}
+      });
+      let number_format = function (number, decimals, dec_point, thousands_sep) {
+        // *     example: number_format(1234.56, 2, ',', ' ');
+        // *     return: '1 234,56'
+        number = (number + '').replace(',', '').replace(' ', '');
+        let n = !isFinite(+number) ? 0 : +number,
+          prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+          sep = (typeof thousands_sep === 'undefined') ? "'" : thousands_sep,
+          dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+          s = '',
+          toFixedFix = function (n, prec) {
+            let k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+          };
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+          s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+          s[1] = s[1] || '';
+          s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+      }
+
+      let updateEarnings = function (year) {
+        let ctx = document.getElementById('earnings').getContext('2d');
+        $.ajax({
+          url: "{{ company.earnings_api_url }}",
+          data: {'year': year},
+          type: 'get',
+          success: function (response) {
+            $('#yearly_total').text('CHF ' + number_format(response.total))
+            let chart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: response.monthly_sums.labels,
+                datasets: [{
+                  label: response.monthly_sums.datasets[0].label,
+                  data: response.monthly_sums.datasets[0].data,
+                  lineTension: 0.3,
+                  backgroundColor: "rgba(78, 115, 223, 0.05)",
+                  borderColor: "rgba(78, 115, 223, 1)",
+                  pointRadius: 3,
+                  pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                  pointBorderColor: "rgba(78, 115, 223, 1)",
+                  pointHoverRadius: 3,
+                  pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                  pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                  pointHitRadius: 10,
+                  pointBorderWidth: 2,
+                }]
+              },
+              options: {
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'date'
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 7
+                    }
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      maxTicksLimit: 5,
+                      padding: 10,
+                      // Include a dollar sign in the ticks
+                      callback: function (value, index, values) {
+                        return 'CHF ' + number_format(value);
+                      }
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2]
+                    }
+                  }],
+                },
+                legend: {
+                  display: false
+                },
+                tooltips: {
+                  backgroundColor: "rgb(255,255,255)",
+                  bodyFontColor: "#858796",
+                  titleMarginBottom: 10,
+                  titleFontColor: '#6e707e',
+                  titleFontSize: 14,
+                  borderColor: '#dddfeb',
+                  borderWidth: 1,
+                  xPadding: 15,
+                  yPadding: 15,
+                  displayColors: false,
+                  intersect: false,
+                  mode: 'index',
+                  caretPadding: 10,
+                  callbacks: {
+                    label: function (tooltipItem, chart) {
+                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                      return datasetLabel + ': CHF ' + number_format(tooltipItem.yLabel);
+                    }
+                  }
+                }
+              }
+            });
+          }
+        });
+      };
+
+      const currentYear = new Date().getUTCFullYear();
+
+      updateEarnings($('#revenue-year').text());
+
+      $('#revenue-left').click(function () {
+        let newYear = parseInt($('#revenue-year').text()) - 1;
+        updateEarnings(newYear);
+        $('#revenue-year').text(newYear);
+        if (newYear < currentYear) {
+          $('#revenue-right').show()
+        } else {
+          $('#revenue-right').hide()
+        }
+      });
+
+      $('#revenue-right').click(function () {
+        let newYear = parseInt($('#revenue-year').text()) + 1;
+        updateEarnings(newYear);
+        $('#revenue-year').text(newYear);
+        if (newYear < currentYear) {
+          $('#revenue-right').show()
+        } else {
+          $('#revenue-right').hide()
+        }
+      });
+
+      let updateOpenInvoices = function () {
+        $('.open-invoices').each(function () {
+          let url = $(this).data('url');
+          let $total = $('.open-total', $(this));
+          let ctx = $('canvas', this)[0].getContext('2d');
+          $.ajax({
+            url: url,
+            type: 'get',
+            success: function (response) {
+              $total.text('CHF ' + number_format(response.total))
+              let chart = new Chart(ctx, {
+                  type: 'horizontalBar',
+                  data: {
+                    datasets: [
+                      {
+                        data: [response.waiting],
+                        label: "{% trans 'Waiting' %}",
+                        borderColor: 'rgba(78, 115, 223, 1)',
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(78, 115, 223, 0.5)'
+                      },
+                      {
+                        data: [response.overdue],
+                        label: "{% trans 'Overdue' %}",
+                        borderColor: 'rgba(231,74,59,1)',
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(231,74,59,0.5)'
+                      }
+                    ]
+                  },
+                  options: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltips: {
+                      backgroundColor: "rgb(255,255,255)",
+                      bodyFontColor: "#858796",
+                      borderColor: '#dddfeb',
+                      borderWidth: 1,
+                      xPadding: 15,
+                      yPadding: 15,
+                      displayColors: true,
+                      caretPadding: -10,
+                      callbacks: {
+                        label: function (tooltipItem, data) {
+                          let label = data.datasets[tooltipItem.datasetIndex].label || '';
+                          if (label) {
+                            label += ': ';
+                          }
+                          label += 'CHF ' + number_format(tooltipItem.xLabel);
+                          return label
+                        },
+                        title: function () {
+                          return ''
+                        },
+                      }
+                    },
+                    scales: {
+                      xAxes: [{
+                        ticks: {
+                          beginAtZero: true,
+                          fontFamily: "Nunito, sans-serif",
+                          fontSize: 11,
+                        },
+                        scaleLabel: {
+                          display: false
+                        },
+                        gridLines: {},
+                        stacked: true
+                      }],
+                      yAxes: [{
+                        gridLines: {
+                          display: false,
+                          color: "#fff",
+                          zeroLineColor: "#fff",
+                          zeroLineWidth: 0
+                        },
+                        ticks: {
+                          fontFamily: "Nunito, sans-serif",
+                          fontSize: 11,
+                        },
+                        stacked: true
+                      }]
+                    },
+                  }
+                }
+              )
+            }
+          })
+
+        });
+      };
+      updateOpenInvoices()
+
+    });
+  </script>
+
+   <script type="text/javascript"
+          src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.23/b-1.6.5/b-html5-1.6.5/r-2.2.7/sc-2.0.3/sb-1.0.1/sp-1.2.2/sl-1.3.1/datatables.min.js"></script>
+  <script>
+    $(function () {
+      $.ajaxSetup({
+        headers: {"X-CSRFToken": "{{ csrf_token }}"}
+      });
+      let table = $("#invoices").DataTable({
+        "ajax": {
+          "url": "{{ company.all_invoices_api_url }}?format=datatables",
+          "headers": {"Accept-language": "{{ request.LANGUAGE_CODE }}"},
+          "rowId": 'id'
+        },
+        {% if LANGUAGE_CODE == 'fr' %}
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json"
+          },
+        {% elif LANGUAGE_CODE == 'de' %}
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/German.json"
+          },
+        {% endif %}
+
+        "columnDefs": [
+          {
+            "orderable": false,
+            "searchable": false,
+            "targets": [-1]
+          },
+          {
+            "render": function (data, type, row) {
+              let actions = row['actions'].flatMap(
+                  action => '<li><a href="' + action.url + '" class="btn btn-sm"><i class="' + action.icon_class + '"></i> ' + action.label + '</a></li>'
+              ).join('');
+              return '<ul class="list-unstyled">' + actions + '</ul>';
+            },
+            "className": "nobr",
+            "targets": 'invoice-actions'
+          },
+          {
+            "render": function (data, type, row) {
+              if (data) {
+                return '<a href="' + data.url + '">' + data.name + '</a>';
+              }
+            },
+            'targets': 'invoice-client'
+          },
+          {
+            "render": function (data, type, row) {
+              let css_class = 'badge-primary'
+              switch (data.value) {
+                case 'draft':
+                  css_class = 'badge-warning';
+                  break;
+                case 'sent':
+                  css_class = 'badge-secondary';
+                  break;
+                case 'paid':
+                  css_class = "badge-success";
+                  break;
+                case 'canceled':
+                  css_class = 'bg-dark'
+              }
+              return '<div class="badge ' + css_class + ' badge-pill">' + data.label + '</div>';
+            },
+            'targets': 'invoice-status'
+          },
+          {
+            "render": function (data, type, row) {
+              return new Intl.NumberFormat('fr-CH', {style: 'currency', currency: row.client.currency}).format(data)
+            },
+            'targets': 'invoice-total'
+          },
+        ],
+        "order": [[ 3, "desc" ]],
+        "lengthMenu": [10, 25, 50, 100]
+      });
+    });
+  </script>
+{% endblock %}

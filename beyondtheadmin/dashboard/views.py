@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import IntegerField, Sum, Func
+from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView
@@ -31,7 +32,7 @@ class Month(Func):
     output_field = IntegerField()
 
 
-class OpenedInvoicesView(APIView):
+class OpenInvoicesView(APIView):
     def get(self, request, company_pk=None, format=None):
         current_date = now()
         waiting_invoices_qs = Invoice.sent.filter(due_date__gte=current_date)
@@ -53,7 +54,8 @@ class OpenedInvoicesView(APIView):
 
 
 class ProfitView(APIView):
-    def get(self, request, format=None):
+    def get(self, request, company_pk, format=None):
+        company_obj = get_object_or_404(Company.objects.filter(users=request.user), pk=company_pk)
         year = self.request.query_params.get('year', '')
         try:
             year = int(year)
@@ -61,7 +63,7 @@ class ProfitView(APIView):
             year = None
         if year is None:
             year = now().year
-        invoices = Invoice.objects.filter(company__users=self.request.user, displayed_date__year=year)\
+        invoices = Invoice.objects.filter(company=company_obj, displayed_date__year=year)\
                                   .annotate(month=Month('displayed_date'))\
                                   .values('month')\
                                   .annotate(monthly_total=Sum('total'))\

@@ -6,7 +6,7 @@ from rest_framework_nested import routers
 
 from beyondtheadmin.users.api.views import UserViewSet
 import beyondtheadmin.invoices.views.api as invoices_views
-from beyondtheadmin.dashboard.views import ProfitView, OpenedInvoicesView
+from beyondtheadmin.dashboard.views import ProfitView, OpenInvoicesView
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -23,9 +23,10 @@ app_name = "api"
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(invoices_router.urls)),
-    path('earnings', ProfitView.as_view(), name='earnings'),
-    path('opened-invoices/<str:company_pk>', OpenedInvoicesView.as_view(), name='open-invoices-per-company'),
-    path('opened-invoices', OpenedInvoicesView.as_view(), name='open-invoices')
+    path('earnings/<uuid:company_pk>/', ProfitView.as_view(), name='earnings-per-company'),
+    path('open-invoices/<str:company_pk>', OpenInvoicesView.as_view(), name='open-invoices-per-company'),
+    path('open-invoices', OpenInvoicesView.as_view(), name='open-invoices'),
+    path('invoices/<str:company_pk>', invoices_views.CompanyInvoiceListView.as_view(), name='company-invoices'),
 
 ]
 

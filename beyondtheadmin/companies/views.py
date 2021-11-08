@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, CreateView, DeleteView
+from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
 
 from .forms import CompanyForm
 from .models import Company
@@ -27,6 +27,14 @@ class CompanyDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return super().get_queryset().filter(users=self.request.user)
+
+
+class CompanyDetailView(LoginRequiredMixin, DetailView):
+    model = Company
+    template_name = 'companies/detail.html'
+
+    def get_queryset(self):
+        return super(CompanyDetailView, self).get_queryset().filter(users=self.request.user).prefetch_related('invoices')
 
 
 class CompanyUpdateView(LoginRequiredMixin, UpdateView):

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from django.contrib.humanize.templatetags.humanize import naturalday
 from django.utils.translation import gettext as _
+
 from rest_framework import serializers
 
 from beyondtheadmin.clients.serializers import ClientSerializer
@@ -41,6 +43,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         return obj.get_api_url()
 
 
+# noinspection PyMethodMayBeStatic
 class InvoiceListSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
     url = serializers.HyperlinkedIdentityField(
@@ -49,13 +52,18 @@ class InvoiceListSerializer(serializers.ModelSerializer):
     )
     actions = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+    due_date_natural = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoice
-        fields = ('id', 'status', 'code', 'company', 'client', 'due_date', 'displayed_date',
+        fields = ('id', 'status', 'code', 'company', 'client',
+                  'due_date', 'due_date_natural', 'displayed_date',
                   'vat_rate',
                   'title', 'description', 'period_start', 'period_end',
                   'url', 'total', 'actions')
+
+    def get_due_date_natural(self, obj):
+        return  naturalday(obj.due_date)
 
     def get_url(self, obj):
         return obj.get_api_url()
