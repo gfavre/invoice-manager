@@ -72,6 +72,12 @@ class Invoice(UUIDModel, StatusModel):
         return self._company_client
 
     @property
+    def displayed_datetime(self):
+        if self.due_date:
+            return datetime.datetime(self.displayed_date.year, self.displayed_date.month, self.displayed_date.day)
+        return None
+
+    @property
     def due_datetime(self):
         if self.due_date:
             return datetime.datetime(self.due_date.year, self.due_date.month, self.due_date.day)

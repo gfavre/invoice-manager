@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.contrib.humanize.templatetags.humanize import naturalday
+import locale
+
+from django.contrib.humanize.templatetags.humanize import naturaltime, naturalday
 from django.utils.translation import gettext as _
 
 from rest_framework import serializers
@@ -52,18 +54,32 @@ class InvoiceListSerializer(serializers.ModelSerializer):
     )
     actions = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
-    due_date_natural = serializers.SerializerMethodField()
+    due_date = serializers.SerializerMethodField()
+    displayed_date = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoice
         fields = ('id', 'status', 'code', 'company', 'client',
-                  'due_date', 'due_date_natural', 'displayed_date',
+                  'due_date', 'displayed_date',
                   'vat_rate',
                   'title', 'description', 'period_start', 'period_end',
                   'url', 'total', 'actions')
 
-    def get_due_date_natural(self, obj):
-        return  naturalday(obj.due_date)
+    def get_due_date(self, obj):
+        locale.setlocale(locale.LC_ALL, '')
+        return {
+            'display': naturalday(obj.due_date),
+            'natural': naturaltime(obj.due_datetime),
+            'timestamp': obj.due_date
+        }
+
+    def get_displayed_date(self, obj):
+        locale.setlocale(locale.LC_ALL, '')
+        return {
+            'display': naturalday(obj.displayed_date),
+            'natural': naturaltime(obj.displayed_datetime),
+            'timestamp': obj.displayed_date
+        }
 
     def get_url(self, obj):
         return obj.get_api_url()
