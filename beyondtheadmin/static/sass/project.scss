@@ -14,6 +14,7 @@ $dark-pink: #eed3d7;
 $red: #b94a48;
 
 @import "badges";
+@import "buttons";
 @import "datatables";
 @import "page-header";
 @import "print";
@@ -114,4 +115,11 @@ fieldset {
   background-repeat: no-repeat;
   //background-attachment: fixed;
   //height: 100vh;
+}
+
+.login-or {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  font-size: 1.5em;
 }

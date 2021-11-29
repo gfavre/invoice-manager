@@ -576,6 +576,17 @@ a.badge-danger-soft:focus, a.badge-danger-soft.focus {
   box-shadow: 0 0 0 0.2rem rgba(241, 224, 227, 0.5);
 }
 
+.btn-google-sign {
+  color: #545454;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px 1px #ddd;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+}
+.btn-google-sign svg {
+  margin-right: 10px;
+}
+
 .datatable {
   font-size: 0.85rem;
 }
@@ -824,6 +835,13 @@ fieldset h4 {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.login-or {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  font-size: 1.5em;
 }
 
 /*# sourceMappingURL=project.css.map */

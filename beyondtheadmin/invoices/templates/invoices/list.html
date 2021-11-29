@@ -12,6 +12,7 @@
   {{ block.super }}
   <script type="text/javascript"
           src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.23/b-1.6.5/b-html5-1.6.5/r-2.2.7/sc-2.0.3/sb-1.0.1/sp-1.2.2/sl-1.3.1/datatables.min.js"></script>
+
   <script>
     $(function () {
       let table = $("#invoices").DataTable({
@@ -22,11 +23,11 @@
         },
         {% if LANGUAGE_CODE == 'fr' %}
           "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json"
+            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/French.json"
           },
         {% elif LANGUAGE_CODE == 'de' %}
           "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/German.json"
+            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/German.json"
           },
         {% endif %}
 
@@ -45,6 +46,12 @@
             },
             "className": "nobr",
             "targets": 'invoice-actions'
+          },
+          {
+            render: function (data, type, row) {
+              return data.display;
+            },
+            "targets": ['invoice-displayed_date', 'invoice-due_date']
           },
           {
             "render": function (data, type, row) {

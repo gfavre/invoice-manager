@@ -127,6 +127,11 @@ class InvoiceListSerializer(serializers.ModelSerializer):
         return actions
 
     def get_status(self, obj):
+        if obj.is_overdue:
+            return {
+                'label': _("Overdue"),
+                'value': 'overdue'
+            }
         return {
             'label': obj.get_status_display(),
             'value': obj.status

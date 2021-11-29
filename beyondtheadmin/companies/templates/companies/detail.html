@@ -111,6 +111,7 @@
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary">{% trans "All Invoices" %}</h6>
   </div>
+  <div class="card-body">
   <table class="table small" id="invoices">
       <thead>
       <tr>
@@ -118,8 +119,7 @@
         <th data-data="client" class="invoice-client">{% trans "Client" %}</th>
         <th data-data="displayed_date" class="invoice-displayed_date">{% trans "Date" %}</th>
         <th data-data="due_date" class="invoice-due_date">{% trans "Due date" context "compact" %}</th>
-        <th data-data="status" class="invoice-status">{% trans "Status" %}</th>
-        <th data-data="total" class="invoice-total">{% trans "Total" %}</th>
+        <th data-data="total" class="invoice-total">{% trans "Amount" %}<span class="d-lg-none d-xl-inline">/ {% trans "Status" %}</span></th>
         <th data-data="actions" class="invoice-actions d-print-none">
           <span class="d-none d-md-inline">{% trans "Actions" %}</span>
         </th>
@@ -128,12 +128,10 @@
       <tbody>
       </tbody>
     </table>
+    </div>
 </section>
-
-
-
-
 {% endblock content %}
+
 {% block css %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css"
@@ -141,15 +139,14 @@
 
 
 {% endblock %}
+
 {% block javascript %}
   {{ block.super }}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datasource@0.1.0"></script>
   <script>
     jQuery(document).ready(function ($) {
-      $.ajaxSetup({
-        headers: {"X-CSRFToken": "{{ csrf_token }}"}
-      });
+
       let number_format = function (number, decimals, dec_point, thousands_sep) {
         // *     example: number_format(1234.56, 2, ',', ' ');
         // *     return: '1 234,56'
@@ -178,6 +175,7 @@
       let updateEarnings = function (year) {
         let ctx = document.getElementById('earnings').getContext('2d');
         $.ajax({
+          headers: {"X-CSRFToken": "{{ csrf_token }}"},
           url: "{{ company.earnings_api_url }}",
           data: {'year': year},
           type: 'get',
@@ -401,9 +399,6 @@
           src="https://cdn.datatables.net/v/bs4/dt-1.11.3/fc-4.0.1/fh-3.2.0/r-2.2.9/datatables.min.js"></script>
   <script>
     $(function () {
-      $.ajaxSetup({
-        headers: {"X-CSRFToken": "{{ csrf_token }}"}
-      });
       let table = $("#invoices").DataTable({
         ajax: {
           url: "{{ company.all_invoices_api_url }}?format=datatables",
@@ -413,11 +408,11 @@
         responsive: true,
         {% if LANGUAGE_CODE == 'fr' %}
           "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json"
+            "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/fr_fr.json",
           },
         {% elif LANGUAGE_CODE == 'de' %}
           "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/German.json"
+            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/de_de.json"
           },
         {% endif %}
         "columnDefs": [
@@ -431,8 +426,8 @@
             responsivePriority: 1,
             targets: ['invoice-code']
           },
+
           {
-            data: "due_date",
             render: function (data, type, row) {
               if (!data.timestamp) return '';
               if (type === 'display') {
@@ -444,25 +439,24 @@
               }
               return data.timestamp;
             },
+            targets: ["invoice-due_date", "invoice-displayed_date"]
+          },
+          {
+            data: "due_date",
             responsivePriority: 1,
-            targets: "invoice-due_date"
+            targets: "invoice-displayed_date"
           },
           {
             data: "displayed_date",
-            render: {
-              _: 'display',
-              display: 'display',
-              sort: 'timestamp'
-            },
             responsivePriority: 2,
             targets: "invoice-displayed_date"
           },
           {
             "render": function (data, type, row) {
               let actions = row['actions'].flatMap(
-                  action => '<li><a href="' + action.url + '" class="btn btn-sm"><i class="' + action.icon_class + '"></i><span class="d-none d-md-inline">&nbsp;' + action.label + '</span></a></li>'
-              ).join('');
-              return '<ul class="list-unstyled">' + actions + '</ul>';
+                  action => '<a href="' + action.url + '" class="btn btn-sm"><i class="' + action.icon_class + '"></i><small class="d-none d-md-inline">&nbsp;' + action.label + '</small></a></li>'
+              ).join('<br>');
+              return actions;
             },
             "className": "nobr",
                           responsivePriority: 1,
@@ -478,37 +472,32 @@
             responsivePriority: 2,
             'targets': 'invoice-client'
           },
+
           {
             "render": function (data, type, row) {
-              let css_class = 'badge-primary'
-              switch (data.value) {
-                case 'draft':
-                  css_class = 'badge-warning';
-                  break;
-                case 'sent':
-                  css_class = 'badge-secondary';
-                  break;
-                case 'paid':
-                  css_class = "badge-success";
-                  break;
-                case 'canceled':
-                  css_class = 'bg-dark'
-              }
-              return '<div class="badge ' + css_class + ' badge-pill">' + data.label + '</div>';
-            },
-            responsivePriority: 3,
-            'targets': 'invoice-status'
-          },
-          {
-            "render": function (data, type, row) {
-              return new Intl.NumberFormat('fr-CH', {style: 'currency', currency: row.client.currency}).format(data)
+              let amount = new Intl.NumberFormat('fr-CH', {style: 'currency', currency: row.client.currency})
+                                   .format(data);
+              return amount + '<br><small>' + row.status.label + '</small>';
             },
             responsivePriority: 1,
             'targets': 'invoice-total'
           },
         ],
+        "createdRow": function (row, data, index) {
+          let class_name = '';
+          if (data.status.value == 'paid') {
+            class_name = 'border-left-success';
+          } else if (data.status.value == 'overdue') {
+            class_name = 'border-left-danger';
+          } else if (data.status.value == 'is_sent') {
+            class_name = 'border-left-primary';
+          } else {
+            class_name = 'border-left-secondary';
+          }
+          $('td', row).first().addClass(class_name)
+        },
         "order": [[ 3, "desc" ]],
-        "lengthMenu": [10, 25, 50, 100]
+        "lengthMenu": [20, 50, 100]
       });
     });
   </script>
