@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from colorfield.fields import ColorField
 from django_countries.fields import CountryField
-from localflavor.generic.models import IBANField, BICField
+from localflavor.generic.models import BICField, IBANField
 from model_utils.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -35,11 +35,12 @@ class Company(UUIDModel):
     signature_text = models.CharField(_("Signature as text"), max_length=100, blank=True)
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
     email_signature = models.TextField(_("Email signature"), blank=True)
-    from_email = models.CharField(_("From email"), max_length=255,
-                                   default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1]))
-    bcc_email = models.EmailField(_("Copy of invoices"),
-                                  help_text=_("Email address that will receive every sent invoice in bcc"),
-                                  blank=True)
+    from_email = models.CharField(
+        _("From email"), max_length=255, default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1])
+    )
+    bcc_email = models.EmailField(
+        _("Copy of invoices"), help_text=_("Email address that will receive every sent invoice in bcc"),
+        blank=True)
     thanks = models.TextField(
         _("Thanks"), blank=True,
         help_text=_("Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language"))

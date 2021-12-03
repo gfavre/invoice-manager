@@ -1,15 +1,14 @@
-import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.http.response import Http404
 from django.test import RequestFactory
 
+import pytest
+
 from beyondtheadmin.users.models import User
 from beyondtheadmin.users.tests.factories import UserFactory
-from beyondtheadmin.users.views import (
-    UserRedirectView,
-    UserUpdateView,
-    user_detail_view,
-)
+from beyondtheadmin.users.views import (UserRedirectView, UserUpdateView,
+                                        user_detail_view)
+
 
 pytestmark = pytest.mark.django_db
 

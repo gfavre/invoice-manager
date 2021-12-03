@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import (
-    ClientCreateView, ClientDeleteView, ClientListView, ClientUpdateView
-)
+from .views import (ClientCreateView, ClientDeleteView, ClientListView,
+                    ClientUpdateView)
+
 
 app_name = "clients"
 urlpatterns = [

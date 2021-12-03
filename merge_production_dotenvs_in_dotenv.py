@@ -4,6 +4,7 @@ from typing import Sequence
 
 import pytest
 
+
 ROOT_DIR_PATH = Path(__file__).parent.resolve()
 PRODUCTION_DOTENVS_DIR_PATH = ROOT_DIR_PATH / ".envs" / ".production"
 PRODUCTION_DOTENV_FILE_PATHS = [

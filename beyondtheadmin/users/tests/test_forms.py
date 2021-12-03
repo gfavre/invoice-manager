@@ -3,6 +3,7 @@ import pytest
 from beyondtheadmin.users.forms import UserCreationForm
 from beyondtheadmin.users.tests.factories import UserFactory
 
+
 pytestmark = pytest.mark.django_db
 
 

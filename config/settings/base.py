@@ -5,6 +5,7 @@ from pathlib import Path
 
 import environ
 
+
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # beyondtheadmin/
 APPS_DIR = ROOT_DIR / "beyondtheadmin"
@@ -67,7 +68,7 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.humanize", # Handy template tags
+    "django.contrib.humanize",  # Handy template tags
     "django.contrib.admin",
     "django.forms",
 ]

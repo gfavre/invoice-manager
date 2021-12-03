@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from .forms import CompanyForm
 from .models import Company
@@ -15,6 +15,7 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
+        # noinspection PyAttributeOutsideInit
         self.object = form.save()
         self.object.users.add(self.request.user)
         return HttpResponseRedirect(self.get_success_url())
@@ -34,7 +35,8 @@ class CompanyDetailView(LoginRequiredMixin, DetailView):
     template_name = 'companies/detail.html'
 
     def get_queryset(self):
-        return super(CompanyDetailView, self).get_queryset().filter(users=self.request.user).prefetch_related('invoices')
+        return super(CompanyDetailView, self).get_queryset().filter(users=self.request.user)\
+                                                            .prefetch_related('invoices')
 
 
 class CompanyUpdateView(LoginRequiredMixin, UpdateView):

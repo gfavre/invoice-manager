@@ -11,5 +11,3 @@ class CompanyAdmin(admin.ModelAdmin):
 @admin.register(CompanyClient)
 class CompanyClient(admin.ModelAdmin):
     list_display = ['company', 'client', 'invoice_current_count']
-
-

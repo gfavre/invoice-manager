@@ -8,12 +8,15 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.timezone import now
-from django.utils.translation import activate, get_language, ugettext_lazy as _
-from django.views.generic import CreateView, FormView, UpdateView, RedirectView, TemplateView
+from django.utils.translation import activate, get_language
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic import (CreateView, FormView, RedirectView,
+                                  TemplateView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 
+from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
+                     InvoiceStatusForm)
 from ..models import Invoice
-from ..forms import BaseInvoiceForm, EmailForm, InvoiceEditForm, InvoiceStatusForm
 
 
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
@@ -114,6 +117,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests: instantiate a blank version of the form."""
+        # noinspection PyAttributeOutsideInit
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
 
@@ -121,7 +125,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         return reverse('invoices:list')
 
     def form_valid(self, form):
-        invoice = self.get_object()
+        invoice: Invoice = self.get_object()
         bcc = []
         if invoice.company.bcc_email:
             bcc.append(invoice.company.bcc_email)
@@ -143,7 +147,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_initial(self):
-        invoice = self.get_object()
+        invoice: Invoice = self.get_object()
         current_lang = get_language()
         activate(invoice.client.language)
         initial = super().get_initial()

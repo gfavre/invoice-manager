@@ -1,10 +1,9 @@
 from django.urls import path
 
-from .views import (
-    InvoiceCreateView, InvoiceDuplicateView, InvoiceListView,
-    InvoiceCancelView, InvoiceMarkPaidView, InvoiceSendMailView,
-    InvoiceSnailMailUpdateView, InvoiceUpdateView
-)
+from .views import (InvoiceCancelView, InvoiceCreateView, InvoiceDuplicateView,
+                    InvoiceListView, InvoiceMarkPaidView, InvoiceSendMailView,
+                    InvoiceSnailMailUpdateView, InvoiceUpdateView)
+
 
 app_name = "invoices"
 urlpatterns = [

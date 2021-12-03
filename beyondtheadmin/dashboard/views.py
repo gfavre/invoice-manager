@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import IntegerField, Sum, Func
+from django.db.models import Func, IntegerField, Sum
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -10,8 +10,8 @@ from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from beyondtheadmin.companies.models import Company
 from beyondtheadmin.companies.forms import CompanyForm
+from beyondtheadmin.companies.models import Company
 from beyondtheadmin.invoices.models import Invoice
 
 

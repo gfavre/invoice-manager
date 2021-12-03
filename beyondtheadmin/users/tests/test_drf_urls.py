@@ -1,7 +1,9 @@
-import pytest
 from django.urls import resolve, reverse
 
+import pytest
+
 from beyondtheadmin.users.models import User
+
 
 pytestmark = pytest.mark.django_db
 

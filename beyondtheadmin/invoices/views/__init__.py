@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from .dashboard import (
-    InvoiceCreateView, InvoiceDuplicateView, InvoiceListView,
-    InvoiceCancelView, InvoiceMarkPaidView, InvoiceSendMailView,
-    InvoiceSnailMailUpdateView, InvoiceUpdateView
-)
-from .public import InvoiceDetailView, qrbill
-from .api import InvoiceViewSet, InvoiceLineViewSet
+from .api import InvoiceLineViewSet, InvoiceViewSet  # noqa
+from .dashboard import (InvoiceCancelView, InvoiceCreateView,  # noqa
+                        InvoiceDuplicateView, InvoiceListView,
+                        InvoiceMarkPaidView, InvoiceSendMailView,
+                        InvoiceSnailMailUpdateView, InvoiceUpdateView)
+from .public import InvoiceDetailView, qrbill  # noqa

@@ -4,7 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from colorfield.widgets import ColorWidget
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Column, Layout, Fieldset, ButtonHolder, Row, Submit
+from crispy_forms.layout import (ButtonHolder, Column, Fieldset, Layout, Row,
+                                 Submit)
 
 from .models import Company
 
@@ -80,4 +81,3 @@ class CompanyForm(ModelForm):
                 Submit('submit', _("Save"), css_class='button white')
             )
         )
-

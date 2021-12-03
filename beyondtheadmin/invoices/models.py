@@ -1,22 +1,21 @@
 import datetime
-from decimal import Decimal, ROUND_UP
+from decimal import ROUND_UP, Decimal
 from io import StringIO
 
 from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
 
 from ckeditor.fields import RichTextField
 from dateutil.relativedelta import relativedelta
-from model_utils.managers import QueryManager
-from model_utils.models import StatusModel
 from model_utils import Choices
+from model_utils.models import StatusModel
 from qrbill.bill import QRBill
 
-from beyondtheadmin.utils.model_utils import UUIDModel
 from beyondtheadmin.companies.models import CompanyClient
+from beyondtheadmin.utils.model_utils import UUIDModel
 
 
 class OpenInvoiceManager(models.Manager):

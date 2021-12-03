@@ -1,8 +1,10 @@
-import pytest
 from django.test import RequestFactory
+
+import pytest
 
 from beyondtheadmin.users.api.views import UserViewSet
 from beyondtheadmin.users.models import User
+
 
 pytestmark = pytest.mark.django_db
 

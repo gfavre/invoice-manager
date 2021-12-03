@@ -28,7 +28,8 @@ class Client(UUIDModel):
                                 choices=(('en', 'English'), ('de', 'Deutsch'), ('fr', 'Français'), ('it', 'Italiano')),
                                 default='fr')
     currency = models.CharField(_("Currency"), max_length=3, choices=(('CHF', 'CHF'), ('EUR', 'Euro')), default='CHF')
-    payment_delay_days = models.IntegerField(_("Payment delay"), help_text=_("Default delay in days to due date"), default=30)
+    payment_delay_days = models.IntegerField(_("Payment delay"), help_text=_("Default delay in days to due date"),
+                                             default=30)
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
     default_hourly_rate = models.DecimalField(_("Default hourly rate"), max_digits=5, decimal_places=2, default='0.00')
     contact_email = models.EmailField(_("Contact email"), blank=True)
@@ -72,8 +73,6 @@ class Client(UUIDModel):
         if last_invoice:
             return last_invoice.displayed_date
         return None
-
-
 
     def get_absolute_url(self):
         return reverse_lazy('clients:update', kwargs={'pk': self.pk})

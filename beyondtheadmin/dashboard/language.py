@@ -2,9 +2,11 @@
 from functools import lru_cache
 
 from django.conf import settings
-from django.urls.base import resolve, reverse as lang_implied_reverse
+from django.urls.base import resolve
+from django.urls.base import reverse as lang_implied_reverse
 from django.urls.exceptions import NoReverseMatch
-from django.utils.translation import activate, deactivate, get_language, override
+from django.utils.translation import (activate, deactivate, get_language,
+                                      override)
 
 
 def reverse(view_name, lang=None, use_lang_prefix=True, args=(), kwargs=None, current_app=None, urlconf=None):
@@ -46,7 +48,8 @@ def get_hreflang_info(path, default=True):
     info = []
     if default:
         try:
-            info.append(('x-default', reverse(reverse_match.view_name, use_lang_prefix=False, kwargs=reverse_match.kwargs)))
+            info.append(('x-default', reverse(reverse_match.view_name, use_lang_prefix=False,
+                                              kwargs=reverse_match.kwargs)))
         except NoReverseMatch:
             # This URL is not language-aware
             return info

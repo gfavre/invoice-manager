@@ -4,6 +4,7 @@ from celery.result import EagerResult
 from beyondtheadmin.users.tasks import get_users_count
 from beyondtheadmin.users.tests.factories import UserFactory
 
+
 pytestmark = pytest.mark.django_db
 
 

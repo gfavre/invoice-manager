@@ -48,8 +48,8 @@ def _make_list_html(path, incl_current):
     hreflang_html = ''
     for lang, url in hreflang_info:
         if lang == get_language() and incl_current:
-            hreflang_html += '<li class="hreflang_current_language nav-item"><strong class="nav-link">{0}</strong></li>\n'.format(
-                lang)
+            hreflang_html += '<li class="hreflang_current_language nav-item">' \
+                             '<strong class="nav-link">{0}</strong></li>\n'.format(lang)
         else:
             hreflang_html += '<li class="nav-item"><a href="{0}" class="nav-link" >{1}</a></li>\n'.format(url, lang)
     return hreflang_html

@@ -7,9 +7,11 @@ from django.contrib.sites.models import Site
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.test import override_settings
+
 import requests
 
 from .models import Invoice
+
 
 logger = logging.getLogger(__name__)
 PHANTOMJS_CONF = {

@@ -1,3 +1,5 @@
+import math
+
 from django import template
 from django.utils.safestring import mark_safe
 
@@ -25,7 +27,5 @@ def add_domain(value):
             return mark_safe('CHF <span class="value">{:1,.2f}</span>'.format(number).replace(',', "'"))
         else:
             return mark_safe('CHF <span class="value">{:1,.0f}.-</span>'.format(number).replace(',', "'"))
-    except ValueError:
-        return value
-    except TypeError:
+    except (ValueError, TypeError):
         return value

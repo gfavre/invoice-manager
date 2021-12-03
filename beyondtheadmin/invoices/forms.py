@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, HTML, Submit, Row, Column, Div, Button
+from crispy_forms.layout import HTML, Button, Column, Div, Layout, Row, Submit
 
 from .models import Invoice
 
@@ -63,7 +63,9 @@ class InvoiceEditForm(forms.ModelForm):
             'vat_rate',
             Div(
                 Div(
-                    HTML('<h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">{}</h5>'.format(_("Lines"))),
+                    HTML('<h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">{}</h5>'.format(
+                        _("Lines"))
+                    ),
                     Div(css_class='lines'),
                     Div(
                         Button('add', _("Add line"), css_class='btn btn-info'),

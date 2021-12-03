@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 import locale
 
-from django.contrib.humanize.templatetags.humanize import naturaltime, naturalday
+from django.contrib.humanize.templatetags.humanize import (naturalday,
+                                                           naturaltime)
 from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
 from beyondtheadmin.clients.serializers import ClientSerializer
-from .models import InvoiceLine, Invoice
+
+from .models import Invoice, InvoiceLine
 
 
 class InvoiceLineSerializer(serializers.ModelSerializer):

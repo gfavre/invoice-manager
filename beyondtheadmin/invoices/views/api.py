@@ -2,13 +2,15 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets, permissions
+from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from beyondtheadmin.companies.models import Company
+
 from ..models import Invoice, InvoiceLine
-from ..serializers import InvoiceSerializer, InvoiceListSerializer, InvoiceLineSerializer
+from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
+                           InvoiceSerializer)
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -35,9 +37,6 @@ class CompanyInvoiceListView(APIView):
         invoices_qs = Invoice.objects.filter(company=company_obj).select_related('client')
         context = {'request': request}
         return Response(InvoiceListSerializer(invoices_qs, many=True, context=context).data)
-
-
-
 
 
 class InvoiceLineViewSet(viewsets.ModelViewSet):

@@ -4,9 +4,10 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter, SimpleRouter
 from rest_framework_nested import routers
 
-from beyondtheadmin.users.api.views import UserViewSet
 import beyondtheadmin.invoices.views.api as invoices_views
-from beyondtheadmin.dashboard.views import ProfitView, OpenInvoicesView
+from beyondtheadmin.dashboard.views import OpenInvoicesView, ProfitView
+from beyondtheadmin.users.api.views import UserViewSet
+
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -29,4 +30,3 @@ urlpatterns = [
     path('invoices/<str:company_pk>', invoices_views.CompanyInvoiceListView.as_view(), name='company-invoices'),
 
 ]
-

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import io
 
+from django.http import FileResponse, Http404
 from django.utils.translation import activate
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView
-from django.http import FileResponse, Http404
 
 from ..models import Invoice
 
@@ -26,6 +26,7 @@ class InvoiceDetailView(DetailView):
     def pdf(self):
         """output: filelike object"""
         from django.http import HttpResponseRedirect
+
         # noinspection PyUnresolvedReferences
         if not self.object.pdf or self.object.pdf_version != self.object.version:
             self.object.generate_pdf()
@@ -42,4 +43,4 @@ def qrbill(request, *args, **kwargs):
     buffer = io.BytesIO(invoice.qr_bill.encode('utf-8'))
     return FileResponse(buffer, content_type='image/svg+xml',
                         as_attachment=True,
-                        filename='qrbill.svg'.format(invoice.code))
+                        filename='{}-qrbill.svg'.format(invoice.code))
