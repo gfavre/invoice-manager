@@ -15,7 +15,7 @@ class InvoiceDetailView(DetailView):
 
     def get(self, request, *args, **kwargs):
         # noinspection PyAttributeOutsideInit
-        self.object = self.get_object()
+        self.object: Invoice = self.get_object()
         # noinspection PyUnresolvedReferences
         activate(self.object.client.language)
         if self.request.GET.get('pdf', ''):
@@ -33,6 +33,7 @@ class InvoiceDetailView(DetailView):
         return HttpResponseRedirect(self.object.latest_pdf_url)
 
 
+# noinspection PyUnusedLocal
 def qrbill(request, *args, **kwargs):
     try:
         invoice = Invoice.objects.get(pk=kwargs.get('pk'))
