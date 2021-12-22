@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Func, IntegerField, Sum
 from django.shortcuts import get_object_or_404
@@ -70,15 +68,16 @@ class ProfitView(APIView):
                                   .order_by('month')
         months = dict(invoices.values_list('month', 'monthly_total'))
         months_list = []
-        labels = [datetime.date(1900, i, 1).strftime('%B') for i in range(1, 13)]
         datasets = [
             {
                 'label': _("Earnings"),
                 'data': [months.get(i, 0) for i in range(1, 13)]
             }
         ]
-        for i in range(1, 13):
-            months_list.append((datetime.date(1900, i, 1).strftime('%B'), months.get(i, 0)))
+        labels = [_("January"), _("February"), _("March"), _("April"), _("May"), _("June"), _("July"), _("August"),
+                  _("September"), _("October"), _("November"), _("December")]
+        #for i in range(1, 13):
+        #    months_list.append(labels[i], months.get(i, 0))
         total = sum([invoice.get('monthly_total') for invoice in invoices])
         return Response({
             'total': total,
