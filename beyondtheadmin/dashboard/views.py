@@ -67,7 +67,6 @@ class ProfitView(APIView):
                                   .annotate(monthly_total=Sum('total'))\
                                   .order_by('month')
         months = dict(invoices.values_list('month', 'monthly_total'))
-        months_list = []
         datasets = [
             {
                 'label': _("Earnings"),
@@ -76,8 +75,7 @@ class ProfitView(APIView):
         ]
         labels = [_("January"), _("February"), _("March"), _("April"), _("May"), _("June"), _("July"), _("August"),
                   _("September"), _("October"), _("November"), _("December")]
-        #for i in range(1, 13):
-        #    months_list.append(labels[i], months.get(i, 0))
+
         total = sum([invoice.get('monthly_total') for invoice in invoices])
         return Response({
             'total': total,

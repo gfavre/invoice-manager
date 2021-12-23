@@ -111,6 +111,7 @@ class Invoice(UUIDModel, StatusModel):
             acc += line.total
         return acc
 
+
     def add_pdf(self, content):
         self.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
         self.pdf_version = self.version
@@ -238,6 +239,13 @@ class Invoice(UUIDModel, StatusModel):
     def set_sent(self):
         self.status = self.STATUS.sent
         self.save(update_fields=["status"])
+
+    @staticmethod
+    def get_overdue_query_params(values):
+        if values and values[0] == 'overdue':
+            return {'status': Invoice.STATUS.sent, 'due_date__lt': now().date()}
+        else:
+            return {'status': Invoice.STATUS.sent, 'due_date__gt': now().date()}
 
 
 class InvoiceLine(UUIDModel):

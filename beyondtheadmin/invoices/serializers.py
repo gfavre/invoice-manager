@@ -58,33 +58,15 @@ class InvoiceListSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     due_date = serializers.SerializerMethodField()
     displayed_date = serializers.SerializerMethodField()
+    overdue = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoice
         fields = ('id', 'status', 'code', 'company', 'client',
-                  'due_date', 'displayed_date',
+                  'due_date', 'displayed_date', 'overdue',
                   'vat_rate',
                   'title', 'description', 'period_start', 'period_end',
                   'url', 'total', 'actions')
-
-    def get_due_date(self, obj):
-        locale.setlocale(locale.LC_ALL, '')
-        return {
-            'display': naturalday(obj.due_date),
-            'natural': naturaltime(obj.due_datetime),
-            'timestamp': obj.due_date
-        }
-
-    def get_displayed_date(self, obj):
-        locale.setlocale(locale.LC_ALL, '')
-        return {
-            'display': naturalday(obj.displayed_date),
-            'natural': naturaltime(obj.displayed_datetime),
-            'timestamp': obj.displayed_date
-        }
-
-    def get_url(self, obj):
-        return obj.get_api_url()
 
     def get_actions(self, obj):
         actions = [
@@ -128,6 +110,25 @@ class InvoiceListSerializer(serializers.ModelSerializer):
             ]
         return actions
 
+    def get_due_date(self, obj):
+        locale.setlocale(locale.LC_ALL, '')
+        return {
+            'display': naturalday(obj.due_date),
+            'natural': naturaltime(obj.due_datetime),
+            'timestamp': obj.due_date
+        }
+
+    def get_displayed_date(self, obj):
+        locale.setlocale(locale.LC_ALL, '')
+        return {
+            'display': naturalday(obj.displayed_date),
+            'natural': naturaltime(obj.displayed_datetime),
+            'timestamp': obj.displayed_date
+        }
+
+    def get_overdue(self, obj):
+        return obj.is_overdue
+
     def get_status(self, obj):
         if obj.is_overdue:
             return {
@@ -138,3 +139,6 @@ class InvoiceListSerializer(serializers.ModelSerializer):
             'label': obj.get_status_display(),
             'value': obj.status
         }
+
+    def get_url(self, obj):
+        return obj.get_api_url()

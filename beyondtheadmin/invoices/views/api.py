@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
+from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
+from django.utils.text import gettext_lazy as _
 
-from rest_framework import permissions, viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, viewsets
 
+from beyondtheadmin.clients.models import Client
 from beyondtheadmin.companies.models import Company
-
+from beyondtheadmin.api.filters import DatatablesFilterAndPanesBackend
 from ..models import Invoice, InvoiceLine
 from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
                            InvoiceSerializer)
@@ -28,15 +30,64 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
 
-class CompanyInvoiceListView(APIView):
+class CompanyInvoiceListView(generics.ListAPIView):
+    filter_backends = (DatatablesFilterAndPanesBackend,)
     serializer_class = InvoiceListSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, company_pk=None):
-        company_obj = get_object_or_404(Company, pk=company_pk, users=request.user)
-        invoices_qs = Invoice.objects.filter(company=company_obj).select_related('client')
-        context = {'request': request}
-        return Response(InvoiceListSerializer(invoices_qs, many=True, context=context).data)
+    class Meta:
+        """Meta class for viewset."""
+        datatables_extra_json = ('get_search_panes',)
+
+    def get_queryset(self):
+        company_obj = get_object_or_404(Company, pk=self.kwargs.get('company_pk'), users=self.request.user)
+        return Invoice.objects.filter(company=company_obj).select_related('client')
+
+    def get_search_panes(self):
+        clients = Client.objects.filter(companies__company=self.kwargs.get('company_pk')).annotate(
+            invoice_count=Count('invoices')
+        )
+        invoices = self.get_queryset()
+        invoice_status = invoices.values('status').annotate(total=Count('status')).order_by('total')
+        current_date = now()
+        waiting_invoices_qs = invoices.filter(due_date__gte=current_date, status=Invoice.STATUS.sent)
+        overdue_invoices_qs = invoices.filter(due_date__lt=current_date, status=Invoice.STATUS.sent)
+
+        return 'searchPanes', {
+            "options": {
+
+                "client": [
+                    {'label': client.name,
+                     'value': client.id,
+                     'count': client.invoice_count,
+                     'total': client.invoice_count}
+                    for client in clients
+                ],
+
+                "status": [
+                    {'label': Invoice.STATUS[i_status.get('status')],
+                     'value': i_status.get('status'),
+                     'count': i_status.get('total'),
+                     'total': i_status.get('total')
+                     } for i_status in invoice_status
+                ],
+
+                "overdue": [
+                    {
+                        'label': _("Waiting"),
+                         'value': 'waiting',
+                         'count': waiting_invoices_qs.count(),
+                         'total': waiting_invoices_qs.count()
+                    },
+                    {
+                        'label': _("Overdue"),
+                         'value': 'overdue',
+                         'count': overdue_invoices_qs.count(),
+                         'total': overdue_invoices_qs.count()
+                     },
+                ]
+            }
+        }
 
 
 class InvoiceLineViewSet(viewsets.ModelViewSet):
