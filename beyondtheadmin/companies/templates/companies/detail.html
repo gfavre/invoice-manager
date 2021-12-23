@@ -551,6 +551,33 @@
             new Intl.NumberFormat('fr-CH', {style: 'currency', currency: 'CHF'}).format(pageTotal)
           );
         },
+         language: {
+            info: "{% trans 'Showing _START_ to _END_ of _TOTAL_ entries' %}",
+            infoEmpty: "{% trans "Showing 0 to 0 of 0 entries" %}",
+            infoFiltered: "{% trans "(filtered from _MAX_ total entries)" %}",
+            lengthMenu: "{% trans "Show _MENU_ entries" %}",
+            paginate: {
+              first: "{% trans 'First' %}",
+              last: "{% trans 'Last' %}",
+              previous: "{% trans 'Previous' %}",
+              next: "{% trans 'Next' %}"
+            },
+            search: "",
+            searchPlaceholder: "{% trans 'Search' %}",
+            searchPanes: {
+              title: {
+                _: '{% trans 'Filters selected' %} - %d',
+                0: '{% trans "No filter selected" %}'
+              },
+              clearMessage: '{% trans "Clear All" %}'
+            },
+            select: {
+              'rows': {
+                1: "{% trans "%d row selected" %}",
+                _: "{% trans "%d rows selected" %}"
+              }
+            }
+          },
 
       {% comment %}
       for some reason the i18n files make the search panes crash.
@@ -566,6 +593,9 @@
       {% endcomment %}
 
         responsive: true,
+        searchPanes: {
+          collapse: false
+        },
         serverSide: true,
 
       });

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-22 05:37+0100\n"
-"PO-Revision-Date: 2021-12-22 05:38+0100\n"
+"POT-Creation-Date: 2021-12-23 12:42+0100\n"
+"PO-Revision-Date: 2021-12-23 12:44+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -155,7 +155,7 @@ msgid "Last invoice"
 msgstr "Dernière facture"
 
 #: beyondtheadmin/clients/templates/clients/list.html:69
-#: beyondtheadmin/companies/templates/companies/detail.html:124
+#: beyondtheadmin/companies/templates/companies/detail.html:127
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:66
 #: beyondtheadmin/invoices/templates/invoices/list.html:126
 msgid "Actions"
@@ -164,7 +164,7 @@ msgstr "Actions"
 #: beyondtheadmin/clients/templates/clients/list.html:79
 #: beyondtheadmin/companies/templates/companies/detail.html:35
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:31
-#: beyondtheadmin/invoices/serializers.py:106
+#: beyondtheadmin/invoices/serializers.py:88
 #: beyondtheadmin/invoices/templates/invoices/detail.html:197
 msgid "Edit"
 msgstr "Éditer"
@@ -291,7 +291,7 @@ msgid "Company infos"
 msgstr "Infos sur l'entreprise"
 
 #: beyondtheadmin/companies/templates/companies/detail.html:76
-#: beyondtheadmin/dashboard/views.py:73
+#: beyondtheadmin/dashboard/views.py:72
 msgid "Earnings"
 msgstr "Revenus"
 
@@ -299,56 +299,118 @@ msgstr "Revenus"
 msgid "Open Invoices"
 msgstr "Factures ouvertes"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:112
+#: beyondtheadmin/companies/templates/companies/detail.html:111
 msgid "All Invoices"
 msgstr "Toutes les factures"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:118
+#: beyondtheadmin/companies/templates/companies/detail.html:117
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:63
 #: beyondtheadmin/invoices/models.py:37
 #: beyondtheadmin/invoices/templates/invoices/list.html:120
 msgid "Code"
 msgstr "Code"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:119
+#: beyondtheadmin/companies/templates/companies/detail.html:118
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:63
 #: beyondtheadmin/invoices/models.py:36
 #: beyondtheadmin/invoices/templates/invoices/list.html:121
 msgid "Client"
 msgstr "Client"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:120
+#: beyondtheadmin/companies/templates/companies/detail.html:119
 #: beyondtheadmin/invoices/templates/invoices/list.html:122
 msgid "Date"
 msgstr "Date"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:121
+#: beyondtheadmin/companies/templates/companies/detail.html:120
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:64
 msgctxt "compact"
 msgid "Due date"
 msgstr "Échéance"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:122
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:65
-msgid "Amount"
-msgstr "Montant"
+#: beyondtheadmin/companies/templates/companies/detail.html:121
+#: beyondtheadmin/companies/templates/companies/detail.html:340
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:185
+#: beyondtheadmin/invoices/serializers.py:135
+#: beyondtheadmin/invoices/views/api.py:83
+msgid "Overdue"
+msgstr "En retard"
 
 #: beyondtheadmin/companies/templates/companies/detail.html:122
+#: beyondtheadmin/companies/templates/companies/detail.html:124
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:65
 #: beyondtheadmin/invoices/templates/invoices/list.html:124
 msgid "Status"
 msgstr "Statut"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:317
+#: beyondtheadmin/companies/templates/companies/detail.html:124
+#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:65
+msgid "Amount"
+msgstr "Montant"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:333
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:178
+#: beyondtheadmin/invoices/views/api.py:77
 msgid "Waiting"
 msgstr "En attente"
 
-#: beyondtheadmin/companies/templates/companies/detail.html:324
-#: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:185
-#: beyondtheadmin/invoices/serializers.py:134
-msgid "Overdue"
-msgstr "En retard"
+#: beyondtheadmin/companies/templates/companies/detail.html:555
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Affichage de _START_ à _END_ sur _TOTAL_ éléments"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:556
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Affichage de l'élément 0 à 0 sur 0 éléments"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:557
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtré de _MAX_ éléments au total)"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:558
+msgid "Show _MENU_ entries"
+msgstr "Afficher _MENU_ éléments"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:560
+msgid "First"
+msgstr "Premier"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:561
+msgid "Last"
+msgstr "Dernier"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:562
+msgid "Previous"
+msgstr "Précédent"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:563
+msgid "Next"
+msgstr "Suivant"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:566
+msgid "Search"
+msgstr "Rechercher"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:569
+msgid "Filters selected"
+msgstr "Filtres sélectionnés"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:570
+msgid "No filter selected"
+msgstr "Aucun filtre sélectionné"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:572
+msgid "Clear All"
+msgstr "Tout effacer"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:576
+#, python-format
+msgid "%%d row selected"
+msgstr "%%d ligne sélectionnée"
+
+#: beyondtheadmin/companies/templates/companies/detail.html:577
+#, python-format
+msgid "%%d rows selected"
+msgstr "%%d lignes sélectionnées"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:9
 #: beyondtheadmin/templates/base.html:55
@@ -370,12 +432,12 @@ msgid "Payment received"
 msgstr "Encaissé"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:96
-#: beyondtheadmin/invoices/serializers.py:98
+#: beyondtheadmin/invoices/serializers.py:80
 msgid "Duplicate"
 msgstr "Dupliquer"
 
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:100
-#: beyondtheadmin/invoices/serializers.py:93
+#: beyondtheadmin/invoices/serializers.py:75
 msgid "View"
 msgstr "Voir"
 
@@ -384,51 +446,51 @@ msgstr "Voir"
 msgid "All invoices"
 msgstr "Toutes les factures"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "January"
 msgstr "Janvier"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "February"
 msgstr "Février"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "March"
 msgstr "Mars"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "April"
 msgstr "Avril"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "May"
 msgstr "Mai"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "June"
 msgstr "Juin"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "July"
 msgstr "Juillet"
 
-#: beyondtheadmin/dashboard/views.py:77
+#: beyondtheadmin/dashboard/views.py:76
 msgid "August"
 msgstr "Août"
 
-#: beyondtheadmin/dashboard/views.py:78
+#: beyondtheadmin/dashboard/views.py:77
 msgid "September"
 msgstr "Septembre"
 
-#: beyondtheadmin/dashboard/views.py:78
+#: beyondtheadmin/dashboard/views.py:77
 msgid "October"
 msgstr "Octobre"
 
-#: beyondtheadmin/dashboard/views.py:78
+#: beyondtheadmin/dashboard/views.py:77
 msgid "November"
 msgstr "Novembre"
 
-#: beyondtheadmin/dashboard/views.py:78
+#: beyondtheadmin/dashboard/views.py:77
 msgid "December"
 msgstr "Décembre"
 
@@ -445,7 +507,7 @@ msgid "Add line"
 msgstr "Ajouter une ligne"
 
 #: beyondtheadmin/invoices/forms.py:116
-#: beyondtheadmin/invoices/serializers.py:111
+#: beyondtheadmin/invoices/serializers.py:93
 #: beyondtheadmin/invoices/templates/invoices/detail.html:192
 msgid "Send"
 msgstr "Envoyer"
@@ -517,21 +579,21 @@ msgstr "Version du PDF"
 msgid "QR Bill"
 msgstr "QR Facture"
 
-#: beyondtheadmin/invoices/models.py:251
+#: beyondtheadmin/invoices/models.py:259
 #: beyondtheadmin/invoices/templates/invoices/update.html:57
 msgid "Hour"
 msgstr "Heure"
 
-#: beyondtheadmin/invoices/models.py:252
+#: beyondtheadmin/invoices/models.py:260
 #: beyondtheadmin/invoices/templates/invoices/update.html:58
 msgid "Number"
 msgstr "Nombre"
 
-#: beyondtheadmin/invoices/serializers.py:116
+#: beyondtheadmin/invoices/serializers.py:98
 msgid "Cancel"
 msgstr "Annuler"
 
-#: beyondtheadmin/invoices/serializers.py:125
+#: beyondtheadmin/invoices/serializers.py:107
 #: beyondtheadmin/invoices/templates/invoices/confirm_paid.html:14
 msgid "Payment received"
 msgstr "Paiement reçu"
