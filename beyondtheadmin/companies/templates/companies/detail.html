@@ -578,20 +578,7 @@
               }
             }
           },
-
-      {% comment %}
-      for some reason the i18n files make the search panes crash.
-      {% if LANGUAGE_CODE == 'fr' %}
-          "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/fr_fr.json",
-          },
-        {% elif LANGUAGE_CODE == 'de' %}
-          "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/de_de.json"
-          },
-        {% endif %}
-      {% endcomment %}
-
+        order: [[3, "desc"]],
         responsive: true,
         searchPanes: {
           collapse: false
