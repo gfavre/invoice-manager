@@ -122,6 +122,7 @@ class Invoice(UUIDModel, StatusModel):
         self.pk = None
         self.code = ''
         self.displayed_date = now().date()
+        self.due_date = self.displayed_date + relativedelta(days=self.client.invoice_due_days)
         if self.period_start:
             self.period_start = self.period_start + relativedelta(months=1)
         if self.period_end:

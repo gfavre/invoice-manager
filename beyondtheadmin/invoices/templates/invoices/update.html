@@ -105,7 +105,7 @@
           $('#id_due_date').val(dueDate.format(dateFormat));
         }
       };
-      $('#id_displayed_date').on('change', updateDueDate);
+      $('#id_displayed_date').datetimepicker().on('dp.change', updateDueDate);
 
       Handlebars.registerHelper("select", function (value, options) {
         return options.fn(this)
