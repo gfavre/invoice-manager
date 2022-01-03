@@ -24,7 +24,7 @@ class BaseInvoiceForm(forms.ModelForm):
 class InvoiceEditForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ('company', 'client', 'due_date', 'displayed_date', 'title', 'description',
+        fields = ('company', 'client', 'displayed_date', 'due_date', 'title', 'description',
                   'period_start', 'period_end', 'vat_rate')
 
     def __init__(self, *args, request=None, **kwargs):
@@ -49,8 +49,8 @@ class InvoiceEditForm(forms.ModelForm):
                 css_class='form-row'
             ),
             Row(
-                Column('due_date', css_class='form-group col-md-6 mb-0'),
                 Column('displayed_date', css_class='form-group col-md-6 mb-0'),
+                Column('due_date', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             'title',

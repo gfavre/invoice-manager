@@ -94,6 +94,19 @@
       $.ajaxSetup({
         headers: {"X-CSRFToken": "{{ csrf_token }}"}
       });
+
+      let updateDueDate = function () {
+        let dateFormat = 'DD.MM.YYYY'
+        let displayedDate = $('#id_displayed_date').val();
+
+        if (displayedDate) {
+          let dueDate = moment(displayedDate, dateFormat);
+          dueDate.add({{ invoice.client.payment_delay_days }}, 'days')
+          $('#id_due_date').val(dueDate.format(dateFormat));
+        }
+      };
+      $('#id_displayed_date').on('change', updateDueDate);
+
       Handlebars.registerHelper("select", function (value, options) {
         return options.fn(this)
             .split('\n')
