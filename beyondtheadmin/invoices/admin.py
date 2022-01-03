@@ -24,6 +24,6 @@ class InvoiceAdmin(admin.ModelAdmin):
         'qr_bill',
         'pdf', 'pdf_version'
     )
-    list_display = ('code', 'total', 'displayed_date', 'due_date', 'status')
-
+    list_display = ('code', 'company', 'client', 'total', 'displayed_date', 'status')
+    list_filter = ('status', 'company', 'client')
     inlines = [InvoiceLineInline]
