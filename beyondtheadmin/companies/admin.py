@@ -12,4 +12,5 @@ class CompanyAdmin(admin.ModelAdmin):
 class CompanyClient(admin.ModelAdmin):
     list_display = ['company', 'client', 'invoice_current_count']
     list_filter = ['company']
-    search_fields = ['company__name', 'client__name']
+    search_fields = ['company__name', 'client__company_name',
+                     'client__contact_first_name', 'client__contact_last_name']

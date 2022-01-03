@@ -9,7 +9,6 @@ class InvoiceLineInline(admin.TabularInline):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    readonly_fields = ['status_changed', 'total', 'pdf', 'pdf_version']
     fields = (
         ('status', 'status_changed'),
         ('company', 'client'),
@@ -24,6 +23,8 @@ class InvoiceAdmin(admin.ModelAdmin):
         'qr_bill',
         'pdf', 'pdf_version'
     )
+    inlines = [InvoiceLineInline]
     list_display = ('code', 'company', 'client', 'total', 'displayed_date', 'status')
     list_filter = ('status', 'company', 'client')
-    inlines = [InvoiceLineInline]
+    readonly_fields = ['status_changed', 'total', 'pdf', 'pdf_version']
+    search_fields = ('code', 'company__name', 'client__name', 'total')
