@@ -111,7 +111,6 @@ class Invoice(UUIDModel, StatusModel):
             acc += line.total
         return acc
 
-
     def add_pdf(self, content):
         self.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
         self.pdf_version = self.version
@@ -122,7 +121,7 @@ class Invoice(UUIDModel, StatusModel):
         self.pk = None
         self.code = ''
         self.displayed_date = now().date()
-        self.due_date = self.displayed_date + relativedelta(days=self.client.invoice_due_days)
+        self.due_date = self.displayed_date + relativedelta(days=self.client.payment_delay_days)
         if self.period_start:
             self.period_start = self.period_start + relativedelta(months=1)
         if self.period_end:
