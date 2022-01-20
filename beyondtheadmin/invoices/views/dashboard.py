@@ -34,9 +34,12 @@ class InvoiceListView(LoginRequiredMixin, TemplateView):
 
 
 class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = InvoiceEditForm
     model = Invoice
     template_name = 'invoices/update.html'
-    form_class = InvoiceEditForm
+
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -63,6 +66,9 @@ class InvoiceCancelView(LoginRequiredMixin, UpdateView):
             'status': Invoice.STATUS.canceled,
         }
 
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
+
     def get_success_url(self):
         return reverse('invoices:list')
 
@@ -76,6 +82,9 @@ class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
         return {
             'status': Invoice.STATUS.paid,
         }
+
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
 
     def get_success_url(self):
         return reverse('invoices:list')
@@ -91,6 +100,9 @@ class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
             'status': Invoice.STATUS.sent,
         }
 
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
+
     def get_success_url(self):
         return reverse('invoices:list')
 
@@ -101,7 +113,7 @@ class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
     pattern_name = 'pk'
 
     def get_redirect_url(self, *args, **kwargs):
-        source = get_object_or_404(Invoice, pk=kwargs['pk'])
+        source = get_object_or_404(Invoice, pk=kwargs['pk'], company__users=self.request.user)
         duplicata = source.duplicate()
         return duplicata.get_edit_url()
 
@@ -114,15 +126,6 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
     model = Invoice
     form_class = EmailForm
     template_name = 'invoices/send.html'
-
-    def get(self, request, *args, **kwargs):
-        """Handle GET requests: instantiate a blank version of the form."""
-        # noinspection PyAttributeOutsideInit
-        self.object = self.get_object()
-        return super().get(request, *args, **kwargs)
-
-    def get_success_url(self):
-        return reverse('invoices:list')
 
     def form_valid(self, form):
         invoice: Invoice = self.get_object()
@@ -146,6 +149,12 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
                       message=_("Your invoice has been sent to %(email)s") % {'email': invoice.client.contact_email})
         return HttpResponseRedirect(self.get_success_url())
 
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests: instantiate a blank version of the form."""
+        # noinspection PyAttributeOutsideInit
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
     def get_initial(self):
         invoice: Invoice = self.get_object()
         current_lang = get_language()
@@ -155,3 +164,9 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         initial['message'] = render_to_string('invoices/mail_message.txt', {'invoice': invoice})
         activate(current_lang)
         return initial
+
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
+
+    def get_success_url(self):
+        return reverse('invoices:list')

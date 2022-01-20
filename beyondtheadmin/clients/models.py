@@ -34,7 +34,7 @@ class Client(UUIDModel):
     default_hourly_rate = models.DecimalField(_("Default hourly rate"), max_digits=5, decimal_places=2, default='0.00')
     contact_email = models.EmailField(_("Contact email"), blank=True)
 
-    slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=10)
+    slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=15)
     invoice_current_count = models.IntegerField(_("Current count of invoices"),
                                                 help_text=_("Used to generate invoice code"),
                                                 default=0)
