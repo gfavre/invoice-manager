@@ -16,6 +16,7 @@ from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
+    queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
     def get_queryset(self):
