@@ -367,4 +367,4 @@ COUNTRIES_FIRST_REPEAT = True
 COUNTRIES_FIRST_BREAK = '---'
 
 
-DEFAULT_FROM_EMAIL = ["facturation@mesfactures.ch"]
+DEFAULT_INVOICE_FROM_EMAIL = "facturation@mesfactures.ch"

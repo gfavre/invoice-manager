@@ -14,7 +14,7 @@ from django.views.generic import (CreateView, FormView, RedirectView,
                                   TemplateView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 
-from anymail.exceptions import AnymailRequestsAPIError
+from anymail.exceptions import AnymailError
 
 from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
                      InvoiceStatusForm)
@@ -155,7 +155,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
             messages.info(
                 self.request,
                 message=_("Your invoice has been sent to %(email)s") % {'email': invoice.client.contact_email})
-        except AnymailRequestsAPIError as e:
+        except AnymailError as e:
             messages.info(
                 self.request,
                 message=_("Your invoice could not be sent, administrators have been warned."))

@@ -85,8 +85,8 @@ class Company(UUIDModel):
     @property
     def invoice_from_email(self):
         if self.override_default_from_email:
-            return f'{self.name} <{self.from_email}>'
-        return f'{self.name} <{settings.DEFAULT_FROM_EMAIL}>'
+            return self.from_email
+        return f'{self.name} <{settings.DEFAULT_INVOICE_FROM_EMAIL}>'
 
     @property
     def open_invoices_api_url(self):
