@@ -3,8 +3,5 @@
 I hope you are well. Please see invoice {{ invoice_nb }} attached. The invoice is due by {{ due_date }}.
 
 Please don’t hesitate to get in touch if you have any questions, or would like to clarify anything.
-
-Best regards,
-{{ your_name }}
 {% endblocktrans %}
 {{ invoice.company.email_signature }}

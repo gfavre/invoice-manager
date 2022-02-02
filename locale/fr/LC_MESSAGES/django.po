@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-23 12:42+0100\n"
-"PO-Revision-Date: 2021-12-23 12:44+0100\n"
+"POT-Creation-Date: 2022-02-02 10:27+0100\n"
+"PO-Revision-Date: 2022-02-02 10:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: beyondtheadmin/clients/forms.py:26 beyondtheadmin/clients/models.py:14
-#: beyondtheadmin/companies/models.py:50 beyondtheadmin/invoices/models.py:34
+#: beyondtheadmin/companies/models.py:51 beyondtheadmin/invoices/models.py:34
 msgid "Company"
 msgstr "Entreprise"
 
@@ -112,11 +112,11 @@ msgid "Slug"
 msgstr "Slug"
 
 #: beyondtheadmin/clients/models.py:37 beyondtheadmin/clients/models.py:39
-#: beyondtheadmin/companies/models.py:114
+#: beyondtheadmin/companies/models.py:121
 msgid "Used to generate invoice code"
 msgstr "Utilisé pour générer le code de la facture"
 
-#: beyondtheadmin/clients/models.py:38 beyondtheadmin/companies/models.py:113
+#: beyondtheadmin/clients/models.py:38 beyondtheadmin/companies/models.py:120
 msgid "Current count of invoices"
 msgstr "Décompte actuel de factures"
 
@@ -244,23 +244,27 @@ msgstr "Signature sous forme d'image"
 msgid "Email signature"
 msgstr "Signature e-mail"
 
-#: beyondtheadmin/companies/models.py:39
+#: beyondtheadmin/companies/models.py:38
+msgid "Override default from email"
+msgstr "Remplacer la valeur par défaut de l'e-mail"
+
+#: beyondtheadmin/companies/models.py:40
 msgid "From email"
 msgstr "Email de l’expéditeur"
 
-#: beyondtheadmin/companies/models.py:42
+#: beyondtheadmin/companies/models.py:43
 msgid "Copy of invoices"
 msgstr "Copie des factures"
 
-#: beyondtheadmin/companies/models.py:42
+#: beyondtheadmin/companies/models.py:43
 msgid "Email address that will receive every sent invoice in bcc"
 msgstr "Adresse e-mail qui recevra chaque facture envoyée en bcc"
 
-#: beyondtheadmin/companies/models.py:45
+#: beyondtheadmin/companies/models.py:46
 msgid "Thanks"
 msgstr "Merci"
 
-#: beyondtheadmin/companies/models.py:46
+#: beyondtheadmin/companies/models.py:47
 msgid ""
 "Thanks at bottom of invoice. If set, this will be on every invoice, "
 "regardless of language"
@@ -268,17 +272,17 @@ msgstr ""
 "Remerciements au bas de la facture. Si cette option est activée, elle "
 "figurera sur toutes les factures, quelle que soit la langue"
 
-#: beyondtheadmin/companies/models.py:51
+#: beyondtheadmin/companies/models.py:52
 #: beyondtheadmin/dashboard/templates/dashboard/dashboard.html:7
 #: beyondtheadmin/templates/base.html:40 beyondtheadmin/users/models.py:12
 msgid "Companies"
 msgstr "Entreprises"
 
-#: beyondtheadmin/companies/models.py:123
+#: beyondtheadmin/companies/models.py:130
 msgid "Company client"
 msgstr "Entreprise cliente"
 
-#: beyondtheadmin/companies/models.py:124
+#: beyondtheadmin/companies/models.py:131
 msgid "Company clients"
 msgstr "Clients de l'entreprise"
 
@@ -722,9 +726,6 @@ msgid ""
 "\n"
 "Please don’t hesitate to get in touch if you have any questions, or would "
 "like to clarify anything.\n"
-"\n"
-"Best regards,\n"
-"%(your_name)s\n"
 msgstr ""
 "Cher %(contact_first_name)s,\n"
 "\n"
@@ -733,9 +734,6 @@ msgstr ""
 "\n"
 "N'hésite pas à me contacter si tu as des questions, ou si tu souhaites "
 "clarifier quelque chose.\n"
-"\n"
-"Cordialement,\n"
-"%(your_name)s\n"
 
 #: beyondtheadmin/invoices/templates/invoices/mail_subject.txt:1
 #, python-format
@@ -768,10 +766,14 @@ msgstr "Pièce jointe"
 msgid "Invoice: %(invoice)s"
 msgstr "Facture: %(invoice)s"
 
-#: beyondtheadmin/invoices/views/dashboard.py:146
+#: beyondtheadmin/invoices/views/dashboard.py:154
 #, python-format
 msgid "Your invoice has been sent to %(email)s"
 msgstr "Votre facture a été envoyée à %(email)s"
+
+#: beyondtheadmin/invoices/views/dashboard.py:158
+msgid "Your invoice could not be sent, administrators have been warned."
+msgstr ""
 
 #: beyondtheadmin/invoices/views/public.py:41
 msgid "Invoice does not exist"
