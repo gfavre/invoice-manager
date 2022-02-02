@@ -136,7 +136,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
             bcc.append(invoice.company.bcc_email)
         reply_to = []
         if not invoice.company.override_default_from_email:
-            reply_to.append(invoice.company.invoice_from_email)
+            reply_to.append(invoice.company.from_email)
         email = EmailMessage(
             subject=form.cleaned_data.get('subject'),
             body=form.cleaned_data.get('message'),
