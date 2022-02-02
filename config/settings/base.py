@@ -365,3 +365,6 @@ PHANTOMJSCLOUD_API_URL = 'https://PhantomJsCloud.com/api/browser/v2/{}/'.format(
 COUNTRIES_FIRST = ('CH',)
 COUNTRIES_FIRST_REPEAT = True
 COUNTRIES_FIRST_BREAK = '---'
+
+
+DEFAULT_FROM_EMAIL = ["facturation@mesfactures.ch"]

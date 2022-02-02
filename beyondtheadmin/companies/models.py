@@ -35,6 +35,7 @@ class Company(UUIDModel):
     signature_text = models.CharField(_("Signature as text"), max_length=100, blank=True)
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
     email_signature = models.TextField(_("Email signature"), blank=True)
+    override_default_from_email = models.BooleanField(_("Override default from email"), default=False)
     from_email = models.CharField(
         _("From email"), max_length=255, default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1])
     )
@@ -80,6 +81,12 @@ class Company(UUIDModel):
     @property
     def has_signature(self):
         return bool(self.signature_text or self.signature_image)
+
+    @property
+    def invoice_from_email(self):
+        if self.override_default_from_email:
+            return f'{self.name} <{self.from_email}>'
+        return f'{self.name} <{settings.DEFAULT_FROM_EMAIL}>'
 
     @property
     def open_invoices_api_url(self):
