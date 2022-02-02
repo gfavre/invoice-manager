@@ -134,12 +134,15 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         bcc = []
         if invoice.company.bcc_email:
             bcc.append(invoice.company.bcc_email)
+        reply_to = []
+        if not invoice.company.override_default_from_email:
+            reply_to.append(invoice.company.invoice_from_email)
         email = EmailMessage(
             subject=form.cleaned_data.get('subject'),
             body=form.cleaned_data.get('message'),
             from_email=invoice.company.invoice_from_email,
             to=[invoice.client.full_contact_email],
-            reply_to=invoice.company.from_email,
+            reply_to=reply_to,
             bcc=bcc
         )
         if not invoice.pdf or invoice.pdf_version != invoice.version:
