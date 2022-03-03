@@ -183,3 +183,15 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return reverse('invoices:list')
+
+
+class InvoiceReminderEmail(InvoiceSendMailView):
+    def get_initial(self):
+        invoice: Invoice = self.get_object()
+        current_lang = get_language()
+        activate(invoice.client.language)
+        initial = super().get_initial()
+        initial['subject'] = render_to_string('invoices/reminder_mail_subject.txt', {'invoice': invoice})
+        initial['message'] = render_to_string('invoices/reminder_mail_message.txt', {'invoice': invoice})
+        activate(current_lang)
+        return initial
