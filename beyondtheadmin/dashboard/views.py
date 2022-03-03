@@ -13,6 +13,22 @@ from beyondtheadmin.companies.models import Company
 from beyondtheadmin.invoices.models import Invoice
 
 
+def dashboard(request):
+    if hasattr(request.user, 'companies'):
+        nb_companies = request.user.companies.count()
+    else:
+        nb_companies = 0
+    if nb_companies > 1:
+        return DashboardView.as_view()(request)
+    elif nb_companies == 1:
+        from beyondtheadmin.companies.views import CompanyDetailView
+        company = request.user.companies.first()
+        return CompanyDetailView.as_view()(request, pk=company.pk)
+    else:
+        # FIXME: wizard
+        return DashboardView.as_view()(request)
+
+
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/dashboard.html'
 

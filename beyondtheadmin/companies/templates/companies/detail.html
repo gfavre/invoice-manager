@@ -106,9 +106,12 @@
     </div>
   </div>
 
-  <section class="card shadow mb-4">
+  <section class="card card-header-actions shadow mb-4">
+
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">{% trans "All Invoices" %}</h6>
+      <a href="{% url 'invoices:create' %}" class="btn btn-sm btn-primary"><i
+            class="bi bi-file-earmark-plus"></i> {% trans "Add invoice" %}</a>
     </div>
     <div class="card-body">
       <table class="table small" id="invoices">

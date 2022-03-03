@@ -22,12 +22,6 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'invoices:list' %}" >
-        <i class="bi bi-view-list"></i>
-        <span>{% trans "All invoices" %}</span>
-      </a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" href="{% url 'invoices:create' %}" >
         <i class="bi bi-file-earmark-plus"></i>
         <span>{% trans "Add invoice" %}</span>
@@ -41,14 +35,23 @@
     </div>
      <!-- Heading -->
 
-    {% for company in companies %}
-      <li class="nav-item">
-      <a class="nav-link" href="{{ company.get_absolute_url }}" >
-        <i class="bi bi-journal"></i>
-        <span>{{ company }}</span>
-      </a>
-    </li>
-    {% endfor %}
+    {% if companies.count > 1 %}
+      {% for company in companies %}
+        <li class="nav-item">
+        <a class="nav-link" href="{{ company.get_absolute_url }}" >
+          <i class="bi bi-journal"></i>
+          <span>{{ company }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    {% else %}
+  <li class="nav-item">
+        <a class="nav-link" href="{{ company.edit_url }}" >
+          <i class="bi bi-journal"></i>
+          <span>{{ company }}</span>
+        </a>
+  </li>
+    {% endif %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'companies:create' %}" >
         <i class="bi bi-journal-plus"></i>

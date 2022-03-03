@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from rest_framework.authtoken.views import obtain_auth_token
 
-from beyondtheadmin.dashboard.views import DashboardView
+from beyondtheadmin.dashboard.views import dashboard
 from beyondtheadmin.invoices.views.public import InvoiceDetailView, qrbill
 
 
@@ -16,7 +16,7 @@ admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 
 urlpatterns = i18n_patterns(
-    path("", DashboardView.as_view(), name="dashboard"),
+    path("", dashboard, name="dashboard"),
     path(
       "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),

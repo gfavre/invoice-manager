@@ -106,9 +106,9 @@
             </table>
           </article>
 
-          <a class="card-footer" href="{% url 'invoices:list' %}">
+          <a class="card-footer" href="{{ company.get_absolute_url }}">
             <div class="d-flex align-items-center justify-content-between small text-body">
-              {% trans "All invoices" %}
+              {% trans "Details" %}
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                    class="feather feather-arrow-right">
