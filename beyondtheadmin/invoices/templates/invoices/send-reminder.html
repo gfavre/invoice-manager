@@ -1,0 +1,10 @@
+{% extends "invoices/send.html" %}
+{% load i18n crispy_forms_tags switzerland %}
+
+{% block title %}{% trans "Send reminder" %}{% endblock %}
+{% block pagetitle %}{% trans "Send reminder" %}{% endblock %}
+
+{% block lead %}
+  {% blocktrans with invoice=invoice.code client=invoice.client amount=invoice.total|money %}Please confirm you
+    want to send a reminder for invoice {{ invoice }} ({{ amount }}) to {{ client }}.{% endblocktrans %}
+{% endblock%}

@@ -152,9 +152,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         try:
             email.send()
             invoice.set_sent()
-            messages.info(
-                self.request,
-                message=_("Your invoice has been sent to %(email)s") % {'email': invoice.client.contact_email})
+            messages.info(self.request, self.get_success_message())
         except AnymailError as e:
             messages.info(
                 self.request,
@@ -167,6 +165,9 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         # noinspection PyAttributeOutsideInit
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
+
+    def get_failure_message(self):
+        return _("Your invoice could not be sent, administrators have been warned.")
 
     def get_initial(self):
         invoice: Invoice = self.get_object()
@@ -181,17 +182,32 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
     def get_queryset(self):
         return Invoice.objects.filter(company__users=self.request.user)
 
+    def get_success_message(self):
+        return _("Your invoice has been sent to %(email)s") % {
+            'email': self.get_object().client.contact_email
+        }
+
     def get_success_url(self):
-        return reverse('invoices:list')
+        return self.get_object().company.detail_url
 
 
-class InvoiceReminderEmail(InvoiceSendMailView):
+class InvoiceSendReminderEmailView(InvoiceSendMailView):
+    template_name = 'invoices/send-reminder.html'
+
     def get_initial(self):
         invoice: Invoice = self.get_object()
         current_lang = get_language()
         activate(invoice.client.language)
         initial = super().get_initial()
-        initial['subject'] = render_to_string('invoices/reminder_mail_subject.txt', {'invoice': invoice})
-        initial['message'] = render_to_string('invoices/reminder_mail_message.txt', {'invoice': invoice})
+        initial['subject'] = render_to_string('invoices/reminder_subject.txt', {'invoice': invoice})
+        initial['message'] = render_to_string('invoices/reminder_message.txt', {'invoice': invoice})
         activate(current_lang)
         return initial
+
+    def get_failure_message(self):
+        return _("Your reminder could not be sent, administrators have been warned.")
+
+    def get_success_message(self):
+        return _("Your reminder has been sent to %(email)s") % {
+            'email': self.get_object().client.contact_email
+        }

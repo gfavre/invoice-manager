@@ -1,6 +1,9 @@
 {% load i18n %}{% blocktrans with contact_first_name=invoice.client.contact_first_name contact_last_name=invoice.client.contact_last_name invoice_nb=invoice.code due_date=invoice.due_date|date your_name=invoice.company.signature_text %}Dear {{ contact_first_name }},
 
-I hope you are well. This is just to remind you that payment on invoice {{ invoice_nb }}, which was sent on Please see invoice  attached. The invoice is due by {{ due_date }}.
+I hope you are well. This is just to remind you that payment on invoice {{ invoice_nb }}, which was sent
+on {{ invoice.sent_date|date }}, hasn't been received yet. Please see invoice attached.
+
+If the payment has already been sent, please disregard this notice.
 
 Please don’t hesitate to get in touch if you have any questions, or would like to clarify anything.
 {% endblocktrans %}

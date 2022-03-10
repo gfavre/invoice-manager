@@ -51,6 +51,8 @@ class Invoice(UUIDModel, StatusModel):
     pdf_version = models.PositiveIntegerField(_("Version of PDF"), null=True, editable=False)
 
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
+    sent_date = models.DateTimeField(_("Sent date"), blank=True, null=True)
+    last_reminder_date = models.DateTimeField(_("Last reminder date"), blank=True, null=True)
 
     _company_client = None
 
@@ -189,6 +191,9 @@ class Invoice(UUIDModel, StatusModel):
     def get_qrbill_url(self):
         return reverse('qrbill', kwargs={'pk': self.pk})
 
+    def get_reminder_url(self):
+        return reverse('invoices:reminder', kwargs={'pk': self.pk})
+
     def get_set_paid_url(self):
         return reverse('invoices:mark_paid', kwargs={'pk': self.pk})
 
@@ -238,7 +243,8 @@ class Invoice(UUIDModel, StatusModel):
 
     def set_sent(self):
         self.status = self.STATUS.sent
-        self.save(update_fields=["status"])
+        self.sent_date = now()
+        self.save(update_fields=["status", "sent_date"])
 
     @staticmethod
     def get_overdue_query_params(values):

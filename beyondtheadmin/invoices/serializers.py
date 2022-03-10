@@ -108,6 +108,14 @@ class InvoiceListSerializer(serializers.ModelSerializer):
                     'icon_class': 'bi-credit-card'
                 },
             ]
+        if obj.is_overdue:
+            actions += [
+                {
+                    'url': obj.get_reminder_url(),
+                    'label': _("Send reminder"),
+                    'icon_class': 'bi-box-arrow-right'
+                },
+            ]
         return actions
 
     def get_due_date(self, obj):

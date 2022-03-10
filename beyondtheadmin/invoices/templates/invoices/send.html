@@ -11,7 +11,7 @@
         <div class="row align-items-center justify-content-between">
           <div class="col-auto mt-4 mb-4">
             <h1 class="page-header-title">
-              <i class="bi bi bi-credit-card"></i>&nbsp; {% trans "Send invoice" %}
+              <i class="bi bi bi-credit-card"></i>&nbsp; {% block pagetitle %}{% trans "Send invoice" %}{% endblock %}
             </h1>
 
           </div>
@@ -23,8 +23,10 @@
     <div class="datatable card">
       <div class="card-body">
         <p class="lead">
+        {% block lead %}
           {% blocktrans with invoice=invoice.code client=invoice.client amount=invoice.total|money %}Please confirm you
             want to send invoice {{ invoice }} ({{ amount }}) to {{ client }}.{% endblocktrans %}
+        {% endblock%}
         </p>
 
         <form action="{{ invoice.get_send_url }}" method="post">
