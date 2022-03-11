@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from django.utils.text import gettext_lazy as _
 
-from rest_framework import generics, permissions, viewsets
+from rest_framework import generics, permissions, viewsets, views, mixins
 
 from beyondtheadmin.clients.models import Client
 from beyondtheadmin.companies.models import Company
@@ -13,6 +13,27 @@ from beyondtheadmin.api.filters import DatatablesFilterAndPanesBackend
 from ..models import Invoice, InvoiceLine
 from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
                            InvoiceSerializer)
+from .tasks import generate_pdf
+
+
+
+class InvoiceGenerateView(mixins.RetrieveModelMixin, views.APIView):
+    """
+    Triggers a call to initiate an expense details report task to
+    asynchronously
+    generate expense details report.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        # view starts off the task
+        task = generate_report.delay()
+        # returns the task_id with the response
+        response = {"task_id": task.task_id}
+        return Response(response, status=status.HTTP_202_ACCEPTED)
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):

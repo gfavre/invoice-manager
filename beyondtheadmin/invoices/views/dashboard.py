@@ -19,6 +19,7 @@ from anymail.exceptions import AnymailError
 from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
                      InvoiceStatusForm)
 from ..models import Invoice
+from ..tasks import generate_pdf
 
 
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
@@ -145,6 +146,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
             reply_to=reply_to,
             bcc=bcc
         )
+        # TODO: move to celery
         if not invoice.pdf or invoice.pdf_version != invoice.version:
             invoice.generate_pdf()
 

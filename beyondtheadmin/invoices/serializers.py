@@ -41,7 +41,8 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = ('id', 'status', 'code', 'company', 'client', 'due_date', 'displayed_date',
                   'vat_rate',
                   'title', 'description', 'period_start', 'period_end',
-                  'url', 'total', 'lines')
+                  'url', 'total', 'lines',
+                  'latest_pdf_url', 'version', 'pdf_version')
 
     def get_url(self, obj):
         return obj.get_api_url()

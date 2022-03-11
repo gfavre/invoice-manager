@@ -103,8 +103,11 @@ class Invoice(UUIDModel, StatusModel):
     @property
     def latest_pdf_url(self):
         if self.pdf_version != self.version:
-            self.generate_pdf()
-        return self.pdf.url
+            from .tasks import generate_pdf
+            generate_pdf.delay(self.id)
+        if self.pdf:
+            return self.pdf.url
+        return None
 
     @property
     def subtotal(self):
