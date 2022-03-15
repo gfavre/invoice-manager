@@ -15,18 +15,31 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet)
-router.register('invoices', invoices_views.InvoiceViewSet)
-invoices_router = routers.NestedSimpleRouter(router, r'invoices', lookup='invoice')
-invoices_router.register(r'lines', invoices_views.InvoiceLineViewSet,
-                         basename='invoices-lines')
+router.register("invoices", invoices_views.InvoiceViewSet)
+invoices_router = routers.NestedSimpleRouter(router, r"invoices", lookup="invoice")
+invoices_router.register(
+    r"lines", invoices_views.InvoiceLineViewSet, basename="invoices-lines"
+)
+invoices_router.register(
+    r"pdf", invoices_views.InvoicePDFViewSet, basename="invoices-pdf"
+)
 
 app_name = "api"
 urlpatterns = [
-    path('', include(router.urls)),
-    path('', include(invoices_router.urls)),
-    path('earnings/<uuid:company_pk>/', ProfitView.as_view(), name='earnings-per-company'),
-    path('open-invoices/<str:company_pk>', OpenInvoicesView.as_view(), name='open-invoices-per-company'),
-    path('open-invoices', OpenInvoicesView.as_view(), name='open-invoices'),
-    path('invoices/<str:company_pk>', invoices_views.CompanyInvoiceListView.as_view(), name='company-invoices'),
-
+    path("", include(router.urls)),
+    path("", include(invoices_router.urls)),
+    path(
+        "earnings/<uuid:company_pk>/", ProfitView.as_view(), name="earnings-per-company"
+    ),
+    path(
+        "open-invoices/<str:company_pk>",
+        OpenInvoicesView.as_view(),
+        name="open-invoices-per-company",
+    ),
+    path("open-invoices", OpenInvoicesView.as_view(), name="open-invoices"),
+    path(
+        "invoices/<str:company_pk>",
+        invoices_views.CompanyInvoiceListView.as_view(),
+        name="company-invoices",
+    ),
 ]

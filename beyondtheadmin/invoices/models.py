@@ -47,9 +47,6 @@ class Invoice(UUIDModel, StatusModel):
 
     version = models.PositiveIntegerField(_("Version"), default=1, editable=False)
 
-    pdf = models.FileField(_("PDF"), null=True, upload_to='invoices/', editable=False)
-    pdf_version = models.PositiveIntegerField(_("Version of PDF"), null=True, editable=False)
-
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
     sent_date = models.DateTimeField(_("Sent date"), blank=True, null=True)
     last_reminder_date = models.DateTimeField(_("Last reminder date"), blank=True, null=True)
@@ -255,6 +252,16 @@ class Invoice(UUIDModel, StatusModel):
             return {'status': Invoice.STATUS.sent, 'due_date__lt': now().date()}
         else:
             return {'status': Invoice.STATUS.sent, 'due_date__gt': now().date()}
+
+
+class InvoicePDF(UUIDModel, StatusModel):
+    STATUS = (('generating', _('Generating')), ('ready', _('Ready')), ('error', _('Error')))
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='pdfs')
+    pdf = models.FileField(_("PDF"), null=True, upload_to='invoices/', editable=False)
+    version = models.PositiveIntegerField(_("Version of PDF"), null=True, editable=False)
+
+    class Meta:
+        unique_together = ('invoice', 'version')
 
 
 class InvoiceLine(UUIDModel):

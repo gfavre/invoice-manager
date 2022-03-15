@@ -29,9 +29,9 @@ TIME_ZONE = "CET"
 LANGUAGE_CODE = "fr"
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 LANGUAGES = [
-    ('fr', 'Français'),
-    ('de', 'Deutsch'),
-    ('en', 'English'),
+    ("fr", "Français"),
+    ("de", "Deutsch"),
+    ("en", "English"),
 ]
 
 
@@ -44,7 +44,7 @@ USE_L10N = True
 USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
 LOCALE_PATHS = [str(ROOT_DIR / "locale")]
-SHORT_DATE_FORMAT = 'dS.m.Y'
+SHORT_DATE_FORMAT = "dS.m.Y"
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -76,21 +76,21 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.openid',
-    'bootstrap_datepicker_plus',
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.openid",
+    "bootstrap_datepicker_plus",
     "ckeditor",
     "colorfield",
     "corsheaders",
     "crispy_forms",
     "django_celery_beat",
-    'django_countries',
-    'localflavor',
-    'phonenumber_field',
+    "django_countries",
+    "localflavor",
+    "phonenumber_field",
     "rest_framework",
     "rest_framework.authtoken",
-    'rest_framework_datatables',
-    'templatetag_handlebars',  # include handlebars templates
+    "rest_framework_datatables",
+    "templatetag_handlebars",  # include handlebars templates
 ]
 
 LOCAL_APPS = [
@@ -326,11 +326,11 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         "AUTH_PARAMS": {
             "access_type": "online",
-        }
+        },
     }
 }
 SOCIALACCOUNT_QUERY_EMAIL = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # django-rest-framework
@@ -342,30 +342,32 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    'DEFAULT_RENDERER_CLASSES': (
-            'rest_framework.renderers.JSONRenderer',
-            'rest_framework.renderers.BrowsableAPIRenderer',
-            'rest_framework_datatables.renderers.DatatablesRenderer',
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        "rest_framework_datatables.renderers.DatatablesRenderer",
     ),
-    'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework_datatables.filters.DatatablesFilterBackend',
+    "DEFAULT_FILTER_BACKENDS": (
+        "rest_framework_datatables.filters.DatatablesFilterBackend",
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 50,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework_datatables.pagination.DatatablesPageNumberPagination",
+    "PAGE_SIZE": 50,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
-PHONENUMBER_DEFAULT_REGION = 'CH'
+PHONENUMBER_DEFAULT_REGION = "CH"
 
-PHANTOMJSCLOUD_APIKEY = env('PHANTOMJSCLOUD_APIKEY')
-PHANTOMJSCLOUD_API_URL = 'https://PhantomJsCloud.com/api/browser/v2/{}/'.format(PHANTOMJSCLOUD_APIKEY)
+PHANTOMJSCLOUD_APIKEY = env("PHANTOMJSCLOUD_APIKEY")
+PHANTOMJSCLOUD_API_URL = "https://PhantomJsCloud.com/api/browser/v2/{}/".format(
+    PHANTOMJSCLOUD_APIKEY
+)
 
-COUNTRIES_FIRST = ('CH',)
+COUNTRIES_FIRST = ("CH",)
 COUNTRIES_FIRST_REPEAT = True
-COUNTRIES_FIRST_BREAK = '---'
+COUNTRIES_FIRST_BREAK = "---"
 
 
 DEFAULT_INVOICE_FROM_EMAIL = "facturation@mesfactures.ch"

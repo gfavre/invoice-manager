@@ -1,10 +1,15 @@
 from django.contrib import admin
 
-from .models import Invoice, InvoiceLine
+from .models import Invoice, InvoiceLine, InvoicePDF
 
 
 class InvoiceLineInline(admin.TabularInline):
     model = InvoiceLine
+
+
+class InvoicePDFInline(admin.TabularInline):
+    model = InvoicePDF
+    readonly_fields = ['pdf', 'version']
 
 
 @admin.register(Invoice)
@@ -21,11 +26,10 @@ class InvoiceAdmin(admin.ModelAdmin):
         'vat_rate',
         'total',
         'qr_bill',
-        'pdf', 'pdf_version'
     )
-    inlines = [InvoiceLineInline]
+    inlines = [InvoiceLineInline, InvoicePDFInline]
     list_display = ('code', 'company', 'client', 'total', 'displayed_date', 'status')
     list_filter = ('status', 'company', 'client')
-    readonly_fields = ['status_changed', 'total', 'pdf', 'pdf_version']
+    readonly_fields = ['status_changed', 'total']
     search_fields = ('code', 'company__name', 'client__company_name',
                      'client__contact_first_name', 'client__contact_last_name', 'total')

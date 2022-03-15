@@ -9,7 +9,7 @@ from rest_framework import serializers
 
 from beyondtheadmin.clients.serializers import ClientSerializer
 
-from .models import Invoice, InvoiceLine
+from .models import Invoice, InvoiceLine, InvoicePDF
 
 
 class InvoiceLineSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
                   'vat_rate',
                   'title', 'description', 'period_start', 'period_end',
                   'url', 'total', 'lines',
-                  'latest_pdf_url', 'version', 'pdf_version')
+                  'version',)
 
     def get_url(self, obj):
         return obj.get_api_url()
@@ -151,3 +151,9 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return obj.get_api_url()
+
+
+class InvoicePDFSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvoicePDF
+        fields = ('status', 'pdf', 'version')

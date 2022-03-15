@@ -2,19 +2,20 @@
 from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now
 from django.utils.text import gettext_lazy as _
+from django.utils.timezone import now
 
-from rest_framework import generics, permissions, viewsets, views, mixins
+from rest_framework import generics, mixins, permissions, views, viewsets
 
+from beyondtheadmin.api.filters import DatatablesFilterAndPanesBackend
 from beyondtheadmin.clients.models import Client
 from beyondtheadmin.companies.models import Company
-from beyondtheadmin.api.filters import DatatablesFilterAndPanesBackend
-from ..models import Invoice, InvoiceLine
-from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
-                           InvoiceSerializer)
-from .tasks import generate_pdf
 
+from ..models import Invoice, InvoiceLine, InvoicePDF
+from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
+                           InvoicePDFSerializer,
+                           InvoiceSerializer)
+from ..tasks import generate_pdf
 
 
 class InvoiceGenerateView(mixins.RetrieveModelMixin, views.APIView):
@@ -30,7 +31,7 @@ class InvoiceGenerateView(mixins.RetrieveModelMixin, views.APIView):
 
     def get(self, request, *args, **kwargs):
         # view starts off the task
-        task = generate_report.delay()
+        task = generate_pdf.delay()
         # returns the task_id with the response
         response = {"task_id": task.task_id}
         return Response(response, status=status.HTTP_202_ACCEPTED)
@@ -41,9 +42,9 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
 
     def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)\
-                              .exclude(status=Invoice.STATUS.canceled)\
-                              .select_related('client', 'company')
+        return Invoice.objects.filter(company__users=self.request.user) \
+            .exclude(status=Invoice.STATUS.canceled) \
+            .select_related('client', 'company')
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -96,16 +97,16 @@ class CompanyInvoiceListView(generics.ListAPIView):
                 "overdue": [
                     {
                         'label': _("Waiting"),
-                         'value': 'waiting',
-                         'count': waiting_invoices_qs.count(),
-                         'total': waiting_invoices_qs.count()
+                        'value': 'waiting',
+                        'count': waiting_invoices_qs.count(),
+                        'total': waiting_invoices_qs.count()
                     },
                     {
                         'label': _("Overdue"),
-                         'value': 'overdue',
-                         'count': overdue_invoices_qs.count(),
-                         'total': overdue_invoices_qs.count()
-                     },
+                        'value': 'overdue',
+                        'count': overdue_invoices_qs.count(),
+                        'total': overdue_invoices_qs.count()
+                    },
                 ]
             }
         }
@@ -118,6 +119,19 @@ class InvoiceLineViewSet(viewsets.ModelViewSet):
         if 'invoice_pk' not in self.kwargs:
             raise Http404()
         return InvoiceLine.objects.filter(invoice_id=self.kwargs['invoice_pk'])
+
+    def perform_create(self, serializer):
+        serializer.save(invoice_id=self.kwargs['invoice_pk'])
+
+
+class InvoicePDFViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = InvoicePDFSerializer
+    lookup_field = 'version'
+
+    def get_queryset(self):
+        if 'invoice_pk' not in self.kwargs:
+            raise Http404()
+        return InvoicePDF.objects.filter(invoice_id=self.kwargs['invoice_pk'])
 
     def perform_create(self, serializer):
         serializer.save(invoice_id=self.kwargs['invoice_pk'])
