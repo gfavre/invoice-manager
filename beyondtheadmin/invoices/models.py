@@ -99,6 +99,8 @@ class Invoice(UUIDModel, StatusModel):
 
     @property
     def latest_pdf_url(self):
+
+        return None
         if self.pdf_version != self.version:
             from .tasks import generate_pdf
             generate_pdf.delay(self.id)
@@ -113,11 +115,11 @@ class Invoice(UUIDModel, StatusModel):
             acc += line.total
         return acc
 
-    def add_pdf(self, content):
-        invoice_pdf, created = InvoicePDF.objects.get_or_create(invoice=self, version=self.version)
-        self.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
-        self.pdf_version = self.version
-        self.save(update_version=False)
+    def add_pdf(self, content, version):
+        invoice_pdf, created = InvoicePDF.objects.get_or_create(invoice=self, version=version)
+        invoice_pdf.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
+        invoice_pdf.status = InvoicePDF.STATUS.ready
+        invoice_pdf.save()
 
     def duplicate(self):
         previous_pk = self.pk
@@ -141,12 +143,6 @@ class Invoice(UUIDModel, StatusModel):
             line.invoice = self
             line.save()
         return self
-
-    def generate_pdf(self, content):
-        from .pdf import generate_pdf
-        pdf = generate_pdf(content)
-        if pdf:
-            self.add_pdf(pdf)
 
     def get_absolute_url(self):
         return reverse('invoice-print', kwargs={'pk': self.pk})
@@ -256,7 +252,7 @@ class Invoice(UUIDModel, StatusModel):
 
 
 class InvoicePDF(UUIDModel, StatusModel):
-    STATUS = (('generating', _('Generating')), ('ready', _('Ready')), ('error', _('Error')))
+    STATUS = Choices(('generating', _('Generating')), ('ready', _('Ready')), ('error', _('Error')))
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='pdfs')
     pdf = models.FileField(_("PDF"), null=True, upload_to='invoices/', editable=False)
     version = models.PositiveIntegerField(_("Version of PDF"), null=True, editable=False)

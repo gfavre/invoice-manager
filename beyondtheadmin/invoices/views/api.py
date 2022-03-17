@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.db.models import Count
+from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import gettext_lazy as _
 from django.utils.timezone import now
 
-from rest_framework import generics, mixins, permissions, views, viewsets
+from rest_framework import generics, permissions, viewsets
 
 from beyondtheadmin.api.filters import DatatablesFilterAndPanesBackend
 from beyondtheadmin.clients.models import Client
@@ -15,26 +16,8 @@ from ..models import Invoice, InvoiceLine, InvoicePDF
 from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer,
                            InvoicePDFSerializer,
                            InvoiceSerializer)
+from ..pdf import build_content_for_pdf
 from ..tasks import generate_pdf
-
-
-class InvoiceGenerateView(mixins.RetrieveModelMixin, views.APIView):
-    """
-    Triggers a call to initiate an expense details report task to
-    asynchronously
-    generate expense details report.
-    """
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
-    def get(self, request, *args, **kwargs):
-        # view starts off the task
-        task = generate_pdf.delay()
-        # returns the task_id with the response
-        response = {"task_id": task.task_id}
-        return Response(response, status=status.HTTP_202_ACCEPTED)
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -135,17 +118,20 @@ class InvoicePDFViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_object(self):
         try:
-            return self.get_queryset().get(version=self.kwargs['version'])
+            version = int(self.kwargs['version'])
+            return self.get_queryset().get(version=version)
         except InvoicePDF.DoesNotExist:
             invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
-            if invoice.version != self.kwargs['version']:
+            if invoice.version != version:
                 raise Http404()
-            invoice_pdf = InvoicePDF.objects.create(invoice=invoice, version=invoice.version)
-            generate_pdf.delay(str(invoice.id))
+            invoice_pdf = InvoicePDF.objects.create(invoice=invoice, version=version)
+            content = build_content_for_pdf(invoice)
+            transaction.on_commit(
+                lambda: generate_pdf.delay(invoice_id=str(invoice.id), version=version, content=content)
+            )
             return invoice_pdf
+        except ValueError:
+            raise Http404()
 
-    def retrieve(self, request, *args, **kwargs):
-        breakpoint()
-        pass
 
 
