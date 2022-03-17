@@ -114,6 +114,7 @@ class Invoice(UUIDModel, StatusModel):
         return acc
 
     def add_pdf(self, content):
+        invoice_pdf, created = InvoicePDF.objects.get_or_create(invoice=self, version=self.version)
         self.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
         self.pdf_version = self.version
         self.save(update_version=False)
@@ -141,9 +142,9 @@ class Invoice(UUIDModel, StatusModel):
             line.save()
         return self
 
-    def generate_pdf(self):
+    def generate_pdf(self, content):
         from .pdf import generate_pdf
-        pdf = generate_pdf(self)
+        pdf = generate_pdf(content)
         if pdf:
             self.add_pdf(pdf)
 

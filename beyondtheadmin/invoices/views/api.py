@@ -133,5 +133,19 @@ class InvoicePDFViewSet(viewsets.ReadOnlyModelViewSet):
             raise Http404()
         return InvoicePDF.objects.filter(invoice_id=self.kwargs['invoice_pk'])
 
-    def perform_create(self, serializer):
-        serializer.save(invoice_id=self.kwargs['invoice_pk'])
+    def get_object(self):
+        try:
+            return self.get_queryset().get(version=self.kwargs['version'])
+        except InvoicePDF.DoesNotExist:
+            invoice = get_object_or_404(Invoice, pk=self.kwargs['invoice_pk'])
+            if invoice.version != self.kwargs['version']:
+                raise Http404()
+            invoice_pdf = InvoicePDF.objects.create(invoice=invoice, version=invoice.version)
+            generate_pdf.delay(str(invoice.id))
+            return invoice_pdf
+
+    def retrieve(self, request, *args, **kwargs):
+        breakpoint()
+        pass
+
+

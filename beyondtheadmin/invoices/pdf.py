@@ -38,7 +38,7 @@ PHANTOMJS_CONF = {
 }
 
 
-def generate_pdf(invoice: Invoice, domain_name=None, use_https=True):
+def build_content_for_pdf(invoice: Invoice, domain_name=None, use_https=True):
     if not domain_name:
         domain_name = Site.objects.get(pk=settings.SITE_ID).domain
     context = {'object': invoice, 'invoice': invoice}
@@ -49,7 +49,11 @@ def generate_pdf(invoice: Invoice, domain_name=None, use_https=True):
     request.META['SERVER_PORT'] = use_https and 443 or 80
     request.META['HTTP_X_FORWARDED_PROTO'] = use_https and 'https' or 'http'
     with override_settings(ALLOWED_HOSTS=[domain_name]):
-        content = render_to_string('invoices/detail.html', context=context, request=request)
+        return render_to_string('invoices/detail.html', context=context, request=request)
+
+
+def generate_pdf(content):
+
     phantomjs_conf = PHANTOMJS_CONF.copy()
     phantomjs_conf['content'] = content
     try:
