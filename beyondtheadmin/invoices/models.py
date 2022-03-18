@@ -162,6 +162,9 @@ class Invoice(UUIDModel, StatusModel):
     def get_edit_url(self):
         return reverse('invoices:update', kwargs={'pk': self.pk})
 
+    def get_pdf_generation_url(self):
+        return reverse('api:invoices-pdf-detail', kwargs={'invoice_pk': self.pk, 'version': self.version})
+
     def get_qrbill(self):
         if not self.due_date:
             raise ValueError
