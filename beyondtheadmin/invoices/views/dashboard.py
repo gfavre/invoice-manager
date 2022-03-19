@@ -131,6 +131,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
     def form_valid(self, form):
         invoice: Invoice = self.get_object()
         send_invoice_email.delay(invoice.pk, form.cleaned_data['subject'], form.cleaned_data['message'])
+        messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
     def get(self, request, *args, **kwargs):
