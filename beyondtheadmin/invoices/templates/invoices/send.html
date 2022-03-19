@@ -42,8 +42,16 @@
           <div class="mb-3 row">
             <label for="recipient" class="col-sm-2 col-form-label">{% trans "Attachment" %}</label>
             <div class="col-sm-10">
-              <a href="{{ invoice.get_absolute_url }}?pdf=1" download="" class="form-control-plaintext"><i
-                  class="bi bi-file-earmark-text"></i>&nbsp; {% trans "Invoice" %}</a>
+              <button class="btn btn-link" id="download-button">
+                <span class="label"><i class="bi bi-file-earmark-text"></i>&nbsp; {% trans "Invoice" %}</span>
+                <span class="loading d-none">
+                  <div class="spinner-border spinner-border-sm" role="status"></div>
+                  {% trans "Generating PDF..." %}
+                </span>
+                <span class="error d-none">
+                  <i class="bi bi-exclamation-triangle"></i>&nbsp; {% trans "Error" %}
+                </span>
+              </button>
             </div>
           </div>
 
@@ -55,3 +63,41 @@
     </div>
   </section>
 {% endblock content %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script>
+    $(document).ready(function () {
+      $('body').on('click', '#download-button:not(.btn-danger)', function (event) {
+
+        event.preventDefault();
+
+        function doPoll() {
+          const url = "{{ invoice.get_pdf_generation_url }}";
+          $('#download-button .label').toggleClass('d-none');
+          $('#download-button .loading').toggleClass('d-none');
+          $.get(url).done(function (data) {
+            if (data.status === 'ready') {
+              const a = document.createElement('a');
+              document.body.appendChild(a);
+              a.style = 'display: none';
+              a.href = data.pdf;
+              a.download = 'download'
+              a.click();
+              $('#download-button .label').toggleClass('d-none');
+              $('#download-button .loading').toggleClass('d-none');
+            } else if (data.status === 'error') {
+              $('#download-button .loading').toggleClass('d-none');
+              $('#download-button .error').toggleClass('d-none');
+              $('#download-button').toggleClass(['btn-primary', 'btn-danger']);
+
+            } else {
+              setTimeout(doPoll, 1000);
+            }
+          });
+        }
+        doPoll()
+      });
+    });
+  </script>
+{% endblock %}

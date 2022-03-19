@@ -14,12 +14,10 @@ from django.views.generic import (CreateView, FormView, RedirectView,
                                   TemplateView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 
-from anymail.exceptions import AnymailError
-
 from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
                      InvoiceStatusForm)
 from ..models import Invoice
-from ..tasks import generate_pdf
+from ..tasks import send_invoice_email
 
 
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
@@ -132,34 +130,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         invoice: Invoice = self.get_object()
-        bcc = []
-        if invoice.company.bcc_email:
-            bcc.append(invoice.company.bcc_email)
-        reply_to = []
-        if not invoice.company.override_default_from_email:
-            reply_to.append(invoice.company.from_email)
-        email = EmailMessage(
-            subject=form.cleaned_data.get('subject'),
-            body=form.cleaned_data.get('message'),
-            from_email=invoice.company.invoice_from_email,
-            to=[invoice.client.full_contact_email],
-            reply_to=reply_to,
-            bcc=bcc
-        )
-        # TODO: move to celery
-        if not invoice.pdf or invoice.pdf_version != invoice.version:
-            invoice.generate_pdf()
-
-        email.attach_file(invoice.pdf.path, 'application/pdf')
-        try:
-            email.send()
-            invoice.set_sent()
-            messages.info(self.request, self.get_success_message())
-        except AnymailError as e:
-            messages.info(
-                self.request,
-                message=_("Your invoice could not be sent, administrators have been warned."))
-            raise
+        send_invoice_email.delay(invoice.pk, form.cleaned_data['subject'], form.cleaned_data['message'])
         return HttpResponseRedirect(self.get_success_url())
 
     def get(self, request, *args, **kwargs):

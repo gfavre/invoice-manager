@@ -98,6 +98,13 @@ class Invoice(UUIDModel, StatusModel):
         return self.status == self.STATUS.sent and self.due_date < now().date()
 
     @property
+    def latest_pdf(self):
+        try:
+            return self.pdfs.get(version=self.version).pdf
+        except InvoicePDF.DoesNotExist:
+            return None
+
+    @property
     def subtotal(self):
         acc = Decimal('0.0')
         for line in self.lines.all():
@@ -150,6 +157,12 @@ class Invoice(UUIDModel, StatusModel):
 
     def get_edit_url(self):
         return reverse('invoices:update', kwargs={'pk': self.pk})
+
+    def generate_latest_pdf(self):
+        from .pdf import build_content_for_pdf, generate_pdf
+        content = build_content_for_pdf(self)
+        generated_pdf = generate_pdf(content)
+        self.add_pdf(generated_pdf, self.version)
 
     def get_pdf_generation_url(self):
         return reverse('api:invoices-pdf-detail', kwargs={'invoice_pk': self.pk, 'version': self.version})

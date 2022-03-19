@@ -359,8 +359,6 @@
 {% if invoice.qr_bill %}
   <section id="qrbill" class="container-fluid">
     {{ invoice.qr_bill|safe }}
-
-    <!--<img src="{% buildfullurl invoice.get_qrbill_url %}" style="width:100%">-->
   </section>
 {% endif %}
 
