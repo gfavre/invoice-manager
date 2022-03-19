@@ -98,17 +98,6 @@ class Invoice(UUIDModel, StatusModel):
         return self.status == self.STATUS.sent and self.due_date < now().date()
 
     @property
-    def latest_pdf_url(self):
-
-        return None
-        if self.pdf_version != self.version:
-            from .tasks import generate_pdf
-            generate_pdf.delay(self.id)
-        if self.pdf:
-            return self.pdf.url
-        return None
-
-    @property
     def subtotal(self):
         acc = Decimal('0.0')
         for line in self.lines.all():
