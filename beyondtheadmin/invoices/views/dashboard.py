@@ -71,8 +71,7 @@ class InvoiceCancelView(LoginRequiredMixin, UpdateView):
         return Invoice.objects.filter(company__users=self.request.user)
 
     def get_success_url(self):
-        return reverse('invoices:list')
-
+        return self.get_object().company.detail_url
 
 class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
     model = Invoice
@@ -88,7 +87,7 @@ class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
         return Invoice.objects.filter(company__users=self.request.user)
 
     def get_success_url(self):
-        return reverse('invoices:list')
+        return self.get_object().company.detail_url
 
 
 class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
@@ -105,7 +104,7 @@ class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
         return Invoice.objects.filter(company__users=self.request.user)
 
     def get_success_url(self):
-        return reverse('invoices:list')
+        return self.get_object().company.detail_url
 
 
 class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
