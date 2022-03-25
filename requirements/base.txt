@@ -33,3 +33,5 @@ django-bootstrap-datepicker-plus==3.0.5
 git+https://github.com/HireIQ/django-templatetag-handlebars.git@django30-support
 django_filter==21.1
 django-countries[pyuca]==7.2.1
+
+zeep==4.1.0
