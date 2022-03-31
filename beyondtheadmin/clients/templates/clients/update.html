@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n  %}
+{% load i18n static %}
 {% block content %}
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
@@ -14,3 +14,31 @@
   </section>
 
 {% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+  <script src="{% static "js/bootstrap-autocomplete.min.js" %}"></script>
+  <script>
+    $(document).ready(function() {
+       $('#id_company_name').autoComplete({
+        resolverSettings: {
+          url: '{% url "api:companies-autocomplete" %}',
+        },
+        formatResult: function(company){
+          return {id: company.uid, text: company.name + ', ' + company.city};
+        },
+
+      });
+
+      $('#id_company_name').on('autocomplete.select', function (evt, item) {
+        evt.preventDefault();
+				$('#id_company_name').val(item.name);
+        $('#id_address').val(item.address);
+        $('#id_city').val(item.city);
+        $('#id_zip_code').val(item.zip_code);
+        $('#id_country').val('CH');
+
+				});
+    });
+  </script>
+{% endblock javascript %}
