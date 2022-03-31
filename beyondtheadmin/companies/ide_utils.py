@@ -5,7 +5,7 @@ entreprises. Les données qu'il contient se limitent au minimum requis pour l'id
 import re
 
 from zeep import Client
-
+from beyondtheadmin.companies.serializers import IDECompanySerializer
 
 TEST_URL = 'https://www.uid-wse-a.admin.ch/V5.0/PublicServices.svc?wsdl'
 PROD_URL = 'https://www.uid-wse.admin.ch/V5.0/PublicServices.svc?wsdl'
@@ -18,14 +18,31 @@ def format_uid(category, uid):
     return '{}-{}'.format(category, '.'.join(re.findall('...',  str(uid))))
 
 
-def uidEntitySearchResultItemToCompany(result_item):
+def convert_search_item_to_company_data(result_item):
     identification_node = result_item.organisation.organisation.organisationIdentification
     uid = format_uid(identification_node.uid.uidOrganisationIdCategorie, identification_node.uid.uidOrganisationId)
     name = identification_node.organisationName
     address_node = result_item.organisation.organisation.address[0]
-    address = address_node.street + address_node.houseNumber
-    zip_code = address_node._value_1.swissZipCode
-    city = address_node.town
+    try:
+        street = address_node.street
+        house_number = address_node.houseNumber
+        if not street:
+            address = ''
+        else:
+            if house_number:
+                address = '{} {}'.format(street, house_number)
+            else:
+                address = street
+    except AttributeError:
+        address = ''
+    try:
+        zip_code = address_node._value_1[0]['swissZipCode']
+    except (IndexError, AttributeError):
+        zip_code = ''
+    try:
+        city = address_node.town
+    except AttributeError:
+        city = ''
     vat_id = None
     try:
         vat_node = result_item.organisation.vatRegisterInformation
@@ -33,8 +50,9 @@ def uidEntitySearchResultItemToCompany(result_item):
             vat_id = format_uid(vat_node.uidVat.uidOrganisationIdCategorie, vat_node.uidVat.uidOrganisationId)
     except AttributeError:
         pass
-
-
+    return {
+        "uid": uid, "name": name, "address": address, "zip_code": zip_code, "city": city, "vat_id": vat_id
+    }
 
 
 def search_company(company_name, client_url=PROD_URL):
@@ -49,39 +67,7 @@ def search_company(company_name, client_url=PROD_URL):
         searchParameters={"uidEntitySearchParameters": company_name},
         config={"maxNumberOfRecords": "10", "searchMode": "Auto", "searchNameAndAddressHistory": False}
     )
-    companies = result.uidEntitySearchResultItem
-    return result
-
-client = Client(wsdl=PROD_URL)
-client.service.Search(
-    searchParameters={"uidEntitySearchParameters": "Beyond the wall"},
-    config={"maxNumberOfRecords": "10", "searchMode": "Auto", "searchNameAndAddressHistory": False})
-
-
-ns3_factory = client.type_factory("ns0")
-        payments = []
-        booking_entries = booking.entries.all().exclude(
-            status__in=[BookingEntry.STATUS.sent, BookingEntry.STATUS.lt_min_amount]
-        )
-        for booking_entry in booking_entries:
-            payment_vat = None
-            payments.append(
-                ns3_factory.PaymentV3(
-                    None,
-                    booking_entry.credited_account_number,
-                    booking_entry.debited_account_number,
-                    None,  # transaction_hash
-                    DEFAULT_PAYMENT_TYPE,  # PaymentType
-                    truncate(booking_entry.amount, 4),  # FIXME: 4 should be a setting
-                    booking_entry.currency.code,
-                    None,
-                    None,
-                    payment_vat,
-                )
-            )
-        payment_array = ns3_factory.ArrayOfPaymentV3(payments)
-        logger.info("Sending Booking: {}".format(payment_array))
-        results = client.service.SavePayments(
-            callContext={"Mandator": settings.FINSTAR_API_MANDATOR},
-            payments=payment_array,
-        )
+    companies = []
+    if result is not None:
+        companies = [convert_search_item_to_company_data(item) for item in result.uidEntitySearchResultItem]
+    return companies

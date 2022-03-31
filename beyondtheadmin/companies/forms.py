@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.forms.models import ModelForm
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from colorfield.widgets import ColorWidget
@@ -10,7 +10,7 @@ from crispy_forms.layout import (ButtonHolder, Column, Fieldset, Layout, Row,
 from .models import Company
 
 
-class CompanyForm(ModelForm):
+class CompanyForm(forms.ModelForm):
 
     class Meta:
         model = Company
@@ -18,6 +18,8 @@ class CompanyForm(ModelForm):
 
         widgets = {
             'contrast_color': ColorWidget(),
+            'address': forms.Textarea(attrs={'rows': 2}),
+
         }
 
     def __init__(self, *args, **kwargs):

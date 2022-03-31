@@ -35,7 +35,6 @@
     </div>
      <!-- Heading -->
 
-    {% if companies.count > 1 %}
       {% for company in companies %}
         <li class="nav-item">
         <a class="nav-link" href="{{ company.get_absolute_url }}" >
@@ -44,14 +43,6 @@
         </a>
       </li>
       {% endfor %}
-    {% else %}
-  <li class="nav-item">
-        <a class="nav-link" href="{{ company.edit_url }}" >
-          <i class="bi bi-journal"></i>
-          <span>{{ company }}</span>
-        </a>
-  </li>
-    {% endif %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'companies:create' %}" >
         <i class="bi bi-journal-plus"></i>

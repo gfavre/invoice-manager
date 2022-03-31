@@ -3,8 +3,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
-from .forms import CompanyForm
-from .models import Company
+from ..forms import CompanyForm
+from ..models import Company
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):

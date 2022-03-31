@@ -21,7 +21,7 @@ class ClientForm(ModelForm):
         self.helper = FormHelper()
 
         self.helper.layout = Layout(
-            InlineRadios('client_type'),
+            'client_type',
             Fieldset(
                 _("Company"),
                 'company_name',
