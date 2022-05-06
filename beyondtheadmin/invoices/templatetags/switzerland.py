@@ -4,6 +4,7 @@ import math
 from django import template
 from django.utils.safestring import mark_safe
 
+from babel.dates import format_date
 import phonenumbers
 
 
@@ -98,3 +99,8 @@ def timedelta(value):
     hours = value // 1  # Integer part
     minutes = value % 1  # decimal part
     return '{}:{:02d}'.format(hours, int(minutes * 60))
+
+
+@register.filter(is_safe=True)
+def swiss_date(value, language='fr'):
+    return format_date(value, locale=f'{language}_CH', format="long")

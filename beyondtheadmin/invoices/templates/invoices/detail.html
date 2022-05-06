@@ -266,7 +266,7 @@
             {{ invoice.client.address | linebreaksbr }}<br>
             {{ invoice.client.country.code }} - {{ invoice.client.zip_code }} {{ invoice.client.city }}
           </address>
-          <p>{% blocktrans with place=invoice.company.city date=invoice.displayed_date|date %}{{ place }},
+          <p>{% blocktrans with place=invoice.company.city date=invoice.displayed_date|swiss_date %}{{ place }},
             {{ date }}{% endblocktrans %}</p>
         </section>
       </div>
@@ -281,7 +281,7 @@
           <dt class="col-3">{% trans "Invoice ID" %}</dt>
           <dd class="col-9">{{ invoice.code }}</dd>
           <dt class="col-3">{% trans "Due date" %}</dt>
-          <dd class="col-9">{{ invoice.due_date }}</dd>
+          <dd class="col-9">{{ invoice.due_date | swiss_date }}</dd>
 
         </dl>
         <table class="table">
