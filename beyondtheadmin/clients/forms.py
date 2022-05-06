@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from decimal import Decimal
+
 from django.forms.models import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,6 +17,12 @@ class ClientForm(ModelForm):
     class Meta:
         model = Client
         fields = '__all__'
+
+    def clean_vat_rate(self):
+        vat_rate = self.cleaned_data.get("vat_rate")
+        if vat_rate is None:
+            vat_rate = Decimal('0.0')
+        return vat_rate
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
