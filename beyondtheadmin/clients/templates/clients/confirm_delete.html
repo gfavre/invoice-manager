@@ -3,13 +3,13 @@
 {% block content %}
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
-      {% trans "Delete company" %}
+      {% trans "Delete client" %}
     </header>
     <article class="card-body">
       <p class="lead">
-        {% blocktrans with company=company %}Are you sure you want to delete "{{ company }}"?{% endblocktrans %}
+        {% blocktrans with company=company %}Are you sure you want to delete "{{ client }}"?{% endblocktrans %}
       </p>
-      <form action="{{ company.delete_url }}" method="post">
+      <form action="{{ client.delete_url }}" method="post">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
 

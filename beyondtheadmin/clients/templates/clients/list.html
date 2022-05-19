@@ -55,37 +55,48 @@
     </div>
   </header>
   <section class="container headed-content">
-  <div class="datatable card">
-    <div class="card-body">
-    <p>
-      <a class="btn btn-success btn-large" href="{% url 'clients:create' %}">
-      <i class="bi bi-person-plus-fill"></i>&nbsp; {% trans "New client" %}</a>
-    </p>
-    <table class="table" id="clients">
-      <thead>
-      <tr>
-        <th class="client-name">{% trans "Name" %}</th>
-        <th class="client-last-invoice-date">{% trans "Last invoice" %}</th>
-        <th data-data="actions" class="invoice-actions d-print-none">{% trans "Actions" %}</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for client in client_list %}
-        <tr>
-          <td>{{ client }}</td>
-          <td>{{ client.last_invoice_date|default:"n/a" }}</td>
-          <td>
-            <ul class="list-unstyled">
-              <li><a href="{{ client.get_update_url }}" class="btn btn-sm"><i class="bi bi-pencil"></i>  {% trans "Edit" %}</a></li>
-              <li><a href="{{ client.get_delete_url }}" class="btn btn-sm"><i class="bi bi-trash"></i>  {% trans "Delete" %}</a></li>
+    <div class="datatable card">
+      <div class="card-body">
+        <p>
+          <a class="btn btn-success btn-large" href="{% url 'clients:create' %}">
+            <i class="bi bi-person-plus-fill"></i>&nbsp; {% trans "New client" %}</a>
+        </p>
+        <table class="table" id="clients">
+          <thead>
+          <tr>
+            <th class="client-name">{% trans "Name" %}</th>
+            <th class="client-last-invoice-date">{% trans "Last invoice" %}</th>
+            <th>{% trans "Client for" %}</th>
+            <th data-data="actions" class="invoice-actions d-print-none">{% trans "Actions" %}</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for client in client_list %}
+            <tr>
+              <td>{{ client }}</td>
+              <td>{{ client.last_invoice_date|default:"n/a" }}</td>
+              <td>
+                <ul class="list-unstyled">
+                  {% for client_company in client.companies.all %}
+                    <li>{{ client_company.company }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
 
-            </ul>
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+              <td>
+                <ul class="list-unstyled">
+                  <li><a href="{{ client.get_update_url }}" class="btn btn-sm"><i
+                    class="bi bi-pencil"></i> {% trans "Edit" %}</a></li>
+                  <li><a href="{{ client.get_delete_url }}" class="btn btn-sm"><i
+                    class="bi bi-trash"></i> {% trans "Delete" %}</a></li>
+
+                </ul>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
       </div>
-  </div>
+    </div>
   </section>
 {% endblock content %}
