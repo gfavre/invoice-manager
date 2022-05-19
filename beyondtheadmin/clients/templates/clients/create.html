@@ -16,29 +16,5 @@
 
 {% block javascript %}
 {{ block.super }}
-  <script src="{% static "js/bootstrap-autocomplete.min.js" %}"></script>
-  <script>
-    $(document).ready(function() {
-       $id
-
-       $('#id_company_name').autoComplete({
-        resolverSettings: {
-          url: '{% url "api:companies-autocomplete" %}',
-        },
-        formatResult: function(company){
-          return {id: company.uid, text: company.name + ', ' + company.city};
-        },
-      });
-
-      $('#id_company_name').on('autocomplete.select', function (evt, item) {
-        evt.preventDefault();
-				$('#id_company_name').val(item.name);
-        $('#id_address').val(item.address);
-        $('#id_city').val(item.city);
-        $('#id_zip_code').val(item.zip_code);
-        $('#id_country').val('CH');
-
-				});
-    });
-  </script>
+{{ form.media }}
 {% endblock javascript %}

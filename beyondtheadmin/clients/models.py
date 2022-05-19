@@ -18,6 +18,7 @@ class Client(UUIDModel):
 
     contact_first_name = models.CharField(_("Contact first name"), max_length=255, blank=True)
     contact_last_name = models.CharField(_("Contact last name"), max_length=255, blank=True)
+    contact_email = models.EmailField(_("Contact email"), blank=True)
 
     address = models.TextField(_("Address"), blank=True)
     zip_code = models.CharField(_("Postal code"), max_length=10, blank=True)
@@ -32,12 +33,18 @@ class Client(UUIDModel):
                                              default=30)
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
     default_hourly_rate = models.DecimalField(_("Default hourly rate"), max_digits=5, decimal_places=2, default='0.00')
-    contact_email = models.EmailField(_("Contact email"), blank=True)
 
     slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=15)
     invoice_current_count = models.IntegerField(_("Current count of invoices"),
                                                 help_text=_("Used to generate invoice code"),
                                                 default=0)
+    email_template = models.TextField(
+        verbose_name=_("Email Template"),
+        help_text=_(
+            "Default text for invoices sent by mail. Use double curly braces {{ and }} as delimiters for variables."
+        ),
+        blank=True
+    )
 
     class Meta:
         ordering = ('company_name', 'contact_last_name', 'country')

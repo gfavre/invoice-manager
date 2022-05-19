@@ -13,6 +13,11 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('clients:list')
     template_name = 'clients/create.html'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         self.object = form.save()
         self.object.users.add(self.request.user)
@@ -41,6 +46,11 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ClientForm
     success_url = reverse_lazy('clients:list')
     template_name = 'clients/update.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def get_queryset(self):
         return Client.objects.filter(users=self.request.user)
