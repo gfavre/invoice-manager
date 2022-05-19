@@ -77,8 +77,8 @@
               <td>{{ client.last_invoice_date|default:"n/a" }}</td>
               <td>
                 <ul class="list-unstyled">
-                  {% for client_company in client.companies.all %}
-                    <li>{{ client_company.company }}</li>
+                  {% for company in client.companies.all %}
+                    <li>{{ company }}</li>
                   {% endfor %}
                 </ul>
               </td>

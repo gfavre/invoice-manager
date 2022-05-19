@@ -45,6 +45,9 @@ class Client(UUIDModel):
         ),
         blank=True
     )
+    companies = models.ManyToManyField('companies.Company', verbose_name=_("Companies"),
+                                       through='companies.CompanyClient',
+                                       through_fields=('client', 'company'))
 
     class Meta:
         ordering = ('company_name', 'contact_last_name', 'country')

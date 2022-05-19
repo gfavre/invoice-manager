@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import CountryField
 
-from beyondtheadmin.companies.models import Company
+from beyondtheadmin.companies.models import Company, CompanyClient
 from .models import Client
 
 

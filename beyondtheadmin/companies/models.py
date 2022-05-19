@@ -115,8 +115,8 @@ class Company(UUIDModel):
 
 
 class CompanyClient(TimeStampedModel):
-    client = models.ForeignKey('clients.Client', on_delete=models.CASCADE, related_name='companies')
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='clients')
+    client = models.ForeignKey('clients.Client', on_delete=models.CASCADE)#, related_name='companies')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)#, related_name='clients')
     invoice_current_count = models.IntegerField(_("Current count of invoices"),
                                                 help_text=_("Used to generate invoice code"),
                                                 default=0)
