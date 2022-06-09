@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import CountryField
 
-from beyondtheadmin.companies.models import Company, CompanyClient
+from beyondtheadmin.companies.models import Company
 from .models import Client
 
 
@@ -74,7 +74,7 @@ class ClientForm(forms.ModelForm):
         self.helper.layout = Layout(
 
             InlineCheckboxes('companies'),
-            companies_visible and HTML('<hr>') or HTML(),
+            companies_visible and HTML('<hr>') or HTML(''),
             InlineRadios('client_type'),
             Fieldset(
                 _("About client"),
