@@ -355,7 +355,16 @@ REST_FRAMEWORK = {
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
-CORS_URLS_REGEX = r"^/api/.*$"
+#CORS_URLS_REGEX = r"^/api/.*$"
+
+#CORS_ALLOWED_ORIGIN_REGEXES = [
+#    r"^https://\w+\.stripe\.com$",
+#    r"^https://\w+\.stripe\.network$",
+#]
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+
 # Your stuff...
 # ------------------------------------------------------------------------------
 PHONENUMBER_DEFAULT_REGION = "CH"
@@ -371,3 +380,6 @@ COUNTRIES_FIRST_BREAK = "---"
 
 
 DEFAULT_INVOICE_FROM_EMAIL = "facturation@mesfactures.ch"
+
+STRIPE_PUBLISHABLE_KEY = env.str('STRIPE_PUBLISHABLE_KEY', default=None)
+STRIPE_SECRET_KEY = env.str('STRIPE_SECRET_KEY', default=None)

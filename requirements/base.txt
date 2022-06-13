@@ -37,3 +37,4 @@ django-countries[pyuca]==7.2.1
 zeep==4.1.0
 
 babel>=2.9.0
+stripe>=3.3.0

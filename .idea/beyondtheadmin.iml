@@ -38,6 +38,7 @@
         <option value="$MODULE_DIR$/beyondtheadmin/dashboard/templates" />
         <option value="$MODULE_DIR$/beyondtheadmin/companies/templates" />
         <option value="$MODULE_DIR$/beyondtheadmin/clients/templates" />
+        <option value="$MODULE_DIR$/beyondtheadmin/users/templates" />
       </list>
     </option>
   </component>
