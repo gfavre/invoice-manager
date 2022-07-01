@@ -61,6 +61,13 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 
+
+class StripeAPIView(APIView):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
 @csrf_exempt
 def stripe_config(request):
     if request.method == 'GET':
@@ -68,12 +75,12 @@ def stripe_config(request):
         return JsonResponse(conf, safe=False)
 
 
-# Trouver comment faire un descripteur de produit. Je pense que ce devrait être un modèle.
-class CreateStripeCheckoutSessionView(APIView):
+
+
+class CreateStripeCheckoutSessionView(StripeAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None):
-        stripe.api_key = settings.STRIPE_SECRET_KEY
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         product = PRODUCTS[serializer.validated_data['code']]
@@ -100,40 +107,6 @@ class CreateStripeCheckoutSessionView(APIView):
         return JsonResponse({'sessionId': checkout_session['id']})
 
 
-@csrf_exempt
-def create_checkout_session(request):
-    breakpoint()
-    if request.method == 'POST':
-        domain_url = 'http://localhost:8000/'
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        try:
-            # Create new Checkout Session for the order
-            # Other optional params include:
-            # [billing_address_collection] - to display billing address details on the page
-            # [customer] - if you have an existing Stripe Customer ID
-            # [payment_intent_data] - capture the payment later
-            # [customer_email] - prefill the email input in the form
-            # For full details see https://stripe.com/docs/api/checkout/sessions/create
-
-            # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-            checkout_session = stripe.checkout.Session.create(
-                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + 'cancelled/',
-                payment_method_types=['card'],
-                mode='payment',
-                line_items=[
-                    {
-                        'name': 'T-shirt',
-                        'quantity': 1,
-                        'currency': 'usd',
-                        'amount': '2000',
-                    }
-                ]
-            )
-            return JsonResponse({'sessionId': checkout_session['id']})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
-
 
 class CheckoutView(LoginRequiredMixin, TemplateView):
     template_name = "users/checkout.html"
@@ -141,6 +114,14 @@ class CheckoutView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class PricesAPIView(StripeAPIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, format=None):
+        prices = stripe.Price.list()
+        return JsonResponse(prices)
 
 
 class CheckoutSuccessView(LoginRequiredMixin, TemplateView):
