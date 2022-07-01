@@ -27,7 +27,7 @@ class UserAdmin(auth_admin.UserAdmin):
     add_form = UserCreationForm
     fieldsets = (
         ("User", {
-            "fields": ("name",)
+            "fields": ("name", "stripe_customer_id")
         }),
 
     ) + tuple(auth_admin.UserAdmin.fieldsets)

@@ -8,14 +8,19 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, RedirectView, TemplateView, UpdateView
 
+from rest_framework import permissions
+from rest_framework.views import APIView
+
 import stripe
+
+from .serializers import ProductSerializer
+from .products import PRODUCTS
 
 
 User = get_user_model()
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
-
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
@@ -63,10 +68,43 @@ def stripe_config(request):
         return JsonResponse(conf, safe=False)
 
 
+# Trouver comment faire un descripteur de produit. Je pense que ce devrait être un modèle.
+class CreateStripeCheckoutSessionView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        product = PRODUCTS[serializer.validated_data['code']]
+        try:
+            breakpoint()
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                success_url=request.build_absolute_uri(reverse('users:create_checkout_session_success')),
+                cancel_url=request.build_absolute_uri(reverse('users:create_checkout_session_cancel')),
+                customer_email=request.user.email,
+                client_reference_id=request.user.id,
+                line_items=[
+                    {
+                        'name': 'Mesfactures',
+                        'description': product.description,
+                        'amount': product.price,
+                        'currency': 'CHF',
+                        'quantity': 1,
+                    },
+                ],
+            )
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+        return JsonResponse({'sessionId': checkout_session['id']})
+
+
 @csrf_exempt
 def create_checkout_session(request):
-    if request.method == 'GET':
-        domain_url = 'https://localhost:8000/'
+    breakpoint()
+    if request.method == 'POST':
+        domain_url = 'http://localhost:8000/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             # Create new Checkout Session for the order
@@ -99,6 +137,22 @@ def create_checkout_session(request):
 
 class CheckoutView(LoginRequiredMixin, TemplateView):
     template_name = "users/checkout.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class CheckoutSuccessView(LoginRequiredMixin, TemplateView):
+    template_name = "users/checkout_success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class CheckoutCancelView(LoginRequiredMixin, TemplateView):
+    template_name = "users/checkout_cancel.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

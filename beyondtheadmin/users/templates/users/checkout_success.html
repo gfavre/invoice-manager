@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block ameta %}
+
+
+<meta
+      http-equiv="Content-Security-Policy"
+  content="script-src 'self' https://js.stripe.com https://checkout.stripe.com 'unsafe-inline'; style-src checkout.stripe.com; frame-src *.stripe.com *.stripe.network; img-src data: *.stripe.com; connect-src *.stripe.com;"
+/>
+{% endblock %}
+{% block title %}{% trans "Success" %}{% endblock %}
+
+{% block content %}
+<section>
+      <h1>Success</h1>
+</section>
+{% endblock %}

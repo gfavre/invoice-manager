@@ -28,7 +28,8 @@
         </div>
       </div>
         <!-- Add a hidden field with the lookup_key of your Price -->
-        <select type="hidden" name="lookup_key">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <select type="hidden" name="code">
           <option value="prod_LqTgExyg7L3CCh">Monthly plan (6.- per month)</option>
           <option value="prod_LqTixak7nB0k5n">Yearly plan (60.- per year)</option>
         </select>
@@ -37,9 +38,12 @@
 {% endblock %}
 {% block javascript %}
 {{ block.super }}
-   <script src="{% static 'js/checkout.js' %}" defer></script>
+      #<script src="{% static 'js/js.cookie.js' %}"></script>
+
+   <script src="{% static 'js/checkout.js' %}"></script>
 {% endblock javascript %}
 
   {% block header_js %}
     <script src="https://js.stripe.com/v3/"></script>
+
   {% endblock %}
