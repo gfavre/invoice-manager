@@ -30,6 +30,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     inlines = [InvoiceLineInline, InvoicePDFInline]
     list_display = ('code', 'company', 'client', 'total', 'displayed_date', 'status')
     list_filter = ('status', 'company', 'client')
+    raw_id_fields = ('company', 'client')
     readonly_fields = ['status_changed', 'total']
     search_fields = ('code', 'company__name', 'client__company_name',
                      'client__contact_first_name', 'client__contact_last_name', 'total')
