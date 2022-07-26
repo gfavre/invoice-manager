@@ -240,7 +240,8 @@
           itemprop="postalCode">{{ invoice.company.zip_code }}</span> <span
           itemprop="addressLocality">{{ invoice.company.city }}</span><br>
         </address>
-        {% if invoice.company.phone %}<span>Tél.</span>
+        {% if invoice.company.phone %}
+          {% if not invoice.company.additional_phone %}<span>Tél.</span>{% endif %}
           <a href="{{ invoice.company.phone|phone:'RFC3966' }}"
              itemprop="telephone">{{ invoice.company.phone|phone }}</a>
           <br>{% endif %}
@@ -340,7 +341,7 @@
         </section>
       {% endif %}
       {% if invoice.company.invoice_note %}
-        <section><p>{{ invoice.company.invoice_note }}</p></section>
+        <section><p class="mb-4">{{ invoice.company.invoice_note|safe }}</p></section>
       {% endif %}
         <section class="row">
           <div class="{% if invoice.company.has_signature %}col-6{% else %}col{% endif %}">

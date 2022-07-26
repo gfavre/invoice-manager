@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from colorfield.fields import ColorField
+from ckeditor.fields import RichTextField
 from django_countries.fields import CountryField
 from localflavor.generic.models import BICField, IBANField
 from model_utils.models import TimeStampedModel
@@ -37,8 +38,7 @@ class Company(UUIDModel):
     signature_text = models.CharField(_("Signature as text"), max_length=100, blank=True)
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
     email_signature = models.TextField(_("Email signature"), blank=True)
-
-    invoice_note = models.TextField(_("Notes"), blank=True,
+    invoice_note = RichTextField(_("Notes"), blank=True,
                                     help_text=_("Displayed between banking details and signature"))
 
     override_default_from_email = models.BooleanField(_("Override default from email"), default=False)
