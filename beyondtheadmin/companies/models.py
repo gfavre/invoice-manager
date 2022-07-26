@@ -20,6 +20,8 @@ class Company(UUIDModel):
     country = CountryField(_("Country"), blank=True, null=True)
 
     phone = PhoneNumberField(_("Phone number"), blank=True)
+    additional_phone = PhoneNumberField(_("Additional phone number"), blank=True)
+
     email = models.EmailField(_("Email"), blank=True)
     website = models.URLField(_("Web site"), blank=True)
     vat_id = models.CharField(_("VAT ID"), blank=True, max_length=20)
@@ -35,6 +37,10 @@ class Company(UUIDModel):
     signature_text = models.CharField(_("Signature as text"), max_length=100, blank=True)
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
     email_signature = models.TextField(_("Email signature"), blank=True)
+
+    invoice_note = models.TextField(_("Notes"), blank=True,
+                                    help_text=_("Displayed between banking details and signature"))
+
     override_default_from_email = models.BooleanField(_("Override default from email"), default=False)
     from_email = models.CharField(
         _("From email"), max_length=255, default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1])

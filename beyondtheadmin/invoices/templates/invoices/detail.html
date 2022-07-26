@@ -244,6 +244,10 @@
           <a href="{{ invoice.company.phone|phone:'RFC3966' }}"
              itemprop="telephone">{{ invoice.company.phone|phone }}</a>
           <br>{% endif %}
+      {% if invoice.company.additional_phone %}
+          <a href="{{ invoice.company.additional_phone|phone:'RFC3966' }}"
+             itemprop="telephone">{{ invoice.company.additional_phone|phone }}</a>
+          <br>{% endif %}
         {% if invoice.company.email %}
           <a href="mailto:{{ invoice.company.email }}" itemprop="email">{{ invoice.company.email }}</a><br>{% endif %}
         {% if invoice.company.website_url %}
@@ -335,12 +339,15 @@
           </div>
         </section>
       {% endif %}
-      {% if invoice.company.has_signature %}
+      {% if invoice.company.invoice_note %}
+        <section><p>{{ invoice.company.invoice_note }}</p></section>
+      {% endif %}
         <section class="row">
-          <div class="col-6">
+          <div class="{% if invoice.company.has_signature %}col-6{% else %}col{% endif %}">
             {% if invoice.company.thanks %}{{ invoice.company.thanks }}{% else %}
               {% trans "Thank you for your continued confidence." %}{% endif %}
           </div>
+          {% if invoice.company.has_signature %}
           <div class="col-6" id="signature">
             {% if invoice.company.signature_image %}
               <img src="{% buildfullurl invoice.company.signature_image.url %}" id="signature-image">
@@ -349,8 +356,8 @@
               <p>{{ invoice.company.signature_text }}</p>
             {% endif %}
           </div>
+          {% endif %}
         </section>
-      {% endif %}
     </div>
   </div>
 </div>
