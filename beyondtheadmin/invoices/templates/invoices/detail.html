@@ -341,7 +341,7 @@
         </section>
       {% endif %}
       {% if invoice.company.invoice_note %}
-        <section><p class="mb-4">{{ invoice.company.invoice_note|safe }}</p></section>
+        <section class="mb-4">{{ invoice.company.invoice_note|safe }}</section>
       {% endif %}
         <section class="row">
           <div class="{% if invoice.company.has_signature %}col-6{% else %}col{% endif %}">
