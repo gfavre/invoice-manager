@@ -44,6 +44,7 @@ class CompanyForm(forms.ModelForm):
                     )
                 ),
                 'phone',
+                'additional_phone',
                 'email',
                 'website',
                 css_class='border-left-info shadow'
@@ -70,6 +71,7 @@ class CompanyForm(forms.ModelForm):
                 _("Invoices"),
                 'logo',
                 'contrast_color',
+                'invoice_note',
                 'signature_text',
                 'signature_image',
                 'email_signature',
