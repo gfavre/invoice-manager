@@ -53,12 +53,12 @@ def send_invoice_email(self, invoice_id, subject, message):
     if not invoice.latest_pdf:
         try:
             invoice.generate_latest_pdf()
-        except Exception:
-            self.retry(countdown=2 ** self.request.retries, exc=e)
+        except Exception as exc:
+            self.retry(countdown=2 ** self.request.retries, exc=exc)
 
     email.attach_file(invoice.latest_pdf.path, 'application/pdf')
     try:
         email.send()
         invoice.set_sent()
-    except AnymailError as e:
-        self.retry(countdown=2**self.request.retries, exc=e)
+    except AnymailError as exc:
+        self.retry(countdown=2**self.request.retries, exc=exc)
