@@ -2,11 +2,9 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse
 from django.utils.timezone import now
 from django.utils.translation import activate, get_language
 from django.utils.translation import ugettext_lazy as _
@@ -72,6 +70,7 @@ class InvoiceCancelView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.get_object().company.detail_url
+
 
 class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
     model = Invoice
