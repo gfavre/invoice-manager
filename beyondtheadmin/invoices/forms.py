@@ -16,7 +16,13 @@ class BaseInvoiceForm(forms.ModelForm):
         fields = ('company', 'client')
 
     def __init__(self, *args, **kwargs):
+        companies = kwargs.pop('companies', None)
+        clients = kwargs.pop('clients', None)
         super().__init__(*args, **kwargs)
+        if companies:
+            self.fields['company'].queryset = companies
+        if clients:
+            self.fields['client'].queryset = clients
         self.helper = FormHelper()
         self.helper.add_input(Submit('submit', _('Submit')))
 
@@ -28,6 +34,8 @@ class InvoiceEditForm(forms.ModelForm):
                   'period_start', 'period_end', 'vat_rate')
 
     def __init__(self, *args, request=None, **kwargs):
+        companies = kwargs.pop('companies', None)
+        clients = kwargs.pop('clients', None)
         super().__init__(*args, **kwargs)
         date_picker_options = {
             "format": "DD.MM.YYYY",  # moment date-time format
@@ -35,6 +43,10 @@ class InvoiceEditForm(forms.ModelForm):
         }
         if request:
             date_picker_options['locale'] = request.LANGUAGE_CODE
+        if companies:
+            self.fields['company'].queryset = companies
+        if clients:
+            self.fields['client'].queryset = clients
         self.fields['due_date'].widget = DatePickerInput(options=date_picker_options)
         self.fields['displayed_date'].widget = DatePickerInput(options=date_picker_options)
         self.fields['period_start'].widget = DatePickerInput(options=date_picker_options)

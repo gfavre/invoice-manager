@@ -23,6 +23,12 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
     template_name = 'invoices/create.html'
     form_class = BaseInvoiceForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['companies'] = self.request.user.companies.all()
+        kwargs['clients'] = self.request.user.clients.all()
+        return kwargs
+
     def get_success_url(self):
         # noinspection PyUnresolvedReferences
         return self.object.get_edit_url()
@@ -43,6 +49,9 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
+        # FIXME: at some points clients have to be find out with the company using a realtime api call...
+        kwargs['companies'] = self.request.user.companies.all()
+        kwargs['clients'] = self.request.user.clients.all()
         return kwargs
 
     # noinspection PyUnresolvedReferences
