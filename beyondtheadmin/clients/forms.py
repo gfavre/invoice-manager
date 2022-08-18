@@ -66,7 +66,7 @@ class ClientForm(forms.ModelForm):
         companies_visible = True
         self.fields['companies'].queryset = companies_qs
         if companies_qs.count() == 1:
-            self.fields['companies'].initial = companies_qs
+            self.fields['companies'].initial = companies_qs.first()
             self.fields['companies'].widget = forms.HiddenInput()
             companies_visible = False
         self.helper = FormHelper()
