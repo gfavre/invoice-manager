@@ -12,6 +12,7 @@ from django.views.generic import (CreateView, FormView, RedirectView,
                                   TemplateView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 
+from beyondtheadmin.companies.models import CompanyClient
 from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
                      InvoiceStatusForm)
 from ..models import Invoice
@@ -26,7 +27,7 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['companies'] = self.request.user.companies.all()
-        kwargs['clients'] = self.request.user.clients.all()
+        kwargs['clients'] = CompanyClient.objects.filter(company__in=self.request.user.companies.all())
         return kwargs
 
     def get_success_url(self):
