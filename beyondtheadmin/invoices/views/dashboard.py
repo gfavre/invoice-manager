@@ -12,6 +12,7 @@ from django.views.generic import (CreateView, FormView, RedirectView,
                                   TemplateView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 
+from beyondtheadmin.clients.models import Client
 from beyondtheadmin.companies.models import CompanyClient
 from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
                      InvoiceStatusForm)
@@ -27,7 +28,7 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['companies'] = self.request.user.companies.all()
-        kwargs['clients'] = CompanyClient.objects.filter(company__in=self.request.user.companies.all())
+        kwargs['clients'] = Client.objects.filter(companyclient__company__in= self.request.user.companies.all()))
         return kwargs
 
     def get_success_url(self):
@@ -52,7 +53,7 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
         kwargs['request'] = self.request
         # FIXME: at some points clients have to be find out with the company using a realtime api call...
         kwargs['companies'] = self.request.user.companies.all()
-        kwargs['clients'] = CompanyClient.objects.filter(company__in=self.request.user.companies.all())
+        kwargs['clients'] = Client.objects.filter(companyclient__company__in= self.request.user.companies.all()))
         return kwargs
 
     # noinspection PyUnresolvedReferences
