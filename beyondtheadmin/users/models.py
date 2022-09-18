@@ -11,7 +11,6 @@ class User(AbstractUser):
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
     companies = models.ManyToManyField(verbose_name=_("Companies"), to='companies.Company',
                                        related_name='users')
-    clients = models.ManyToManyField(verbose_name=_("Clients"), to='clients.Client', related_name='users')
 
     def get_absolute_url(self):
         """Get url for user's detail view.

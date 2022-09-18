@@ -118,20 +118,3 @@ class Company(UUIDModel):
 
     def get_absolute_url(self):
         return self.detail_url
-
-
-class CompanyClient(TimeStampedModel):
-    client = models.ForeignKey('clients.Client', on_delete=models.CASCADE)#, related_name='companies')
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)#, related_name='clients')
-    invoice_current_count = models.IntegerField(_("Current count of invoices"),
-                                                help_text=_("Used to generate invoice code"),
-                                                default=0)
-
-    def __str__(self):
-        return f'{self.client} - {self.company}'
-
-    class Meta:
-        ordering = ('company', 'client')
-        unique_together = ('client', 'company')
-        verbose_name = _("Company client")
-        verbose_name_plural = _("Company clients")

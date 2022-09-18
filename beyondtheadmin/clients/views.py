@@ -18,11 +18,6 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def form_valid(self, form):
-        self.object = form.save()
-        self.object.users.add(self.request.user)
-        return HttpResponseRedirect(self.get_success_url())
-
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
@@ -30,7 +25,7 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'clients/confirm_delete.html'
 
     def get_queryset(self):
-        return Client.objects.filter(users=self.request.user)
+        return Client.objects.filter(company__users=self.request.user)
 
 
 class ClientListView(LoginRequiredMixin, ListView):
@@ -38,7 +33,7 @@ class ClientListView(LoginRequiredMixin, ListView):
     template_name = 'clients/list.html'
 
     def get_queryset(self):
-        return Client.objects.filter(users=self.request.user)
+        return Client.objects.filter(company__users=self.request.user)
 
 
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
@@ -53,4 +48,4 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def get_queryset(self):
-        return Client.objects.filter(users=self.request.user)
+        return Client.objects.filter(company__users=self.request.user)

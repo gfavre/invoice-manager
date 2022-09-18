@@ -34,10 +34,7 @@ class Client(UUIDModel):
     vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
     default_hourly_rate = models.DecimalField(_("Default hourly rate"), max_digits=5, decimal_places=2, default='0.00')
 
-    slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=15)
-    invoice_current_count = models.IntegerField(_("Current count of invoices"),
-                                                help_text=_("Used to generate invoice code"),
-                                                default=0)
+
     email_template = models.TextField(
         verbose_name=_("Email Template"),
         help_text=_(
@@ -45,9 +42,13 @@ class Client(UUIDModel):
         ),
         blank=True
     )
-    companies = models.ManyToManyField('companies.Company', verbose_name=_("Companies"),
-                                       through='companies.CompanyClient',
-                                       through_fields=('client', 'company'))
+
+    slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=15)
+    invoice_current_count = models.IntegerField(_("Current count of invoices"),
+                                                help_text=_("Used to generate invoice code"),
+                                                default=0)
+    company = models.ForeignKey(verbose_name=_("Company"), to='companies.Company', related_name='clients',
+                                on_delete=models.CASCADE,)
 
     class Meta:
         ordering = ('company_name', 'contact_last_name', 'country')

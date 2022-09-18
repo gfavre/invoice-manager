@@ -22,18 +22,37 @@
   });
 
   let toggleForm = function (){
-    switch ($(this).val()) {
+    switch ($("input[name=client_type]:checked").val()) {
       case 'company':
         $('#person_infos').addClass('d-none');
         $('#company_infos').removeClass('d-none');
+        $('#company_infos #id_company_name').prop('required', true);
+        $('#company_infos label[for=id_company_name]').addClass('requiredField');
+        $('<span class="asteriskField">*</span>').appendTo($('#company_infos label[for=id_company_name]'));
+
+        $('#person_infos #id_first_name').prop('required', false);
+        $('#person_infos label[for=id_first_name]').removeClass('requiredField');
+        $('#person_infos label[for=id_first_name] .asteriskField').remove();
+        $('#person_infos #id_last_name').prop('required', false);
+        $('#person_infos label[for=id_last_name]').removeClass('requiredField');
+        $('#person_infos label[for=id_last_name] .asteriskField').remove();
         break
       case 'person':
         $('#person_infos').removeClass('d-none');
         $('#company_infos').addClass('d-none');
+        $('#person_infos #id_first_name').prop('required', true);
+        $('#person_infos label[for=id_first_name]').addClass('requiredField');
+        $('<span class="asteriskField">*</span>').appendTo($('#person_infos label[for=id_first_name]'));
+        $('#person_infos #id_last_name').prop('required', true);
+        $('#person_infos label[for=id_last_name]').addClass('requiredField');
+        $('<span class="asteriskField">*</span>').appendTo($('#person_infos label[for=id_last_name]'));
+
+        $('#company_infos #id_company_name').prop('required', false);
+        $('#company_infos label[for=id_company_name]').removeClass('requiredField');
+        $('#company_infos label[for=id_company_name] .asteriskField').remove();
         break
     }
   }
-
 
   let clientRadios = document.querySelectorAll("input[name='client_type']");
   Array.prototype.forEach.call(clientRadios, function (radio){
@@ -41,6 +60,5 @@
   })
 
   // initial setup
-  $("#id_client_type_0").change()
-
+  toggleForm();
 })(jQuery); // End of use strict;

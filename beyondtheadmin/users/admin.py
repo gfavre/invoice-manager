@@ -9,12 +9,6 @@ from beyondtheadmin.users.forms import UserChangeForm, UserCreationForm
 User = get_user_model()
 
 
-class ClientInline(admin.TabularInline):
-    model = User.clients.through
-    raw_id_fields = ('client',)
-    verbose_name = _("Clients")
-
-
 class CompanyInline(admin.TabularInline):
     model = User.companies.through
     raw_id_fields = ('company',)
@@ -34,4 +28,4 @@ class UserAdmin(auth_admin.UserAdmin):
 
     list_display = ["username", "name", "is_superuser"]
     search_fields = ["name"]
-    inlines = [ClientInline, CompanyInline]
+    inlines = [CompanyInline]

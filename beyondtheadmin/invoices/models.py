@@ -14,7 +14,6 @@ from model_utils import Choices
 from model_utils.models import StatusModel
 from qrbill.bill import QRBill
 
-from beyondtheadmin.companies.models import CompanyClient
 from beyondtheadmin.utils.model_utils import UUIDModel
 
 
@@ -51,8 +50,6 @@ class Invoice(UUIDModel, StatusModel):
     sent_date = models.DateTimeField(_("Sent date"), blank=True, null=True)
     last_reminder_date = models.DateTimeField(_("Last reminder date"), blank=True, null=True)
 
-    _company_client = None
-
     objects = models.Manager()
     visible = OpenInvoiceManager()
 
@@ -61,13 +58,6 @@ class Invoice(UUIDModel, StatusModel):
 
     def __str__(self):
         return self.code
-
-    @property
-    def company_client(self):
-        if not self._company_client:
-            cc, __ = CompanyClient.objects.get_or_create(client=self.client, company=self.company)
-            self._company_client = cc
-        return self._company_client
 
     @property
     def displayed_datetime(self):
@@ -150,7 +140,7 @@ class Invoice(UUIDModel, StatusModel):
         return reverse('invoices:cancel', kwargs={'pk': self.pk})
 
     def get_code(self):
-        return '{}-{}'.format(self.client.slug, self.company_client.invoice_current_count + 1)
+        return '{}-{}'.format(self.client.slug, self.client.invoice_current_count + 1)
 
     def get_duplicate_url(self):
         return reverse('invoices:duplicate', kwargs={'pk': self.pk})
@@ -215,8 +205,8 @@ class Invoice(UUIDModel, StatusModel):
         super().save(*args, **kwargs)
         if not self.code and generate_code:
             self.code = self.get_code()
-            self.company_client.invoice_current_count += 1
-            self.company_client.save()
+            self.client.invoice_current_count += 1
+            self.client.save()
         if not self.displayed_date:
             self.displayed_date = self.created
         if update_version:
