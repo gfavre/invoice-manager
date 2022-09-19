@@ -52,7 +52,7 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
         kwargs['request'] = self.request
         # FIXME: at some points clients have to be find out with the company using a realtime api call...
         kwargs['companies'] = self.request.user.companies.all()
-        kwargs['clients'] = Client.objects.filter(ompany__in=kwargs['companies'])
+        kwargs['clients'] = Client.objects.filter(company__in=kwargs['companies'])
         return kwargs
 
     # noinspection PyUnresolvedReferences

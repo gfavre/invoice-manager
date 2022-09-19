@@ -28,6 +28,7 @@ class BaseInvoiceForm(forms.ModelForm):
 
 
 class InvoiceEditForm(forms.ModelForm):
+
     class Meta:
         model = Invoice
         fields = ('company', 'client', 'displayed_date', 'due_date', 'title', 'description',
@@ -37,6 +38,9 @@ class InvoiceEditForm(forms.ModelForm):
         companies = kwargs.pop('companies', None)
         clients = kwargs.pop('clients', None)
         super().__init__(*args, **kwargs)
+        self.fields['company'].empty_label = None
+        self.fields['client'].empty_label = None
+
         date_picker_options = {
             "format": "DD.MM.YYYY",  # moment date-time format
             "locale": settings.LANGUAGE_CODE,
