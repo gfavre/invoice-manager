@@ -7,12 +7,13 @@ import re
 from zeep import Client
 from beyondtheadmin.companies.serializers import IDECompanySerializer
 
-TEST_URL = 'https://www.uid-wse-a.admin.ch/V5.0/PublicServices.svc?wsdl'
-PROD_URL = 'https://www.uid-wse.admin.ch/V5.0/PublicServices.svc?wsdl'
+UID_TEST_URL = 'https://www.uid-wse-a.admin.ch/V5.0/PublicServices.svc?wsdl'
+UID_PROD_URL = 'https://www.uid-wse.admin.ch/V5.0/PublicServices.svc?wsdl'
+UID_VAT_REGISTERED = '2'
 
-VAT_REGISTERED = '2'
 
 # nom de l'entreprise: uidEntitySearchResultItem
+
 
 def format_uid(category, uid):
     return '{}-{}'.format(category, '.'.join(re.findall('...',  str(uid))))
@@ -46,7 +47,7 @@ def convert_search_item_to_company_data(result_item):
     vat_id = None
     try:
         vat_node = result_item.organisation.vatRegisterInformation
-        if vat_node.vatStatus == VAT_REGISTERED:
+        if vat_node.vatStatus == UID_VAT_REGISTERED:
             vat_id = format_uid(vat_node.uidVat.uidOrganisationIdCategorie, vat_node.uidVat.uidOrganisationId)
     except AttributeError:
         pass
@@ -55,7 +56,7 @@ def convert_search_item_to_company_data(result_item):
     }
 
 
-def search_company(company_name, client_url=PROD_URL):
+def search_company(company_name, client_url=UID_PROD_URL):
     """
     Search company by name.
     :param company_name:
@@ -71,3 +72,5 @@ def search_company(company_name, client_url=PROD_URL):
     if result is not None:
         companies = [convert_search_item_to_company_data(item) for item in result.uidEntitySearchResultItem]
     return companies
+
+

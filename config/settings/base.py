@@ -371,3 +371,6 @@ COUNTRIES_FIRST_BREAK = "---"
 
 
 DEFAULT_INVOICE_FROM_EMAIL = "facturation@mesfactures.ch"
+
+ZEFIX_USERNAME = env("ZEFIX_USERNAME", default=None)
+ZEFIX_PASSWORD = env("ZEFIX_PASSWORD", default=None)

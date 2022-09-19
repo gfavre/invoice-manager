@@ -32,25 +32,21 @@
 
       $('#id_name').on('autocomplete.select', function (evt, item) {
         evt.preventDefault();
-				$('#id_name').val(item.name);
-				$('#id_vat_id').val(item.vat_id);
-        $('#id_address').val(item.address);
-        $('#id_city').val(item.city);
-        $('#id_zip_code').val(item.zip_code);
-        $('#id_country').val('CH');
-
+         $.ajax({
+           headers: {"X-CSRFToken": "{{ csrf_token }}"},
+           url: '{% url "api:company-detail" %}',
+           data: {uid: item.uid},
+           type: 'GET',
+           success: function (companyDetail) {
+             $('#id_name').val(companyDetail.name);
+              $('#id_vat_id').val(companyDetail.vat_id);
+              $('#id_address').val(companyDetail.address);
+              $('#id_city').val(companyDetail.city);
+              $('#id_zip_code').val(companyDetail.zip_code);
+              $('#id_country').val('CH');
+           },
+         })
 				});
-
-      // Modal
-				$('.basicModalAutoSelect').autoComplete();
-				$('.basicModalAutoSelect').on('autocomplete.select', function (evt, item) {
-					console.log('select');
-					$('.basicModalAutoSelectSelected').html(JSON.stringify(item));
-				});
-
-
-
-
     });
   </script>
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal
 
-from crispy_forms.bootstrap import InlineCheckboxes, InlineRadios
+from crispy_forms.bootstrap import InlineRadios
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (ButtonHolder, Column, Fieldset, HTML, Layout, Row, Submit)
 from django import forms
@@ -27,7 +27,8 @@ class ClientForm(forms.ModelForm):
     company = forms.ModelChoiceField(
         label=_("Client for"),
         queryset=Company.objects.all(),
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.RadioSelect,
+        empty_label=None
     )
 
     class Media:
@@ -46,9 +47,6 @@ class ClientForm(forms.ModelForm):
         widgets = {
             'client_type': forms.RadioSelect,
             'address': forms.Textarea(attrs={'rows': 2}),
-            'company_name': forms.TextInput(
-                attrs={'data-url': reverse_lazy("api:companies-autocomplete")}
-            ),
         }
 
     def clean_vat_rate(self):
@@ -81,6 +79,9 @@ class ClientForm(forms.ModelForm):
         company_qs = Company.objects.filter(users=user)
         companies_visible = True
         self.fields['company'].queryset = company_qs
+        self.fields['company_name'].widget.attrs['data-search-url'] = reverse_lazy("api:companies-autocomplete")
+        self.fields['company_name'].widget.attrs['data-detail-url'] = reverse_lazy("api:company-detail")
+
         if company_qs.count() == 1:
             self.fields['company'].initial = company_qs.first()
             self.fields['company'].widget = forms.HiddenInput()
@@ -99,6 +100,7 @@ class ClientForm(forms.ModelForm):
         self.helper.layout = Layout(
             InlineRadios('company'),
             companies_visible and HTML('<hr>') or HTML(''),
+
             InlineRadios('client_type'),
             Fieldset(
                 _("About client"),

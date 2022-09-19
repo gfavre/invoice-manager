@@ -49,7 +49,7 @@ class CompanyInvoiceListView(generics.ListAPIView):
         return Invoice.objects.filter(company=company_obj).select_related('client')
 
     def get_search_panes(self):
-        clients = Client.objects.filter(companies=self.kwargs.get('company_pk')).annotate(
+        clients = Client.objects.filter(company=self.kwargs.get('company_pk')).annotate(
             invoice_count=Count('invoices')
         )
         invoices = self.get_queryset()

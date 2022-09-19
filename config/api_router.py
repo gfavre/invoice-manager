@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from rest_framework_nested import routers
 
 import beyondtheadmin.invoices.views.api as invoices_views
-from beyondtheadmin.companies.views.api_views import CompanySearchView
+from beyondtheadmin.companies.views.api_views import CompanySearchView, CompanyDetailView
 from beyondtheadmin.dashboard.views import OpenInvoicesView, ProfitView
 from beyondtheadmin.users.api.views import UserViewSet
 
@@ -30,6 +30,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("", include(invoices_router.urls)),
     path("companies/", CompanySearchView.as_view(), name="companies-autocomplete"),
+    path("company-detail/", CompanyDetailView.as_view(), name="company-detail"),
     path(
         "earnings/<uuid:company_pk>/", ProfitView.as_view(), name="earnings-per-company"
     ),

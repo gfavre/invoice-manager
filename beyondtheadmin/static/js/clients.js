@@ -5,7 +5,7 @@
   let $companyField = $('#id_company_name');
   $companyField.autoComplete({
     resolverSettings: {
-      url: $companyField.data('url'),
+      url: $companyField.data('search-url'),
     },
     formatResult: function (company) {
       return {id: company.uid, text: company.name + ', ' + company.city};
@@ -14,14 +14,24 @@
 
   $companyField.on('autocomplete.select', function (evt, item) {
     evt.preventDefault();
-    $('#id_company_name').val(item.name);
-    $('#id_address').val(item.address);
-    $('#id_city').val(item.city);
-    $('#id_zip_code').val(item.zip_code);
-    $('#id_country').val('CH');
+    $.ajax({
+      headers: {"X-CSRFToken": "{{ csrf_token }}"},
+      url: $companyField.data('detail-url'),
+      data: {uid: item.uid},
+      type: 'GET',
+      success: function (companyDetail) {
+        $companyField.val(companyDetail.name);
+        $('#id_address').val(companyDetail.address);
+        $('#id_city').val(companyDetail.city);
+        $('#id_zip_code').val(companyDetail.zip_code);
+        $('#id_country').val('CH');
+      },
+    })
+
+
   });
 
-  let toggleForm = function (){
+  let toggleForm = function () {
     switch ($("input[name=client_type]:checked").val()) {
       case 'company':
         $('#person_infos').addClass('d-none');
@@ -55,7 +65,7 @@
   }
 
   let clientRadios = document.querySelectorAll("input[name='client_type']");
-  Array.prototype.forEach.call(clientRadios, function (radio){
+  Array.prototype.forEach.call(clientRadios, function (radio) {
     radio.addEventListener('change', toggleForm)
   })
 
