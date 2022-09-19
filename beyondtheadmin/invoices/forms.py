@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from decimal import Decimal
+
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -33,6 +35,12 @@ class InvoiceEditForm(forms.ModelForm):
         model = Invoice
         fields = ('company', 'client', 'displayed_date', 'due_date', 'title', 'description',
                   'period_start', 'period_end', 'vat_rate')
+
+    def clean_vat_rate(self):
+        vat_rate = self.cleaned_data.get("vat_rate")
+        if vat_rate is None:
+            vat_rate = Decimal('0.0')
+        return vat_rate
 
     def __init__(self, *args, request=None, **kwargs):
         companies = kwargs.pop('companies', None)
