@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ..serializers import IDECompanySerializer
-from ..zefix_utils import search_zefix, get_detail
+from ..utils.zefix import search_zefix, get_detail
 
 
 class CompanySearchView(APIView):
@@ -17,6 +17,17 @@ class CompanySearchView(APIView):
         serializer = IDECompanySerializer(data=data, many=True)
         serializer.is_valid()
         return Response(serializer.data)
+
+
+class IBANSearchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        query_string = request.query_params.get('q')
+        data = []
+        if query_string:
+            data = get_detail(query_string)
+        return Response(data)
 
 
 class CompanyDetailView(APIView):
