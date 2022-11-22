@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from colorfield.widgets import ColorWidget
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import (ButtonHolder, Column, Fieldset, Layout, Row,
+from crispy_forms.layout import (ButtonHolder, Column, Field, Fieldset, Layout, Row, HTML,
                                  Submit)
 
 from .models import Company
@@ -53,18 +53,28 @@ class CompanyForm(forms.ModelForm):
             Fieldset(
                 _("Business"),
                 'vat_id',
-                'name_for_bank',
                 Row(
                     Column(
-                        'bank',
+                        Field('iban',
+                              **{"v-model": "iban",
+                                 ":class": "{'is-valid': ibanStatus.valid, 'is-invalid': !ibanStatus.valid}"}),
+                        css_class='col-md-6'
+                    ),
+                    Column(
+                        'name_for_bank',
+                        css_class='col-md-6'
+                    ),
+                ),
+                Row(
+                    Column(
+                        Field('bank', v_model='bank', rows=3),
                         css_class='col-9'
                     ),
                     Column(
-                        'bic',
+                        Field('bic', v_model='ibanStatus.bank.swift'),
                         css_class='col'
                     ),
                 ),
-                'iban',
                 css_class='border-left-warning shadow'
             ),
             Fieldset(

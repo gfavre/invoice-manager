@@ -1,5 +1,8 @@
 import requests
 
+from ..models import Bank
+from ..serializers import BankSerializer
+
 
 class OpenIban:
     URL = "https://openiban.com/validate/{iban}?getBIC=true&validateBankCode=true"
@@ -11,9 +14,24 @@ class OpenIban:
         except requests.exceptions.RequestException:
             return {"valid": False}
         response_json = response.json()
+        bank_code = response_json.get("bankData", {}).get("bankCode", "")
+        print(response_json)
+        try:
+            bank = Bank.objects.get(code=bank_code)
+            bank_data = BankSerializer(instance=bank).data
+        except (Bank.DoesNotExist, ValueError):
+            bank_data = None
+
         return {
             "valid": response_json.get("valid"),
-            "bank_name": response_json.get("bankData", {}).get("name", ""),
-            "bank_bic": response_json.get("bankData", {}).get("bic", ""),
-            "bank_code": response_json.get("bankData", {}).get("bankCode", ""),
+            "iban": response_json.get("iban"),
+            "bank": bank_data,
         }
+
+
+"""
+from beyondtheadmin.companies.utils.iban import OpenIban
+
+OpenIban.validate_iban("CH5080808008848958461")
+
+"""

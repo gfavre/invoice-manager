@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ..serializers import IDECompanySerializer
+from ..utils.iban import OpenIban
 from ..utils.zefix import search_zefix, get_detail
 
 
@@ -26,7 +27,7 @@ class IBANSearchView(APIView):
         query_string = request.query_params.get('q')
         data = []
         if query_string:
-            data = get_detail(query_string)
+            data = OpenIban.validate_iban(query_string)
         return Response(data)
 
 
