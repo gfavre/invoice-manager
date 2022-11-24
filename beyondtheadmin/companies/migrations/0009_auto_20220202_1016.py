@@ -6,22 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0015_alter_client_slug'),
-        ('companies', '0008_company_name_for_bank'),
+        ("clients", "0015_alter_client_slug"),
+        ("companies", "0008_company_name_for_bank"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='companyclient',
-            options={'ordering': ('company', 'client'), 'verbose_name': 'Company client', 'verbose_name_plural': 'Company clients'},
+            name="companyclient",
+            options={
+                "ordering": ("company", "client"),
+                "verbose_name": "Company client",
+                "verbose_name_plural": "Company clients",
+            },
         ),
         migrations.AddField(
-            model_name='company',
-            name='override_default_from_email',
-            field=models.BooleanField(default=False, verbose_name='Override default from email'),
+            model_name="company",
+            name="override_default_from_email",
+            field=models.BooleanField(default=False, verbose_name="Override default from email"),
         ),
         migrations.AlterUniqueTogether(
-            name='companyclient',
-            unique_together={('client', 'company')},
+            name="companyclient",
+            unique_together={("client", "company")},
         ),
     ]

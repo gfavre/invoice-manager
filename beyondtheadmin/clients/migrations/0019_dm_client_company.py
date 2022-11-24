@@ -5,7 +5,7 @@ from django.db import migrations
 
 def add_company_to_client(apps, schema_editor):
     # noinspection PyPep8Naming
-    CompanyClient = apps.get_model('companies', 'CompanyClient')
+    CompanyClient = apps.get_model("companies", "CompanyClient")
     for company_client in CompanyClient.objects.all():
         client = company_client.client
         client.company = company_client.company
@@ -14,8 +14,8 @@ def add_company_to_client(apps, schema_editor):
 
 
 def add_client_to_company_client(apps, schema_editor):
-    CompanyClient = apps.get_model('companies', 'CompanyClient')
-    Client = apps.get_model('clients', 'Client')
+    CompanyClient = apps.get_model("companies", "CompanyClient")
+    Client = apps.get_model("clients", "Client")
     for client in Client.objects.all():
         CompanyClient.objects.create(
             company=client.company,
@@ -27,7 +27,7 @@ def add_client_to_company_client(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0018_client_company'),
+        ("clients", "0018_client_company"),
     ]
 
     operations = [

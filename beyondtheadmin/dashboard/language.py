@@ -5,11 +5,18 @@ from django.conf import settings
 from django.urls.base import resolve
 from django.urls.base import reverse as lang_implied_reverse
 from django.urls.exceptions import NoReverseMatch
-from django.utils.translation import (activate, deactivate, get_language,
-                                      override)
+from django.utils.translation import activate, deactivate, get_language, override
 
 
-def reverse(view_name, lang=None, use_lang_prefix=True, args=(), kwargs=None, current_app=None, urlconf=None):
+def reverse(
+    view_name,
+    lang=None,
+    use_lang_prefix=True,
+    args=(),
+    kwargs=None,
+    current_app=None,
+    urlconf=None,
+):
     """
     Similar to django.core.urlresolvers.reverse except for the parameters:
 
@@ -23,7 +30,9 @@ def reverse(view_name, lang=None, use_lang_prefix=True, args=(), kwargs=None, cu
     # http://stackoverflow.com/questions/27680748/when-using-i18n-patterns-how-to-reverse-url-without-language-code
     if lang is None:
         with override(None):
-            return lang_implied_reverse(view_name, args=args, kwargs=kwargs, urlconf=urlconf, current_app=current_app)
+            return lang_implied_reverse(
+                view_name, args=args, kwargs=kwargs, urlconf=urlconf, current_app=current_app
+            )
     cur_language = get_language()
     if use_lang_prefix:
         activate(lang)
@@ -31,9 +40,11 @@ def reverse(view_name, lang=None, use_lang_prefix=True, args=(), kwargs=None, cu
         deactivate()
     url = lang_implied_reverse(view_name, args=args, kwargs=kwargs)
     if not use_lang_prefix:
-        if not url.startswith('/{0}'.format(settings.LANGUAGE_CODE)):
-            raise NoReverseMatch('could not find reverse match for "{}" with language "{}"'.format(view_name, lang))
-        url = url[len(settings.LANGUAGE_CODE) + 1:]
+        if not url.startswith("/{0}".format(settings.LANGUAGE_CODE)):
+            raise NoReverseMatch(
+                'could not find reverse match for "{}" with language "{}"'.format(view_name, lang)
+            )
+        url = url[len(settings.LANGUAGE_CODE) + 1 :]
     activate(cur_language)
     return url
 
@@ -48,14 +59,29 @@ def get_hreflang_info(path, default=True):
     info = []
     if default:
         try:
-            info.append(('x-default', reverse(reverse_match.view_name, use_lang_prefix=False,
-                                              kwargs=reverse_match.kwargs)))
+            info.append(
+                (
+                    "x-default",
+                    reverse(
+                        reverse_match.view_name, use_lang_prefix=False, kwargs=reverse_match.kwargs
+                    ),
+                )
+            )
         except NoReverseMatch:
             # This URL is not language-aware
             return info
     for lang in language_codes():
         info.append(
-            (lang, reverse(reverse_match.view_name, lang=lang, use_lang_prefix=True, kwargs=reverse_match.kwargs)))
+            (
+                lang,
+                reverse(
+                    reverse_match.view_name,
+                    lang=lang,
+                    use_lang_prefix=True,
+                    kwargs=reverse_match.kwargs,
+                ),
+            )
+        )
     return info
 
 

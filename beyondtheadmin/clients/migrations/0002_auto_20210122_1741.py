@@ -6,18 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0001_initial'),
+        ("clients", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='currency',
-            field=models.CharField(choices=[('CHF', 'CHF'), ('EUR', 'Euro')], default='CHF', max_length=3),
+            model_name="client",
+            name="currency",
+            field=models.CharField(
+                choices=[("CHF", "CHF"), ("EUR", "Euro")], default="CHF", max_length=3
+            ),
         ),
         migrations.AddField(
-            model_name='client',
-            name='language',
-            field=models.CharField(choices=[('en', 'English'), ('de', 'Deutsch'), ('fr', 'Français'), ('it', 'Italiano')], default='fr', max_length=2),
+            model_name="client",
+            name="language",
+            field=models.CharField(
+                choices=[
+                    ("en", "English"),
+                    ("de", "Deutsch"),
+                    ("fr", "Français"),
+                    ("it", "Italiano"),
+                ],
+                default="fr",
+                max_length=2,
+            ),
         ),
     ]

@@ -8,26 +8,25 @@ from django.template.loader import render_to_string
 from django.utils.timezone import now
 from django.utils.translation import activate, get_language
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import (CreateView, FormView, RedirectView,
-                                  TemplateView, UpdateView)
+from django.views.generic import CreateView, FormView, RedirectView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
 from beyondtheadmin.clients.models import Client
-from ..forms import (BaseInvoiceForm, EmailForm, InvoiceEditForm,
-                     InvoiceStatusForm)
+
+from ..forms import BaseInvoiceForm, EmailForm, InvoiceEditForm, InvoiceStatusForm
 from ..models import Invoice
 from ..tasks import send_invoice_email
 
 
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
     model = Invoice
-    template_name = 'invoices/create.html'
+    template_name = "invoices/create.html"
     form_class = BaseInvoiceForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['companies'] = self.request.user.companies.all()
-        kwargs['clients'] = Client.objects.filter(company__in=kwargs['companies'])
+        kwargs["companies"] = self.request.user.companies.all()
+        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
         return kwargs
 
     def get_success_url(self):
@@ -36,43 +35,43 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
 
 
 class InvoiceListView(LoginRequiredMixin, TemplateView):
-    template_name = 'invoices/list.html'
+    template_name = "invoices/list.html"
 
 
 class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
     form_class = InvoiceEditForm
     model = Invoice
-    template_name = 'invoices/update.html'
+    template_name = "invoices/update.html"
 
     def get_queryset(self):
         return Invoice.objects.filter(company__users=self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
+        kwargs["request"] = self.request
         # FIXME: at some points clients have to be find out with the company using a realtime api call...
-        kwargs['companies'] = self.request.user.companies.all()
-        kwargs['clients'] = Client.objects.filter(company__in=kwargs['companies'])
+        kwargs["companies"] = self.request.user.companies.all()
+        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
         return kwargs
 
     # noinspection PyUnresolvedReferences
     def get_initial(self):
         initial = {}
         if not self.object.due_date:
-            initial['due_date'] = now() + timedelta(days=self.object.client.payment_delay_days),
+            initial["due_date"] = (now() + timedelta(days=self.object.client.payment_delay_days),)
         if self.object.vat_rate is None:
-            initial['vat_rate'] = self.object.client.vat_rate
+            initial["vat_rate"] = self.object.client.vat_rate
         return initial
 
 
 class InvoiceCancelView(LoginRequiredMixin, UpdateView):
     model = Invoice
-    template_name = 'invoices/confirm_cancel.html'
+    template_name = "invoices/confirm_cancel.html"
     form_class = InvoiceStatusForm
 
     def get_initial(self):
         return {
-            'status': Invoice.STATUS.canceled,
+            "status": Invoice.STATUS.canceled,
         }
 
     def get_queryset(self):
@@ -84,12 +83,12 @@ class InvoiceCancelView(LoginRequiredMixin, UpdateView):
 
 class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
     model = Invoice
-    template_name = 'invoices/confirm_paid.html'
+    template_name = "invoices/confirm_paid.html"
     form_class = InvoiceStatusForm
 
     def get_initial(self):
         return {
-            'status': Invoice.STATUS.paid,
+            "status": Invoice.STATUS.paid,
         }
 
     def get_queryset(self):
@@ -101,12 +100,12 @@ class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
 
 class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
     model = Invoice
-    template_name = 'invoices/confirm_print.html'
+    template_name = "invoices/confirm_print.html"
     form_class = InvoiceStatusForm
 
     def get_initial(self):
         return {
-            'status': Invoice.STATUS.sent,
+            "status": Invoice.STATUS.sent,
         }
 
     def get_queryset(self):
@@ -119,10 +118,10 @@ class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
 class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
-    pattern_name = 'pk'
+    pattern_name = "pk"
 
     def get_redirect_url(self, *args, **kwargs):
-        source = get_object_or_404(Invoice, pk=kwargs['pk'], company__users=self.request.user)
+        source = get_object_or_404(Invoice, pk=kwargs["pk"], company__users=self.request.user)
         duplicata = source.duplicate()
         return duplicata.get_edit_url()
 
@@ -132,13 +131,16 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
     GET: Form with mail text and invoice as PDF
     POST: send
     """
+
     model = Invoice
     form_class = EmailForm
-    template_name = 'invoices/send.html'
+    template_name = "invoices/send.html"
 
     def form_valid(self, form):
         invoice: Invoice = self.get_object()
-        send_invoice_email.delay(invoice.pk, form.cleaned_data['subject'], form.cleaned_data['message'])
+        send_invoice_email.delay(
+            invoice.pk, form.cleaned_data["subject"], form.cleaned_data["message"]
+        )
         messages.success(self.request, self.get_success_message())
         return HttpResponseRedirect(self.get_success_url())
 
@@ -156,8 +158,8 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         current_lang = get_language()
         activate(invoice.client.language)
         initial = super().get_initial()
-        initial['subject'] = render_to_string('invoices/mail_subject.txt', {'invoice': invoice})
-        initial['message'] = render_to_string('invoices/mail_message.txt', {'invoice': invoice})
+        initial["subject"] = render_to_string("invoices/mail_subject.txt", {"invoice": invoice})
+        initial["message"] = render_to_string("invoices/mail_message.txt", {"invoice": invoice})
         activate(current_lang)
         return initial
 
@@ -166,7 +168,7 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
 
     def get_success_message(self):
         return _("Your invoice has been sent to %(email)s") % {
-            'email': self.get_object().client.contact_email
+            "email": self.get_object().client.contact_email
         }
 
     def get_success_url(self):
@@ -174,15 +176,19 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
 
 
 class InvoiceSendReminderEmailView(InvoiceSendMailView):
-    template_name = 'invoices/send-reminder.html'
+    template_name = "invoices/send-reminder.html"
 
     def get_initial(self):
         invoice: Invoice = self.get_object()
         current_lang = get_language()
         activate(invoice.client.language)
         initial = super().get_initial()
-        initial['subject'] = render_to_string('invoices/reminder_subject.txt', {'invoice': invoice})
-        initial['message'] = render_to_string('invoices/reminder_message.txt', {'invoice': invoice})
+        initial["subject"] = render_to_string(
+            "invoices/reminder_subject.txt", {"invoice": invoice}
+        )
+        initial["message"] = render_to_string(
+            "invoices/reminder_message.txt", {"invoice": invoice}
+        )
         activate(current_lang)
         return initial
 
@@ -191,5 +197,5 @@ class InvoiceSendReminderEmailView(InvoiceSendMailView):
 
     def get_success_message(self):
         return _("Your reminder has been sent to %(email)s") % {
-            'email': self.get_object().client.contact_email
+            "email": self.get_object().client.contact_email
         }

@@ -8,43 +8,43 @@ import ckeditor.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invoices', '0002_auto_20210121_0726'),
+        ("invoices", "0002_auto_20210121_0726"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='invoice',
-            name='description',
+            model_name="invoice",
+            name="description",
             field=ckeditor.fields.RichTextField(blank=True),
         ),
         migrations.AddField(
-            model_name='invoice',
-            name='period_end',
+            model_name="invoice",
+            name="period_end",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='invoice',
-            name='period_start',
+            model_name="invoice",
+            name="period_start",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='invoice',
-            name='title',
+            model_name="invoice",
+            name="title",
             field=models.CharField(blank=True, max_length=100),
         ),
         migrations.AlterField(
-            model_name='invoice',
-            name='displayed_date',
+            model_name="invoice",
+            name="displayed_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='invoice',
-            name='total',
+            model_name="invoice",
+            name="total",
             field=models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=6),
         ),
         migrations.AlterField(
-            model_name='invoice',
-            name='vat_rate',
+            model_name="invoice",
+            name="vat_rate",
             field=models.DecimalField(blank=True, decimal_places=4, default=0.065, max_digits=6),
         ),
     ]

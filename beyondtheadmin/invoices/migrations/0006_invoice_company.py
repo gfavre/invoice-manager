@@ -7,14 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('companies', '0001_initial'),
-        ('invoices', '0005_invoice_qr_bill'),
+        ("companies", "0001_initial"),
+        ("invoices", "0005_invoice_qr_bill"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='invoice',
-            name='company',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='invoices', to='companies.Company'),
+            model_name="invoice",
+            name="company",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="invoices",
+                to="companies.Company",
+            ),
         ),
     ]

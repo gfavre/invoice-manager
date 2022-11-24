@@ -6,22 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0007_client_invoice_current_count'),
+        ("clients", "0007_client_invoice_current_count"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='client',
-            name='contact_name',
+            model_name="client",
+            name="contact_name",
         ),
         migrations.AddField(
-            model_name='client',
-            name='contact_first_name',
-            field=models.CharField(blank=True, max_length=255, verbose_name='Contact first name'),
+            model_name="client",
+            name="contact_first_name",
+            field=models.CharField(blank=True, max_length=255, verbose_name="Contact first name"),
         ),
         migrations.AddField(
-            model_name='client',
-            name='contact_last_name',
-            field=models.CharField(blank=True, max_length=255, verbose_name='Contact last name'),
+            model_name="client",
+            name="contact_last_name",
+            field=models.CharField(blank=True, max_length=255, verbose_name="Contact last name"),
         ),
     ]

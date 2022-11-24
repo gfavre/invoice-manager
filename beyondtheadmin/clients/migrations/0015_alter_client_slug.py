@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0014_auto_20210825_0854'),
+        ("clients", "0014_auto_20210825_0854"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='client',
-            name='slug',
-            field=models.CharField(help_text='Used to generate invoice code', max_length=15, verbose_name='Slug'),
+            model_name="client",
+            name="slug",
+            field=models.CharField(
+                help_text="Used to generate invoice code", max_length=15, verbose_name="Slug"
+            ),
         ),
     ]

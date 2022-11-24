@@ -24,20 +24,35 @@ class OpenInvoiceManager(models.Manager):
 
 class Invoice(UUIDModel, StatusModel):
     STATUS = Choices(
-        ('draft', _("Draft")),
-        ('sent', _("Sent")),
-        ('paid', _("Paid")),
-        ('canceled', _("canceled")),
+        ("draft", _("Draft")),
+        ("sent", _("Sent")),
+        ("paid", _("Paid")),
+        ("canceled", _("canceled")),
     )
-    company = models.ForeignKey('companies.Company', on_delete=models.PROTECT, related_name='invoices',
-                                null=True,  blank=False, verbose_name=_("Company"))
-    client = models.ForeignKey('clients.Client', on_delete=models.PROTECT, related_name='invoices', null=False,
-                               verbose_name=_("Client"))
+    company = models.ForeignKey(
+        "companies.Company",
+        on_delete=models.PROTECT,
+        related_name="invoices",
+        null=True,
+        blank=False,
+        verbose_name=_("Company"),
+    )
+    client = models.ForeignKey(
+        "clients.Client",
+        on_delete=models.PROTECT,
+        related_name="invoices",
+        null=False,
+        verbose_name=_("Client"),
+    )
     code = models.CharField(_("Code"), max_length=30, blank=True)
     due_date = models.DateField(_("Due date"), null=True, blank=False)
     displayed_date = models.DateField(_("Displayed date"), blank=True, null=True)
-    vat_rate = models.DecimalField(_("VAT rate"), max_digits=6, decimal_places=4, default=Decimal('0.077'), blank=True)
-    total = models.DecimalField(_("Total"), max_digits=7, decimal_places=2, default=0.0, blank=True, editable=False)
+    vat_rate = models.DecimalField(
+        _("VAT rate"), max_digits=6, decimal_places=4, default=Decimal("0.077"), blank=True
+    )
+    total = models.DecimalField(
+        _("Total"), max_digits=7, decimal_places=2, default=0.0, blank=True, editable=False
+    )
 
     title = models.CharField(_("Title"), max_length=100, blank=True)
     description = RichTextField(_("Description"), blank=True)
@@ -54,7 +69,7 @@ class Invoice(UUIDModel, StatusModel):
     visible = OpenInvoiceManager()
 
     class Meta:
-        ordering = ('-due_date',)
+        ordering = ("-due_date",)
 
     def __str__(self):
         return self.code
@@ -62,7 +77,9 @@ class Invoice(UUIDModel, StatusModel):
     @property
     def displayed_datetime(self):
         if self.due_date:
-            return datetime.datetime(self.displayed_date.year, self.displayed_date.month, self.displayed_date.day)
+            return datetime.datetime(
+                self.displayed_date.year, self.displayed_date.month, self.displayed_date.day
+            )
         return None
 
     @property
@@ -96,21 +113,21 @@ class Invoice(UUIDModel, StatusModel):
 
     @property
     def subtotal(self):
-        acc = Decimal('0.0')
+        acc = Decimal("0.0")
         for line in self.lines.all():
             acc += line.total
         return acc
 
     def add_pdf(self, content, version):
         invoice_pdf, created = InvoicePDF.objects.get_or_create(invoice=self, version=version)
-        invoice_pdf.pdf.save('{}.pdf'.format(self.code), ContentFile(content), save=False)
+        invoice_pdf.pdf.save("{}.pdf".format(self.code), ContentFile(content), save=False)
         invoice_pdf.status = InvoicePDF.STATUS.ready
         invoice_pdf.save()
 
     def duplicate(self):
         previous_pk = self.pk
         self.pk = None
-        self.code = ''
+        self.code = ""
         self.displayed_date = now().date()
         self.due_date = self.displayed_date + relativedelta(days=self.client.payment_delay_days)
         if self.period_start:
@@ -123,7 +140,7 @@ class Invoice(UUIDModel, StatusModel):
         self.pdf_version = None
         self.qr_bill = None
         self.save(generate_code=False)
-        assert(previous_pk != self.pk)
+        assert previous_pk != self.pk
         for line in InvoiceLine.objects.filter(invoice_id=previous_pk):
             line.pk = None
             line.invoice = self
@@ -131,31 +148,34 @@ class Invoice(UUIDModel, StatusModel):
         return self
 
     def get_absolute_url(self):
-        return reverse('invoice-print', kwargs={'pk': self.pk})
+        return reverse("invoice-print", kwargs={"pk": self.pk})
 
     def get_api_url(self):
-        return reverse('api:invoice-detail', kwargs={'pk': self.pk})
+        return reverse("api:invoice-detail", kwargs={"pk": self.pk})
 
     def get_cancel_url(self):
-        return reverse('invoices:cancel', kwargs={'pk': self.pk})
+        return reverse("invoices:cancel", kwargs={"pk": self.pk})
 
     def get_code(self):
-        return '{}-{}'.format(self.client.slug, self.client.invoice_current_count + 1)
+        return "{}-{}".format(self.client.slug, self.client.invoice_current_count + 1)
 
     def get_duplicate_url(self):
-        return reverse('invoices:duplicate', kwargs={'pk': self.pk})
+        return reverse("invoices:duplicate", kwargs={"pk": self.pk})
 
     def get_edit_url(self):
-        return reverse('invoices:update', kwargs={'pk': self.pk})
+        return reverse("invoices:update", kwargs={"pk": self.pk})
 
     def generate_latest_pdf(self):
         from .pdf import build_content_for_pdf, generate_pdf
+
         content = build_content_for_pdf(self)
         generated_pdf = generate_pdf(content)
         self.add_pdf(generated_pdf, self.version)
 
     def get_pdf_generation_url(self):
-        return reverse('api:invoices-pdf-detail', kwargs={'invoice_pk': self.pk, 'version': self.version})
+        return reverse(
+            "api:invoices-pdf-detail", kwargs={"invoice_pk": self.pk, "version": self.version}
+        )
 
     def get_qrbill(self):
         if not self.due_date:
@@ -163,43 +183,46 @@ class Invoice(UUIDModel, StatusModel):
         qr_bill = QRBill(
             account=self.company.iban,
             debtor={
-                'name': self.client.name,
-                'pcode': self.client.zip_code, 'city': self.client.city,
-                'country': self.client.country.code,
+                "name": self.client.name,
+                "pcode": self.client.zip_code,
+                "city": self.client.city,
+                "country": self.client.country.code,
             },
             extra_infos=self.code,
             creditor={
-                'name': self.company.bank_account_name, 'street': self.company.address,
-                'pcode': self.company.zip_code, 'city': self.company.city,
-                'country': self.company.country.code,
+                "name": self.company.bank_account_name,
+                "street": self.company.address,
+                "pcode": self.company.zip_code,
+                "city": self.company.city,
+                "country": self.company.country.code,
             },
             language=self.client.language,
-            due_date=self.due_date.strftime('%Y-%m-%d'),
+            due_date=self.due_date.strftime("%Y-%m-%d"),
             amount=self.get_total(),
         )
 
         return qr_bill
 
     def get_qrbill_url(self):
-        return reverse('qrbill', kwargs={'pk': self.pk})
+        return reverse("qrbill", kwargs={"pk": self.pk})
 
     def get_reminder_url(self):
-        return reverse('invoices:reminder', kwargs={'pk': self.pk})
+        return reverse("invoices:reminder", kwargs={"pk": self.pk})
 
     def get_set_paid_url(self):
-        return reverse('invoices:mark_paid', kwargs={'pk': self.pk})
+        return reverse("invoices:mark_paid", kwargs={"pk": self.pk})
 
     def get_send_url(self):
-        return reverse('invoices:send', kwargs={'pk': self.pk})
+        return reverse("invoices:send", kwargs={"pk": self.pk})
 
     def get_snail_mail_url(self):
-        return reverse('invoices:mark_sent', kwargs={'pk': self.pk})
+        return reverse("invoices:mark_sent", kwargs={"pk": self.pk})
 
     def get_total(self):
         return self.subtotal + self.get_vat()
 
     def get_vat(self):
-        return (self.subtotal * self.vat_rate).quantize(Decimal('.01'), rounding=ROUND_UP)
+        return (self.subtotal * self.vat_rate).quantize(Decimal(".01"), rounding=ROUND_UP)
 
     def save(self, update_version=True, generate_code=True, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -240,51 +263,51 @@ class Invoice(UUIDModel, StatusModel):
 
     @staticmethod
     def get_overdue_query_params(values):
-        if values and values[0] == 'overdue':
-            return {'status': Invoice.STATUS.sent, 'due_date__lt': now().date()}
+        if values and values[0] == "overdue":
+            return {"status": Invoice.STATUS.sent, "due_date__lt": now().date()}
         else:
-            return {'status': Invoice.STATUS.sent, 'due_date__gt': now().date()}
+            return {"status": Invoice.STATUS.sent, "due_date__gt": now().date()}
 
 
 class InvoicePDF(UUIDModel, StatusModel):
-    STATUS = Choices(('generating', _('Generating')), ('ready', _('Ready')), ('error', _('Error')))
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='pdfs')
-    pdf = models.FileField(_("PDF"), null=True, upload_to='invoices/', editable=False)
+    STATUS = Choices(("generating", _("Generating")), ("ready", _("Ready")), ("error", _("Error")))
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="pdfs")
+    pdf = models.FileField(_("PDF"), null=True, upload_to="invoices/", editable=False)
     version = models.PositiveIntegerField(_("Version of PDF"), null=True, editable=False)
 
     class Meta:
-        unique_together = ('invoice', 'version')
+        unique_together = ("invoice", "version")
 
 
 class InvoiceLine(UUIDModel):
-    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, related_name='lines')
+    invoice = models.ForeignKey("Invoice", on_delete=models.CASCADE, related_name="lines")
 
     description = models.TextField()
     note = models.TextField(blank=True)
 
     quantity = models.DecimalField(max_digits=7, decimal_places=2)
-    unit = models.CharField(max_length=10, choices=Choices(
-        ('h', _("Hour")),
-        ('nb', _("Number"))
-    ))
+    unit = models.CharField(max_length=10, choices=Choices(("h", _("Hour")), ("nb", _("Number"))))
     price_per_unit = models.DecimalField(max_digits=7, decimal_places=2)
 
     class Meta:
-        ordering = ('created', )
+        ordering = ("created",)
 
     @property
     def is_hours(self):
-        return self.unit == 'h'
+        return self.unit == "h"
 
     @property
     def total(self):
-        return (self.price_per_unit * self.quantity).quantize(Decimal('.01'), rounding=ROUND_UP)
+        return (self.price_per_unit * self.quantity).quantize(Decimal(".01"), rounding=ROUND_UP)
 
     def get_api_url(self, request=None):
         from rest_framework.reverse import reverse
 
-        return reverse('api:invoices-lines-detail', kwargs={'pk': self.pk, 'invoice_pk': self.invoice.pk},
-                       request=request)
+        return reverse(
+            "api:invoices-lines-detail",
+            kwargs={"pk": self.pk, "invoice_pk": self.invoice.pk},
+            request=request,
+        )
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

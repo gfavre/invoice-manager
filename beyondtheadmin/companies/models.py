@@ -3,8 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from colorfield.fields import ColorField
 from ckeditor.fields import RichTextField
+from colorfield.fields import ColorField
 from django_countries.fields import CountryField
 from localflavor.generic.models import BICField, IBANField
 from model_utils.models import TimeStampedModel
@@ -38,22 +38,33 @@ class Company(UUIDModel):
     signature_text = models.CharField(_("Signature as text"), max_length=100, blank=True)
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
     email_signature = models.TextField(_("Email signature"), blank=True)
-    invoice_note = RichTextField(_("Notes"), blank=True,
-                                    help_text=_("Displayed between banking details and signature"))
+    invoice_note = RichTextField(
+        _("Notes"), blank=True, help_text=_("Displayed between banking details and signature")
+    )
 
-    override_default_from_email = models.BooleanField(_("Override default from email"), default=False)
+    override_default_from_email = models.BooleanField(
+        _("Override default from email"), default=False
+    )
     from_email = models.CharField(
-        _("From email"), max_length=255, default='{} <{}>'.format(settings.ADMINS[0][0], settings.ADMINS[0][1])
+        _("From email"),
+        max_length=255,
+        default="{} <{}>".format(settings.ADMINS[0][0], settings.ADMINS[0][1]),
     )
     bcc_email = models.EmailField(
-        _("Copy of invoices"), help_text=_("Email address that will receive every sent invoice in bcc"),
-        blank=True)
+        _("Copy of invoices"),
+        help_text=_("Email address that will receive every sent invoice in bcc"),
+        blank=True,
+    )
     thanks = models.TextField(
-        _("Thanks"), blank=True,
-        help_text=_("Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language"))
+        _("Thanks"),
+        blank=True,
+        help_text=_(
+            "Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language"
+        ),
+    )
 
     class Meta:
-        ordering = ('name', 'created')
+        ordering = ("name", "created")
         verbose_name = _("Company")
         verbose_name_plural = _("Companies")
 
@@ -62,7 +73,7 @@ class Company(UUIDModel):
 
     @property
     def all_invoices_api_url(self):
-        return reverse('api:company-invoices', kwargs={'company_pk': self.pk})
+        return reverse("api:company-invoices", kwargs={"company_pk": self.pk})
 
     @property
     def bank_account_name(self):
@@ -70,19 +81,19 @@ class Company(UUIDModel):
 
     @property
     def delete_url(self):
-        return reverse('companies:delete', kwargs={'pk': self.pk})
+        return reverse("companies:delete", kwargs={"pk": self.pk})
 
     @property
     def earnings_api_url(self):
-        return reverse('api:earnings-per-company', kwargs={'company_pk': self.pk})
+        return reverse("api:earnings-per-company", kwargs={"company_pk": self.pk})
 
     @property
     def detail_url(self):
-        return reverse('companies:detail', kwargs={'pk': self.pk})
+        return reverse("companies:detail", kwargs={"pk": self.pk})
 
     @property
     def edit_url(self):
-        return reverse('companies:update', kwargs={'pk': self.pk})
+        return reverse("companies:update", kwargs={"pk": self.pk})
 
     @property
     def has_signature(self):
@@ -92,11 +103,11 @@ class Company(UUIDModel):
     def invoice_from_email(self):
         if self.override_default_from_email:
             return self.from_email
-        return f'{self.name} <{settings.DEFAULT_INVOICE_FROM_EMAIL}>'
+        return f"{self.name} <{settings.DEFAULT_INVOICE_FROM_EMAIL}>"
 
     @property
     def open_invoices_api_url(self):
-        return reverse('api:open-invoices-per-company', kwargs={'company_pk': self.pk})
+        return reverse("api:open-invoices-per-company", kwargs={"company_pk": self.pk})
 
     @property
     def single_line_address(self):
@@ -104,17 +115,18 @@ class Company(UUIDModel):
         if self.address:
             output.append(self.address)
         if self.zip_code:
-            output.append(f'{self.zip_code} {self.city}')
+            output.append(f"{self.zip_code} {self.city}")
         if self.country:
             output.append(self.country.name)
-        return ', '.join(output)
+        return ", ".join(output)
 
     def open_invoices(self):
         from beyondtheadmin.invoices.models import Invoice
-        return Invoice.visible.filter(company=self).select_related('client')
+
+        return Invoice.visible.filter(company=self).select_related("client")
 
     def latest_open_invoices(self):
-        return self.open_invoices().order_by('-due_date')[:5]
+        return self.open_invoices().order_by("-due_date")[:5]
 
     def get_absolute_url(self):
         return self.detail_url
@@ -131,7 +143,7 @@ class Bank(TimeStampedModel):
     country = CountryField(_("Country"), blank=True, null=True)
 
     class Meta:
-        ordering = ('name', 'created')
+        ordering = ("name", "created")
         verbose_name = _("Bank")
         verbose_name_plural = _("Banks")
 

@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import (CompanyCreateView, CompanyDeleteView, CompanyDetailView,
-                    CompanyUpdateView)
+from .views import CompanyCreateView, CompanyDeleteView, CompanyDetailView, CompanyUpdateView
 
 
 app_name = "companies"

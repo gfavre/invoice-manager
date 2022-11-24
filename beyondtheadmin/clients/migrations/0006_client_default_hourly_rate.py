@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0005_client_vat_rate'),
+        ("clients", "0005_client_vat_rate"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='default_hourly_rate',
-            field=models.DecimalField(decimal_places=2, default='0.00', max_digits=5),
+            model_name="client",
+            name="default_hourly_rate",
+            field=models.DecimalField(decimal_places=2, default="0.00", max_digits=5),
         ),
     ]

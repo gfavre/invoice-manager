@@ -6,7 +6,14 @@ from .models import Bank
 class BankSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bank
-        fields = ("swift", "name", "address", "zip_code", "city", "country", )
+        fields = (
+            "swift",
+            "name",
+            "address",
+            "zip_code",
+            "city",
+            "country",
+        )
 
 
 class IDECompanySerializer(serializers.Serializer):
@@ -24,8 +31,8 @@ class IBANInfosSerializer(serializers.Serializer):
     bank = BankSerializer(read_only=True, many=False)
 
     class Meta:
-        fields = ("iban", "iban_valid", "bank", )
-
-
-
-
+        fields = (
+            "iban",
+            "iban_valid",
+            "bank",
+        )

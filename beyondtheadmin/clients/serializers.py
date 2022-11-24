@@ -9,7 +9,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ('id', 'name', 'slug', 'language', 'currency', 'url')
+        fields = ("id", "name", "slug", "language", "currency", "url")
 
     def get_url(self, obj: Client):
         return obj.get_absolute_url()

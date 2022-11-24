@@ -8,18 +8,18 @@ from .models import Company
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'zip_code', 'city']
-    list_display = ['name', 'zip_code', 'city', 'get_users']
+    search_fields = ["name", "zip_code", "city"]
+    list_display = ["name", "zip_code", "city", "get_users"]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.prefetch_related('users')
+        return qs.prefetch_related("users")
 
     def get_users(self, obj):
         def get_user_link(user):
-            url = reverse('admin:users_user_change', args=[user.id])
-            return mark_safe('<a href="{}">{}</a>'.format(
-                url, str(user)
-            ))
-        return mark_safe(', '.join([get_user_link(user) for user in obj.users.all()]))
-    get_users.short_description = _('Users')
+            url = reverse("admin:users_user_change", args=[user.id])
+            return mark_safe('<a href="{}">{}</a>'.format(url, str(user)))
+
+        return mark_safe(", ".join([get_user_link(user) for user in obj.users.all()]))
+
+    get_users.short_description = _("Users")

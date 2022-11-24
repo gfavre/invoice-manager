@@ -8,13 +8,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invoices', '0009_auto_20210217_0521'),
+        ("invoices", "0009_auto_20210217_0521"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='invoice',
-            name='vat_rate',
-            field=models.DecimalField(blank=True, decimal_places=4, default=Decimal('0.077'), max_digits=6, verbose_name='VAT rate'),
+            model_name="invoice",
+            name="vat_rate",
+            field=models.DecimalField(
+                blank=True,
+                decimal_places=4,
+                default=Decimal("0.077"),
+                max_digits=6,
+                verbose_name="VAT rate",
+            ),
         ),
     ]

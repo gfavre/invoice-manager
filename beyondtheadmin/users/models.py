@@ -9,8 +9,9 @@ class User(AbstractUser):
 
     #: First and last name do not cover name patterns around the globe
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
-    companies = models.ManyToManyField(verbose_name=_("Companies"), to='companies.Company',
-                                       related_name='users')
+    companies = models.ManyToManyField(
+        verbose_name=_("Companies"), to="companies.Company", related_name="users"
+    )
 
     def get_absolute_url(self):
         """Get url for user's detail view.

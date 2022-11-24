@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0006_client_default_hourly_rate'),
+        ("clients", "0006_client_default_hourly_rate"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='invoice_current_count',
-            field=models.IntegerField(default=0, help_text='Used to generate invoice code', verbose_name='Current count of invoices'),
+            model_name="client",
+            name="invoice_current_count",
+            field=models.IntegerField(
+                default=0,
+                help_text="Used to generate invoice code",
+                verbose_name="Current count of invoices",
+            ),
         ),
     ]

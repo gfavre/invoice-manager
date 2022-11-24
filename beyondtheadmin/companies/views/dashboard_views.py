@@ -10,8 +10,8 @@ from ..models import Company
 class CompanyCreateView(LoginRequiredMixin, CreateView):
     model = Company
     form_class = CompanyForm
-    template_name = 'companies/create.html'
-    success_url = reverse_lazy('dashboard')
+    template_name = "companies/create.html"
+    success_url = reverse_lazy("dashboard")
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
@@ -23,8 +23,8 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
 
 class CompanyDeleteView(LoginRequiredMixin, DeleteView):
     model = Company
-    template_name = 'companies/confirm_delete.html'
-    success_url = reverse_lazy('dashboard')
+    template_name = "companies/confirm_delete.html"
+    success_url = reverse_lazy("dashboard")
 
     def get_queryset(self):
         return super().get_queryset().filter(users=self.request.user)
@@ -32,18 +32,22 @@ class CompanyDeleteView(LoginRequiredMixin, DeleteView):
 
 class CompanyDetailView(LoginRequiredMixin, DetailView):
     model = Company
-    template_name = 'companies/detail.html'
+    template_name = "companies/detail.html"
 
     def get_queryset(self):
-        return super(CompanyDetailView, self).get_queryset().filter(users=self.request.user)\
-                                                            .prefetch_related('invoices')
+        return (
+            super(CompanyDetailView, self)
+            .get_queryset()
+            .filter(users=self.request.user)
+            .prefetch_related("invoices")
+        )
 
 
 class CompanyUpdateView(LoginRequiredMixin, UpdateView):
     model = Company
     form_class = CompanyForm
-    template_name = 'companies/update.html'
-    success_url = reverse_lazy('dashboard')
+    template_name = "companies/update.html"
+    success_url = reverse_lazy("dashboard")
 
     def get_queryset(self):
         return super().get_queryset().filter(users=self.request.user)

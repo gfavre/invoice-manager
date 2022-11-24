@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('companies', '0002_auto_20210122_1750'),
+        ("companies", "0002_auto_20210122_1750"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='email_signature',
-            field=models.TextField(blank=True, verbose_name='Email signature'),
+            model_name="company",
+            name="email_signature",
+            field=models.TextField(blank=True, verbose_name="Email signature"),
         ),
         migrations.AddField(
-            model_name='company',
-            name='from_email',
-            field=models.EmailField(default='Gregory Favre <greg@beyondthewall.ch>', max_length=254, verbose_name='From email'),
+            model_name="company",
+            name="from_email",
+            field=models.EmailField(
+                default="Gregory Favre <greg@beyondthewall.ch>",
+                max_length=254,
+                verbose_name="From email",
+            ),
         ),
     ]

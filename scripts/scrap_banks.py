@@ -1,5 +1,7 @@
 import pandas
+
 from beyondtheadmin.companies.models import Bank
+
 
 URL = "https://www.mepa.ch/support/tools/schweizer-banken-bankleitzahlen-adressen-swift/"
 
@@ -21,7 +23,7 @@ for elem in df.to_dict(orient="records"):
             "city": elem["Ort"],
             "country": elem["Landcode"] if str(elem["Landcode"]) != "nan" else "CH",
             "swift": elem["SWIFT"],
-        }
+        },
     )
     if created:
         created_count += 1

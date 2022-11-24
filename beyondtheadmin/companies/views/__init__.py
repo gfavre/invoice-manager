@@ -1,1 +1,2 @@
-from .dashboard_views import CompanyCreateView, CompanyDetailView, CompanyDeleteView, CompanyUpdateView
+from .dashboard_views import (CompanyCreateView, CompanyDeleteView, CompanyDetailView,
+                              CompanyUpdateView)

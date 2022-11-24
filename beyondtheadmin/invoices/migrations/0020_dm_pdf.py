@@ -9,13 +9,15 @@ def create_dm_pdf(apps, schema_editor):
     Invoice = apps.get_model("invoices", "Invoice")
     InvoicePDF = apps.get_model("invoices", "InvoicePDF")
     for invoice in Invoice.objects.all():
-        InvoicePDF.objects.create(invoice=invoice, pdf=invoice.pdf, version=invoice.pdf_version, status="ready")
+        InvoicePDF.objects.create(
+            invoice=invoice, pdf=invoice.pdf, version=invoice.pdf_version, status="ready"
+        )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invoices', '0019_invoicepdf'),
+        ("invoices", "0019_invoicepdf"),
     ]
 
     operations = [

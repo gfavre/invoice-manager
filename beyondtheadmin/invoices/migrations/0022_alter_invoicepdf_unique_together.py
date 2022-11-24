@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invoices', '0021_remove_pdf_from_invoice'),
+        ("invoices", "0021_remove_pdf_from_invoice"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='invoicepdf',
-            unique_together={('invoice', 'version')},
+            name="invoicepdf",
+            unique_together={("invoice", "version")},
         ),
     ]

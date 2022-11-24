@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invoices', '0017_auto_20210730_1202'),
+        ("invoices", "0017_auto_20210730_1202"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='invoice',
-            name='last_reminder_date',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Last reminder date'),
+            model_name="invoice",
+            name="last_reminder_date",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="Last reminder date"),
         ),
         migrations.AddField(
-            model_name='invoice',
-            name='sent_date',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Sent date'),
+            model_name="invoice",
+            name="sent_date",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="Sent date"),
         ),
     ]

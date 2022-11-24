@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invoices', '0012_auto_20210225_0535'),
+        ("invoices", "0012_auto_20210225_0535"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='invoice',
-            options={'ordering': ('displayed_date',)},
+            name="invoice",
+            options={"ordering": ("displayed_date",)},
         ),
         migrations.AlterModelOptions(
-            name='invoiceline',
-            options={'ordering': ('created',)},
+            name="invoiceline",
+            options={"ordering": ("created",)},
         ),
     ]

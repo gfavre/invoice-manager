@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('companies', '0006_companyclient'),
+        ("companies", "0006_companyclient"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='thanks',
-            field=models.TextField(blank=True, help_text='Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language', verbose_name='Thanks'),
+            model_name="company",
+            name="thanks",
+            field=models.TextField(
+                blank=True,
+                help_text="Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language",
+                verbose_name="Thanks",
+            ),
         ),
     ]

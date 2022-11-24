@@ -15,47 +15,46 @@ from .models import Invoice
 
 logger = logging.getLogger(__name__)
 PHANTOMJS_CONF = {
-    'backend': 'chrome',
-    'content': '',
-    'renderType': 'pdf',
-    'omitBackground': False,
+    "backend": "chrome",
+    "content": "",
+    "renderType": "pdf",
+    "omitBackground": False,
     "renderSettings": {
-        'emulateMedia': 'print',
-        'pdfOptions': {
-            'format': 'A4',
-            'landscape': False,
-            'preferCSSPageSize': True,
-            'omitBackground': False,
-        }
+        "emulateMedia": "print",
+        "pdfOptions": {
+            "format": "A4",
+            "landscape": False,
+            "preferCSSPageSize": True,
+            "omitBackground": False,
+        },
     },
-    'requestSettings': {
-        'waitInterval': 400,
-        'resourceTimeout': 2000,
-        'resourceWait': 2000,
-
-        'doneWhen': [{'event': "load"}]
-    }
+    "requestSettings": {
+        "waitInterval": 400,
+        "resourceTimeout": 2000,
+        "resourceWait": 2000,
+        "doneWhen": [{"event": "load"}],
+    },
 }
 
 
 def build_content_for_pdf(invoice: Invoice, domain_name=None, use_https=True):
     if not domain_name:
         domain_name = Site.objects.get(pk=settings.SITE_ID).domain
-    context = {'object': invoice, 'invoice': invoice}
+    context = {"object": invoice, "invoice": invoice}
     request = HttpRequest()
     request.path = invoice.get_absolute_url()
-    request.method = 'GET'
-    request.META['SERVER_NAME'] = domain_name
-    request.META['SERVER_PORT'] = use_https and 443 or 80
-    request.META['HTTP_X_FORWARDED_PROTO'] = use_https and 'https' or 'http'
+    request.method = "GET"
+    request.META["SERVER_NAME"] = domain_name
+    request.META["SERVER_PORT"] = use_https and 443 or 80
+    request.META["HTTP_X_FORWARDED_PROTO"] = use_https and "https" or "http"
     with override_settings(ALLOWED_HOSTS=[domain_name]):
-        return render_to_string('invoices/detail.html', context=context, request=request)
+        return render_to_string("invoices/detail.html", context=context, request=request)
 
 
 def generate_pdf(content):
 
     phantomjs_conf = PHANTOMJS_CONF.copy()
-    phantomjs_conf['content'] = content
+    phantomjs_conf["content"] = content
     try:
         payload = json.dumps(phantomjs_conf)
         logger.debug(payload)

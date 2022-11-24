@@ -6,6 +6,7 @@ from django.core.mail import EmailMessage
 from anymail.exceptions import AnymailError
 
 from config import celery_app
+
 from .models import Invoice
 from .pdf import generate_pdf as generate_pdf_invoice
 
@@ -14,13 +15,13 @@ logger = logging.getLogger(__name__)
 
 
 @celery_app.task(bind=True, max_retries=17, soft_time_limit=20)
-def generate_pdf(self, invoice_id,  version, content):
+def generate_pdf(self, invoice_id, version, content):
     """Generate latest PDF for invoice."""
     try:
         invoice = Invoice.objects.get(id=invoice_id)
         generated_pdf = generate_pdf_invoice(content)
         if generated_pdf is None:
-            self.retry(countdown=2**self.request.retries)
+            self.retry(countdown=2 ** self.request.retries)
         else:
             invoice.add_pdf(generated_pdf, version)
     except Invoice.DoesNotExist:
@@ -48,7 +49,7 @@ def send_invoice_email(self, invoice_id, subject, message):
         from_email=invoice.company.invoice_from_email,
         to=[invoice.client.full_contact_email],
         reply_to=reply_to,
-        bcc=bcc
+        bcc=bcc,
     )
     if not invoice.latest_pdf:
         try:
@@ -56,9 +57,9 @@ def send_invoice_email(self, invoice_id, subject, message):
         except Exception as exc:
             self.retry(countdown=2 ** self.request.retries, exc=exc)
 
-    email.attach_file(invoice.latest_pdf.path, 'application/pdf')
+    email.attach_file(invoice.latest_pdf.path, "application/pdf")
     try:
         email.send()
         invoice.set_sent()
     except AnymailError as exc:
-        self.retry(countdown=2**self.request.retries, exc=exc)
+        self.retry(countdown=2 ** self.request.retries, exc=exc)

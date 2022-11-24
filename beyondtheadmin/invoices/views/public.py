@@ -11,18 +11,21 @@ from ..models import Invoice
 
 class InvoiceDetailView(DetailView):
     model = Invoice
-    template_name = 'invoices/detail.html'
+    template_name = "invoices/detail.html"
 
 
 # noinspection PyUnusedLocal
 def qrbill(request, *args, **kwargs):
     try:
-        invoice = Invoice.objects.get(pk=kwargs.get('pk'))
+        invoice = Invoice.objects.get(pk=kwargs.get("pk"))
     except Invoice.DoesNotExist:
         raise Http404(_("Invoice does not exist"))
     if not invoice.qr_bill:
         raise Http404(_("Invoice has no QR Bill"))
-    buffer = io.BytesIO(invoice.qr_bill.encode('utf-8'))
-    return FileResponse(buffer, content_type='image/svg+xml',
-                        as_attachment=True,
-                        filename='{}-qrbill.svg'.format(invoice.code))
+    buffer = io.BytesIO(invoice.qr_bill.encode("utf-8"))
+    return FileResponse(
+        buffer,
+        content_type="image/svg+xml",
+        as_attachment=True,
+        filename="{}-qrbill.svg".format(invoice.code),
+    )

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import locale
 
-from django.contrib.humanize.templatetags.humanize import (naturalday,
-                                                           naturaltime)
+from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.utils.translation import gettext as _
 
 from rest_framework import serializers
@@ -17,32 +16,50 @@ class InvoiceLineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InvoiceLine
-        fields = ('id', 'description', 'note', 'quantity', 'unit', 'price_per_unit', 'total', 'url')
+        fields = (
+            "id",
+            "description",
+            "note",
+            "quantity",
+            "unit",
+            "price_per_unit",
+            "total",
+            "url",
+        )
         extra_kwargs = {
-            'quantity': {'coerce_to_string': False},
-            'price_per_unit': {'coerce_to_string': False}
-
+            "quantity": {"coerce_to_string": False},
+            "price_per_unit": {"coerce_to_string": False},
         }
 
     def get_url(self, obj):
-        request = self.context['request']
+        request = self.context["request"]
         return obj.get_api_url(request)
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='api:invoice-detail',
-        lookup_field='pk'
-    )
+    url = serializers.HyperlinkedIdentityField(view_name="api:invoice-detail", lookup_field="pk")
     lines = InvoiceLineSerializer(many=True, read_only=True)
 
     class Meta:
         model = Invoice
-        fields = ('id', 'status', 'code', 'company', 'client', 'due_date', 'displayed_date',
-                  'vat_rate',
-                  'title', 'description', 'period_start', 'period_end',
-                  'url', 'total', 'lines',
-                  'version',)
+        fields = (
+            "id",
+            "status",
+            "code",
+            "company",
+            "client",
+            "due_date",
+            "displayed_date",
+            "vat_rate",
+            "title",
+            "description",
+            "period_start",
+            "period_end",
+            "url",
+            "total",
+            "lines",
+            "version",
+        )
 
     def get_url(self, obj):
         return obj.get_api_url()
@@ -51,10 +68,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 # noinspection PyMethodMayBeStatic
 class InvoiceListSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
-    url = serializers.HyperlinkedIdentityField(
-        view_name='api:invoice-detail',
-        lookup_field='pk'
-    )
+    url = serializers.HyperlinkedIdentityField(view_name="api:invoice-detail", lookup_field="pk")
     actions = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     due_date = serializers.SerializerMethodField()
@@ -63,76 +77,76 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invoice
-        fields = ('id', 'status', 'code', 'company', 'client',
-                  'due_date', 'displayed_date', 'overdue',
-                  'vat_rate',
-                  'title', 'description', 'period_start', 'period_end',
-                  'url', 'total', 'actions')
+        fields = (
+            "id",
+            "status",
+            "code",
+            "company",
+            "client",
+            "due_date",
+            "displayed_date",
+            "overdue",
+            "vat_rate",
+            "title",
+            "description",
+            "period_start",
+            "period_end",
+            "url",
+            "total",
+            "actions",
+        )
 
     def get_actions(self, obj):
         actions = [
             {
-                'url': obj.get_absolute_url(),
-                'label': _("View"),
-                'icon_class': 'bi-file-earmark-text'
+                "url": obj.get_absolute_url(),
+                "label": _("View"),
+                "icon_class": "bi-file-earmark-text",
             },
-            {
-                'url': obj.get_duplicate_url(),
-                'label': _("Duplicate"),
-                'icon_class': 'bi-files'
-            },
+            {"url": obj.get_duplicate_url(), "label": _("Duplicate"), "icon_class": "bi-files"},
         ]
         if obj.is_draft:
             actions += [
+                {"url": obj.get_edit_url(), "label": _("Edit"), "icon_class": "bi-pencil"},
                 {
-                    'url': obj.get_edit_url(),
-                    'label': _("Edit"),
-                    'icon_class': 'bi-pencil'
+                    "url": obj.get_send_url(),
+                    "label": _("Send"),
+                    "icon_class": "bi-box-arrow-right",
                 },
-                {
-                    'url': obj.get_send_url(),
-                    'label': _("Send"),
-                    'icon_class': 'bi-box-arrow-right'
-                },
-                {
-                    'url': obj.get_cancel_url(),
-                    'label': _("Cancel"),
-                    'icon_class': 'bi-trash'
-                },
-
+                {"url": obj.get_cancel_url(), "label": _("Cancel"), "icon_class": "bi-trash"},
             ]
         if obj.is_sent:
             actions += [
                 {
-                    'url': obj.get_set_paid_url(),
-                    'label': _("Payment received"),
-                    'icon_class': 'bi-credit-card'
+                    "url": obj.get_set_paid_url(),
+                    "label": _("Payment received"),
+                    "icon_class": "bi-credit-card",
                 },
             ]
         if obj.is_overdue:
             actions += [
                 {
-                    'url': obj.get_reminder_url(),
-                    'label': _("Send reminder"),
-                    'icon_class': 'bi-box-arrow-right'
+                    "url": obj.get_reminder_url(),
+                    "label": _("Send reminder"),
+                    "icon_class": "bi-box-arrow-right",
                 },
             ]
         return actions
 
     def get_due_date(self, obj):
-        locale.setlocale(locale.LC_ALL, '')
+        locale.setlocale(locale.LC_ALL, "")
         return {
-            'display': naturalday(obj.due_date),
-            'natural': naturaltime(obj.due_datetime),
-            'timestamp': obj.due_date
+            "display": naturalday(obj.due_date),
+            "natural": naturaltime(obj.due_datetime),
+            "timestamp": obj.due_date,
         }
 
     def get_displayed_date(self, obj):
-        locale.setlocale(locale.LC_ALL, '')
+        locale.setlocale(locale.LC_ALL, "")
         return {
-            'display': naturalday(obj.displayed_date),
-            'natural': naturaltime(obj.displayed_datetime),
-            'timestamp': obj.displayed_date
+            "display": naturalday(obj.displayed_date),
+            "natural": naturaltime(obj.displayed_datetime),
+            "timestamp": obj.displayed_date,
         }
 
     def get_overdue(self, obj):
@@ -140,14 +154,8 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         if obj.is_overdue:
-            return {
-                'label': _("Overdue"),
-                'value': 'overdue'
-            }
-        return {
-            'label': obj.get_status_display(),
-            'value': obj.status
-        }
+            return {"label": _("Overdue"), "value": "overdue"}
+        return {"label": obj.get_status_display(), "value": obj.status}
 
     def get_url(self, obj):
         return obj.get_api_url()
@@ -156,4 +164,4 @@ class InvoiceListSerializer(serializers.ModelSerializer):
 class InvoicePDFSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvoicePDF
-        fields = ('status', 'pdf', 'version')
+        fields = ("status", "pdf", "version")

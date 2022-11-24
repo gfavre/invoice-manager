@@ -4,8 +4,8 @@ import math
 from django import template
 from django.utils.safestring import mark_safe
 
-from babel.dates import format_date
 import phonenumbers
+from babel.dates import format_date
 
 
 register = template.Library()
@@ -17,9 +17,13 @@ def money_html(value):
         number = float(value)
         frac, integer = math.modf(number)
         if frac:
-            return mark_safe('CHF <span class="value">{:1,.2f}</span>'.format(number).replace(',', "'"))
+            return mark_safe(
+                'CHF <span class="value">{:1,.2f}</span>'.format(number).replace(",", "'")
+            )
         else:
-            return mark_safe('CHF <span class="value">{:1,.0f}.-</span>'.format(number).replace(',', "'"))
+            return mark_safe(
+                'CHF <span class="value">{:1,.0f}.-</span>'.format(number).replace(",", "'")
+            )
     except ValueError:
         return value
     except TypeError:
@@ -32,9 +36,9 @@ def money(value):
         number = float(value)
         frac, integer = math.modf(number)
         if frac:
-            return mark_safe('CHF {:1,.2f}'.format(number).replace(',', "'"))
+            return mark_safe("CHF {:1,.2f}".format(number).replace(",", "'"))
         else:
-            return mark_safe('CHF {:1,.0f}.-'.format(number).replace(',', "'"))
+            return mark_safe("CHF {:1,.0f}.-".format(number).replace(",", "'"))
     except ValueError:
         return value
     except TypeError:
@@ -46,34 +50,34 @@ def iban(value):
     if value is None:
         return value
     grouping = 4
-    value = value.upper().replace(' ', '').replace('-', '')
-    return ' '.join(value[i:i + grouping] for i in range(0, len(value), grouping))
+    value = value.upper().replace(" ", "").replace("-", "")
+    return " ".join(value[i : i + grouping] for i in range(0, len(value), grouping))
 
 
 @register.filter(is_safe=True)
-def phone(value, phone_format='national'):
+def phone(value, phone_format="national"):
     """phone numbers and formats it"""
-    if value in (None, ''):
-        return ''
+    if value in (None, ""):
+        return ""
 
     if isinstance(value, phonenumbers.PhoneNumber):
-        if phone_format.lower() == 'e164':
+        if phone_format.lower() == "e164":
             return value.as_e164
-        elif phone_format.lower() == 'international':
+        elif phone_format.lower() == "international":
             return value.as_international
-        elif phone_format.lower() == 'rfc3966':
+        elif phone_format.lower() == "rfc3966":
             return value.as_rfc3966
         return value.as_national
 
     fm = phonenumbers.PhoneNumberFormat.NATIONAL
-    if phone_format.lower() == 'e164':
+    if phone_format.lower() == "e164":
         fm = phonenumbers.PhoneNumberFormat.E164
-    elif phone_format.lower() == 'international':
+    elif phone_format.lower() == "international":
         fm = phonenumbers.PhoneNumberFormat.INTERNATIONAL
-    elif phone_format.lower() == 'rfc3966':
+    elif phone_format.lower() == "rfc3966":
         fm = phonenumbers.PhoneNumberFormat.RFC3966
     try:
-        number = phonenumbers.parse(value, 'CH')
+        number = phonenumbers.parse(value, "CH")
         return phonenumbers.format_number(number, fm)
     except phonenumbers.NumberParseException:
         return value
@@ -83,9 +87,9 @@ def phone(value, phone_format='national'):
 def ahv(value):
     if value is None:
         return value
-    value = value.replace(' ', '').replace('.', '')
+    value = value.replace(" ", "").replace(".", "")
     if value:
-        return '%s.%s.%s.%s' % (value[0:3], value[3:7], value[7:11], value[11:])
+        return "%s.%s.%s.%s" % (value[0:3], value[3:7], value[7:11], value[11:])
     return value
 
 
@@ -98,9 +102,9 @@ def percentage(value):
 def timedelta(value):
     hours = value // 1  # Integer part
     minutes = value % 1  # decimal part
-    return '{}:{:02d}'.format(hours, int(minutes * 60))
+    return "{}:{:02d}".format(hours, int(minutes * 60))
 
 
 @register.filter(is_safe=True)
-def swiss_date(value, language='fr'):
-    return format_date(value, locale=f'{language}_CH', format="long")
+def swiss_date(value, language="fr"):
+    return format_date(value, locale=f"{language}_CH", format="long")

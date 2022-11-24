@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ApiConfig(AppConfig):
-    name = 'beyondtheadmin.api'
+    name = "beyondtheadmin.api"
