@@ -6,8 +6,6 @@ import re
 
 from zeep import Client
 
-from beyondtheadmin.companies.serializers import IDECompanySerializer
-
 
 UID_TEST_URL = "https://www.uid-wse-a.admin.ch/V5.0/PublicServices.svc?wsdl"
 UID_PROD_URL = "https://www.uid-wse.admin.ch/V5.0/PublicServices.svc?wsdl"

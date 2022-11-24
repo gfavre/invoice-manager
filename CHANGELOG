@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [1.1.0] - 2022-11-24
-Time for a new release.
+Time for a new release and to use CHANGELOG seriously.
+
+# Changed
+- Social connection can be made to existing accounts if email is the same.
+
 # Added
 - Suggestions for IBAN
 - Suggestions for company infos

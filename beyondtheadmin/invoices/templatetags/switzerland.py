@@ -51,7 +51,7 @@ def iban(value):
         return value
     grouping = 4
     value = value.upper().replace(" ", "").replace("-", "")
-    return " ".join(value[i : i + grouping] for i in range(0, len(value), grouping))
+    return " ".join(value[i: i + grouping] for i in range(0, len(value), grouping))
 
 
 @register.filter(is_safe=True)

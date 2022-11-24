@@ -2,7 +2,6 @@
 import io
 
 from django.http import FileResponse, Http404
-from django.utils.translation import activate
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView
 
