@@ -12,6 +12,15 @@ from .models import Company
 
 class CompanyForm(forms.ModelForm):
 
+    class Media:
+        js = (
+            'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
+            'js/companies-form.js',
+            'js/bootstrap-autocomplete.min.js',
+            'js/companies-autocomplete.js',
+        )
+
+
     class Meta:
         model = Company
         fields = '__all__'
@@ -25,6 +34,8 @@ class CompanyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.include_media = False
         self.helper.layout = Layout(
             Fieldset(
                 _("Contact"),
@@ -57,7 +68,7 @@ class CompanyForm(forms.ModelForm):
                     Column(
                         Field('iban',
                               **{"v-model": "iban",
-                                 ":class": "{'is-valid': ibanStatus.valid, 'is-invalid': !ibanStatus.valid}"}),
+                                 ":class": "classIbanValid"}),
                         css_class='col-md-6'
                     ),
                     Column(
@@ -71,7 +82,7 @@ class CompanyForm(forms.ModelForm):
                         css_class='col-9'
                     ),
                     Column(
-                        Field('bic', v_model='ibanStatus.bank.swift'),
+                        Field('bic', v_model='swift'),
                         css_class='col'
                     ),
                 ),
