@@ -27,7 +27,7 @@ class Company(UUIDModel):
     website = models.URLField(_("Web site"), blank=True)
     vat_id = models.CharField(_("VAT ID"), blank=True, max_length=20)
 
-    name_for_bank = models.CharField(_("Bank account name"), max_length=255, blank=True)
+    name_for_bank = models.CharField(_("Bank account's owner name"), max_length=255, blank=True)
     bank = models.TextField(_("Bank"), blank=True)
     bic = BICField(_("BIC"), blank=True)
     iban = IBANField(_("IBAN"), blank=True)
@@ -118,3 +118,22 @@ class Company(UUIDModel):
 
     def get_absolute_url(self):
         return self.detail_url
+
+
+class Bank(TimeStampedModel):
+    name = models.CharField(_("Bank name"), max_length=255)
+    code = models.IntegerField(_("Code"), null=True)
+    swift = models.CharField(_("BIC/Swift"), blank=True, max_length=11)
+
+    address = models.TextField(_("Address"), blank=True)
+    zip_code = models.CharField(_("Postal code"), max_length=10, blank=True)
+    city = models.CharField(_("City"), max_length=255, blank=True)
+    country = CountryField(_("Country"), blank=True, null=True)
+
+    class Meta:
+        ordering = ('name', 'created')
+        verbose_name = _("Bank")
+        verbose_name_plural = _("Banks")
+
+    def __str__(self):
+        return self.name

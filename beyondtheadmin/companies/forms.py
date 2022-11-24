@@ -4,13 +4,22 @@ from django.utils.translation import ugettext_lazy as _
 
 from colorfield.widgets import ColorWidget
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import (ButtonHolder, Column, Fieldset, Layout, Row,
+from crispy_forms.layout import (ButtonHolder, Column, Field, Fieldset, Layout, Row, HTML,
                                  Submit)
 
 from .models import Company
 
 
 class CompanyForm(forms.ModelForm):
+
+    class Media:
+        js = (
+            'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
+            'js/companies-form.js',
+            'js/bootstrap-autocomplete.min.js',
+            'js/companies-autocomplete.js',
+        )
+
 
     class Meta:
         model = Company
@@ -25,6 +34,8 @@ class CompanyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.include_media = False
         self.helper.layout = Layout(
             Fieldset(
                 _("Contact"),
@@ -53,18 +64,28 @@ class CompanyForm(forms.ModelForm):
             Fieldset(
                 _("Business"),
                 'vat_id',
-                'name_for_bank',
                 Row(
                     Column(
-                        'bank',
+                        Field('iban',
+                              **{"v-model": "iban",
+                                 ":class": "classIbanValid"}),
+                        css_class='col-md-6'
+                    ),
+                    Column(
+                        'name_for_bank',
+                        css_class='col-md-6'
+                    ),
+                ),
+                Row(
+                    Column(
+                        Field('bank', v_model='bank', rows=3),
                         css_class='col-9'
                     ),
                     Column(
-                        'bic',
+                        Field('bic', v_model='swift'),
                         css_class='col'
                     ),
                 ),
-                'iban',
                 css_class='border-left-warning shadow'
             ),
             Fieldset(

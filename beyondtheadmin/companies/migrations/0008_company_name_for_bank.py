@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='company',
             name='name_for_bank',
-            field=models.CharField(blank=True, max_length=255, verbose_name='Bank account name'),
+            field=models.CharField(blank=True, max_length=255, verbose_name='name_for_bank'),
         ),
     ]

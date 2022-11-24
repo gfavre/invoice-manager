@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
-{% load i18n  %}
+{% load i18n crispy_forms_tags %}
 {% block content %}
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
       {% trans "Edit company" %}
     </header>
-    <article class="card-body">
+    <article class="card-body" id="app" ref="app"
+             data-autocomplete-url="{% url "api:companies-autocomplete" %}"
+             data-company-detail-url="{% url "api:company-detail" %}"
+             data-iban-url="{% url "api:iban-lookup" %}?q="
+    >
       <form action="{{ company.edit_url }}" method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          {% include "companies/form.html" %}
-        </form>
+        {% csrf_token %}
+        {% crispy form %}
+      </form>
     </article>
-   <a href="{{ company.delete_url }}" class="btn btn-sm btn-danger"><i
-              class="icon bi-trash"></i> {% trans "Delete" %}</a>
+    <a href="{{ company.delete_url }}" class="btn btn-sm btn-danger"><i
+      class="icon bi-trash"></i> {% trans "Delete" %}</a>
   </section>
-
 {% endblock content %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script>
+  window.bank = `{{ company.bank|default:"" }}`;
+  window.iban = "{{ company.iban|default:"" }}";
+  window.swift = "{{ company.bic|default:"" }}";
+  </script>
+  {{ form.media }}
+{% endblock %}
