@@ -44,7 +44,7 @@ def reverse(
             raise NoReverseMatch(
                 'could not find reverse match for "{}" with language "{}"'.format(view_name, lang)
             )
-        url = url[len(settings.LANGUAGE_CODE) + 1 :]
+        url = url[len(settings.LANGUAGE_CODE) + 1:]
     activate(cur_language)
     return url
 

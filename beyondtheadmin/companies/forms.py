@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from colorfield.widgets import ColorWidget
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import HTML, ButtonHolder, Column, Field, Fieldset, Layout, Row, Submit
+from crispy_forms.layout import ButtonHolder, Column, Field, Fieldset, Layout, Row, Submit
 
 from .models import Company
 
