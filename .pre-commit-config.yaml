@@ -11,19 +11,27 @@ repos:
       - id: check-yaml
 
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 22.10.0
     hooks:
       - id: black
+        # It is recommended to specify the latest version of Python
+        # supported by your project here, or alternatively use
+        # pre-commit's default_language_version, see
+        # https://pre-commit.com/#top_level-default_language_version
+        language_version: python3.9
+        args: [ --line-length=99 ]
 
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.7.0
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
     hooks:
       - id: isort
+        args: [ "--profile", "black", "--line-length", "99" ]
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.4
+  - repo: https://github.com/pycqa/flake8
+    rev: 5.0.4
     hooks:
       - id: flake8
-        args: ['--config=setup.cfg']
-        additional_dependencies: [flake8-isort]
-
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-comprehensions
+          #- flake8-simplify
