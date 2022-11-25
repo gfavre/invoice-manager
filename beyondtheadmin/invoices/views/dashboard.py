@@ -18,52 +18,6 @@ from ..models import Invoice
 from ..tasks import send_invoice_email
 
 
-class InvoiceCreateView(LoginRequiredMixin, CreateView):
-    model = Invoice
-    template_name = "invoices/create.html"
-    form_class = BaseInvoiceForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["companies"] = self.request.user.companies.all()
-        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
-        return kwargs
-
-    def get_success_url(self):
-        # noinspection PyUnresolvedReferences
-        return self.object.get_edit_url()
-
-
-class InvoiceListView(LoginRequiredMixin, TemplateView):
-    template_name = "invoices/list.html"
-
-
-class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
-    form_class = InvoiceEditForm
-    model = Invoice
-    template_name = "invoices/update.html"
-
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["request"] = self.request
-        # FIXME: at some points clients have to be find out with the company using a realtime api call...
-        kwargs["companies"] = self.request.user.companies.all()
-        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
-        return kwargs
-
-    # noinspection PyUnresolvedReferences
-    def get_initial(self):
-        initial = {}
-        if not self.object.due_date:
-            initial["due_date"] = (now() + timedelta(days=self.object.client.payment_delay_days),)
-        if self.object.vat_rate is None:
-            initial["vat_rate"] = self.object.client.vat_rate
-        return initial
-
-
 class InvoiceCancelView(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_cancel.html"
@@ -81,6 +35,37 @@ class InvoiceCancelView(LoginRequiredMixin, UpdateView):
         return self.get_object().company.detail_url
 
 
+class InvoiceCreateView(LoginRequiredMixin, CreateView):
+    model = Invoice
+    template_name = "invoices/create.html"
+    form_class = BaseInvoiceForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["companies"] = self.request.user.companies.all()
+        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
+        return kwargs
+
+    def get_success_url(self):
+        # noinspection PyUnresolvedReferences
+        return self.object.get_edit_url()
+
+
+class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = "pk"
+
+    def get_redirect_url(self, *args, **kwargs):
+        source = get_object_or_404(Invoice, pk=kwargs["pk"], company__users=self.request.user)
+        duplicata = source.duplicate()
+        return duplicata.get_edit_url()
+
+
+class InvoiceListView(LoginRequiredMixin, TemplateView):
+    template_name = "invoices/list.html"
+
+
 class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_paid.html"
@@ -96,34 +81,6 @@ class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.get_object().company.detail_url
-
-
-class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
-    model = Invoice
-    template_name = "invoices/confirm_print.html"
-    form_class = InvoiceStatusForm
-
-    def get_initial(self):
-        return {
-            "status": Invoice.STATUS.sent,
-        }
-
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
-    def get_success_url(self):
-        return self.get_object().company.detail_url
-
-
-class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
-    permanent = False
-    query_string = True
-    pattern_name = "pk"
-
-    def get_redirect_url(self, *args, **kwargs):
-        source = get_object_or_404(Invoice, pk=kwargs["pk"], company__users=self.request.user)
-        duplicata = source.duplicate()
-        return duplicata.get_edit_url()
 
 
 class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
@@ -199,3 +156,46 @@ class InvoiceSendReminderEmailView(InvoiceSendMailView):
         return _("Your reminder has been sent to %(email)s") % {
             "email": self.get_object().client.contact_email
         }
+
+
+class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
+    model = Invoice
+    template_name = "invoices/confirm_print.html"
+    form_class = InvoiceStatusForm
+
+    def get_initial(self):
+        return {
+            "status": Invoice.STATUS.sent,
+        }
+
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
+
+    def get_success_url(self):
+        return self.get_object().company.detail_url
+
+
+class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = InvoiceEditForm
+    model = Invoice
+    template_name = "invoices/update.html"
+
+    def get_queryset(self):
+        return Invoice.objects.filter(company__users=self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        # FIXME: at some points clients have to be find out with the company using a realtime api call...
+        kwargs["companies"] = self.request.user.companies.all()
+        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
+        return kwargs
+
+    # noinspection PyUnresolvedReferences
+    def get_initial(self):
+        initial = {}
+        if not self.object.due_date:
+            initial["due_date"] = (now() + timedelta(days=self.object.client.payment_delay_days),)
+        if self.object.vat_rate is None:
+            initial["vat_rate"] = self.object.client.vat_rate
+        return initial

@@ -83,7 +83,7 @@ class ProfitView(APIView):
         if year is None:
             year = now().year
         invoices = (
-            Invoice.objects.filter(company=company_obj, displayed_date__year=year)
+            Invoice.visible.filter(company=company_obj, displayed_date__year=year)
             .annotate(month=Month("displayed_date"))
             .values("month")
             .annotate(monthly_total=Sum("total"))
