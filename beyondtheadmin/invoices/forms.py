@@ -21,9 +21,9 @@ class BaseInvoiceForm(forms.ModelForm):
         companies = kwargs.pop("companies", None)
         clients = kwargs.pop("clients", None)
         super().__init__(*args, **kwargs)
-        if companies:
+        if companies is not None:
             self.fields["company"].queryset = companies
-        if clients:
+        if clients is not None:
             self.fields["client"].queryset = clients
         self.helper = FormHelper()
         self.helper.add_input(Submit("submit", _("Submit")))
