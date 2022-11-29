@@ -18,6 +18,7 @@ Time for a new release and to use CHANGELOG seriously.
 # Fixed
 - only take sent and paid invoices into account for the invoices graph
 - color of the sent invoice is now blue
+- issue preventing client edition
 
 
 ## [1.0.0] - 2021-04-10

@@ -3,12 +3,12 @@
 {% block content %}
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
-      {% trans "Edit company" %}
+      {% trans "Edit client" %}
     </header>
     <article class="card-body">
-      <form action="{{ company.edit_url }}" method="post" enctype="multipart/form-data">
+      <form action="{{ client.edit_url }}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          {% include "companies/form.html" %}
+          {% include "clients/form.html" %}
         </form>
     </article>
   </section>
