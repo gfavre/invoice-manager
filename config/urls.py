@@ -17,20 +17,15 @@ admin.site.enable_nav_sidebar = False
 
 urlpatterns = i18n_patterns(
     path("", dashboard, name="dashboard"),
-    path(
-      "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
+    path("about/", TemplateView.as_view(template_name="pages/about.html"), name="about"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
-
     path("accounts/", include("allauth.urls")),
     path("clients/", include("beyondtheadmin.clients.urls", namespace="clients")),
     path("companies/", include("beyondtheadmin.companies.urls", namespace="companies")),
-
     path("invoices/", include("beyondtheadmin.invoices.urls", namespace="invoices")),
     path("users/", include("beyondtheadmin.users.urls", namespace="users")),
-
-    prefix_default_language=False
+    prefix_default_language=False,
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
@@ -43,7 +38,6 @@ urlpatterns += [
     # under a case where one could change the language. Therefore it has to find place here.
     path("invoice/<uuid:pk>/", view=InvoiceDetailView.as_view(), name="invoice-print"),
     path("invoice/<uuid:pk>/qrbill.svg", view=qrbill, name="qrbill"),
-
 ]
 
 if settings.DEBUG:

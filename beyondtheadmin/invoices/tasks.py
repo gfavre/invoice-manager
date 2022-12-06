@@ -21,7 +21,7 @@ def generate_pdf(self, invoice_id, version, content):
         invoice = Invoice.objects.get(id=invoice_id)
         generated_pdf = generate_pdf_invoice(content)
         if generated_pdf is None:
-            self.retry(countdown=2 ** self.request.retries)
+            self.retry(countdown=2**self.request.retries)
         else:
             invoice.add_pdf(generated_pdf, version)
     except Invoice.DoesNotExist:
@@ -55,11 +55,11 @@ def send_invoice_email(self, invoice_id, subject, message):
         try:
             invoice.generate_latest_pdf()
         except Exception as exc:
-            self.retry(countdown=2 ** self.request.retries, exc=exc)
+            self.retry(countdown=2**self.request.retries, exc=exc)
 
     email.attach_file(invoice.latest_pdf.path, "application/pdf")
     try:
         email.send()
         invoice.set_sent()
     except AnymailError as exc:
-        self.retry(countdown=2 ** self.request.retries, exc=exc)
+        self.retry(countdown=2**self.request.retries, exc=exc)

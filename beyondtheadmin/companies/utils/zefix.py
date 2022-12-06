@@ -43,7 +43,9 @@ def search_zefix(company_name):
         "activeOnly": True,
     }
     response = requests.post(
-        ZEFIX_SEARCH_URL, json=data, auth=requests.auth.HTTPBasicAuth(username, password)
+        ZEFIX_SEARCH_URL,
+        json=data,
+        auth=requests.auth.HTTPBasicAuth(username, password),
     )
     if response.status_code == 200:
         return [

@@ -52,7 +52,8 @@ def convert_search_item_to_company_data(result_item):
         vat_node = result_item.organisation.vatRegisterInformation
         if vat_node.vatStatus == UID_VAT_REGISTERED:
             vat_id = format_uid(
-                vat_node.uidVat.uidOrganisationIdCategorie, vat_node.uidVat.uidOrganisationId
+                vat_node.uidVat.uidOrganisationIdCategorie,
+                vat_node.uidVat.uidOrganisationId,
             )
     except AttributeError:
         pass

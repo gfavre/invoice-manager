@@ -92,7 +92,11 @@ class Migration(migrations.Migration):
             model_name="invoice",
             name="vat_rate",
             field=models.DecimalField(
-                blank=True, decimal_places=4, default=0.065, max_digits=6, verbose_name="VAT rate"
+                blank=True,
+                decimal_places=4,
+                default=0.065,
+                max_digits=6,
+                verbose_name="VAT rate",
             ),
         ),
     ]

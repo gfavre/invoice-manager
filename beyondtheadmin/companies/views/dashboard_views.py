@@ -1,10 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
 
 from ..forms import CompanyForm
 from ..models import Company
+
+
+class CompanyWizardView(LoginRequiredMixin, TemplateView):
+    template_name = "companies/wizard.html"
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):

@@ -12,7 +12,9 @@ def cleanup_value(model_class, accessor, values):
         )
         # noinspection PyProtectedMember
         query_filter, cleaned_values = cleanup_value(
-            model_class._meta.get_field(parent_field_name).related_model, child_field_name, values
+            model_class._meta.get_field(parent_field_name).related_model,
+            child_field_name,
+            values,
         )
         return "{}__{}".format(parent_field_name, query_filter), cleaned_values
     # noinspection PyProtectedMember

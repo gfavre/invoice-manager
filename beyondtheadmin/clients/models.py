@@ -30,17 +30,29 @@ class Client(UUIDModel):
     language = models.CharField(
         _("Language"),
         max_length=2,
-        choices=(("en", "English"), ("de", "Deutsch"), ("fr", "Français"), ("it", "Italiano")),
+        choices=(
+            ("en", "English"),
+            ("de", "Deutsch"),
+            ("fr", "Français"),
+            ("it", "Italiano"),
+        ),
         default="fr",
     )
     currency = models.CharField(
-        _("Currency"), max_length=3, choices=(("CHF", "CHF"), ("EUR", "Euro")), default="CHF"
+        _("Currency"),
+        max_length=3,
+        choices=(("CHF", "CHF"), ("EUR", "Euro")),
+        default="CHF",
     )
     payment_delay_days = models.IntegerField(
         _("Payment delay"), help_text=_("Default delay in days to due date"), default=30
     )
     vat_rate = models.DecimalField(
-        _("VAT rate"), max_digits=6, decimal_places=4, default=Decimal("0.077"), blank=True
+        _("VAT rate"),
+        max_digits=6,
+        decimal_places=4,
+        default=Decimal("0.077"),
+        blank=True,
     )
     default_hourly_rate = models.DecimalField(
         _("Default hourly rate"), max_digits=5, decimal_places=2, default="0.00"
@@ -56,7 +68,9 @@ class Client(UUIDModel):
 
     slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=15)
     invoice_current_count = models.IntegerField(
-        _("Current count of invoices"), help_text=_("Used to generate invoice code"), default=0
+        _("Current count of invoices"),
+        help_text=_("Used to generate invoice code"),
+        default=0,
     )
     company = models.ForeignKey(
         verbose_name=_("Company"),

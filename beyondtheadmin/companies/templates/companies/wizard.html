@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n static crispy_forms_tags %}
+{% block content %}
+  <section class="card card-header-actions mb-4">
+    <header class="card-header ">
+      {% trans "Create company" %}
+    </header>
+    <article class="card-body" id="app" ref="app"
+             data-autocomplete-url="{% url "api:companies-autocomplete" %}"
+             data-company-detail-url="{% url "api:company-detail" %}"
+             data-iban-url="{% url 'api:iban-lookup' %}?q=">
+      <form action="{% url 'companies:create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% crispy form %}
+      </form>
+    </article>
+  </section>
+{% endblock content %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script>
+  window.bank = `{{ form.bank.value|default:"" }}`;
+  window.iban = "{{ form.iban.value|default:"" }}";
+  window.swift = "{{ form.bic.value|default:"" }}";
+  </script>
+  {{ form.media }}
+{% endblock %}

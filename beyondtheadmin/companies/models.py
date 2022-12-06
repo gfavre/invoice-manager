@@ -39,7 +39,9 @@ class Company(UUIDModel):
     signature_image = models.ImageField(_("Signature as image"), null=True, blank=True)
     email_signature = models.TextField(_("Email signature"), blank=True)
     invoice_note = RichTextField(
-        _("Notes"), blank=True, help_text=_("Displayed between banking details and signature")
+        _("Notes"),
+        blank=True,
+        help_text=_("Displayed between banking details and signature"),
     )
 
     override_default_from_email = models.BooleanField(
