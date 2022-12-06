@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from .models import Company
+from .models import Bank, Company
 
 
 @admin.register(Company)
@@ -23,3 +23,9 @@ class CompanyAdmin(admin.ModelAdmin):
         return mark_safe(", ".join([get_user_link(user) for user in obj.users.all()]))
 
     get_users.short_description = _("Users")
+
+
+@admin.register(Bank)
+class BankAdmin(admin.ModelAdmin):
+    search_fields = ["name", "swift", "city"]
+    list_display = ["name", "code", "swift", "city"]
