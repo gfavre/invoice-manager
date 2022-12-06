@@ -26,10 +26,10 @@ def dashboard(request):
         company = request.user.companies.first()
         return CompanyDetailView.as_view()(request, pk=company.pk)
     else:
-        from beyondtheadmin.companies.views import CompanyCreateView
+        from beyondtheadmin.companies.views import CompanyWizardView
 
         # FIXME: wizard
-        return CompanyCreateView.as_view()(request)
+        return CompanyWizardView.as_view()(request)
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
