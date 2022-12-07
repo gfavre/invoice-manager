@@ -9,9 +9,9 @@
              data-autocomplete-url="{% url "api:companies-autocomplete" %}"
              data-company-detail-url="{% url "api:company-detail" %}"
              data-iban-url="{% url 'api:iban-lookup' %}?q=">
+
       <form action="{% url 'companies:create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {% crispy form %}
       </form>
     </article>
   </section>
@@ -19,10 +19,28 @@
 
 {% block javascript %}
   {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
   <script>
-  window.bank = `{{ form.bank.value|default:"" }}`;
-  window.iban = "{{ form.iban.value|default:"" }}";
-  window.swift = "{{ form.bic.value|default:"" }}";
+  import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
+
+const app = new Vue({
+  el: '#app',
+  data: {
+    stepIndex: 0,
+    steps: [
+      {
+        name: 'About company'
+      },
+      {
+        name: 'Bank account'
+      },
+      {
+        name: 'Invoices'
+      },
+    ]
+  },
+
+});
   </script>
-  {{ form.media }}
 {% endblock %}
