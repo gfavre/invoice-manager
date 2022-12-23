@@ -39,6 +39,7 @@ class CompanyDetailView(APIView):
         data = []
         if query_string:
             data = get_detail(query_string)
+        data["country"] = "CH"
         serializer = IDECompanySerializer(data=data)
         serializer.is_valid()
         return Response(serializer.data)

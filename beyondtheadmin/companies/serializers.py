@@ -23,6 +23,7 @@ class IDECompanySerializer(serializers.Serializer):
     zip_code = serializers.CharField(max_length=5, required=False)
     city = serializers.CharField(max_length=255, required=True)
     vat_id = serializers.CharField(max_length=20)
+    country = serializers.CharField(max_length=2, required=False)
 
 
 class IBANInfosSerializer(serializers.Serializer):

@@ -1,14 +1,23 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
 from ..forms import CompanyForm
 from ..models import Company
 
 
-class CompanyWizardView(LoginRequiredMixin, TemplateView):
+class CompanyWizardView(LoginRequiredMixin, CreateView):
+    form_class = CompanyForm
+    success_url = reverse_lazy("dashboard")
     template_name = "companies/wizard.html"
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        # noinspection PyAttributeOutsideInit
+        self.object = form.save()
+        self.object.users.add(self.request.user)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):

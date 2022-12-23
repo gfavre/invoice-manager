@@ -12,35 +12,25 @@
 
       <form action="{% url 'companies:create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <vue-typeahead-bootstrap
+          v-model="query"
+          :data="companies"
+          :serializer="item => item.name + ', ' + item.city"
+          min.matching-chars="3"
+          placeholder="{% trans "Find company" %}"
+          @input="companyLookup"
+          @hit="selectedCompany = $event"
+        ></vue-typeahead-bootstrap>
+          {% crispy form %}
       </form>
     </article>
+
   </section>
+
 {% endblock content %}
 
 {% block javascript %}
   {{ block.super }}
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-  <script>
-  import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
-
-const app = new Vue({
-  el: '#app',
-  data: {
-    stepIndex: 0,
-    steps: [
-      {
-        name: 'About company'
-      },
-      {
-        name: 'Bank account'
-      },
-      {
-        name: 'Invoices'
-      },
-    ]
-  },
-
-});
-  </script>
+  <script type="module" src="{% static 'js/wizard.js' %}"></script>
 {% endblock %}

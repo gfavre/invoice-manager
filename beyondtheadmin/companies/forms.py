@@ -35,12 +35,16 @@ class CompanyForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 _("Contact"),
-                "name",
-                "address",
+                Field("name", **{"v-model": "company.name"}),
+                Field("address", **{"v-model": "company.address"}),
                 Row(
-                    Column("country", css_class="col-md-4"),
-                    Column("zip_code", css_class="col-md-2"),
-                    Column("city"),
+                    Column(
+                        Field("country", **{"v-model": "company.country"}), css_class="col-md-4"
+                    ),
+                    Column(
+                        Field("zip_code", **{"v-model": "company.zip_code"}), css_class="col-md-2"
+                    ),
+                    Column(Field("city", **{"v-model": "company.city"})),
                 ),
                 "phone",
                 "additional_phone",
@@ -50,7 +54,7 @@ class CompanyForm(forms.ModelForm):
             ),
             Fieldset(
                 _("Business"),
-                "vat_id",
+                Field("vat_id", **{"v-model": "company.vat_id"}),
                 Row(
                     Column(
                         Field("iban", **{"v-model": "iban", ":class": "classIbanValid"}),
