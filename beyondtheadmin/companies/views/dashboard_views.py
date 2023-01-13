@@ -3,7 +3,12 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
-from ..forms import CompanyForm
+from ..forms import (
+    CompanyCreateWizardBankDataForm,
+    CompanyCreateWizardBaseDataForm,
+    CompanyCreateWizardConfigureInvoicesForm,
+    CompanyForm,
+)
 from ..models import Company
 
 
@@ -11,6 +16,14 @@ class CompanyWizardView(LoginRequiredMixin, CreateView):
     form_class = CompanyForm
     success_url = reverse_lazy("dashboard")
     template_name = "companies/wizard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_base"] = CompanyCreateWizardBaseDataForm()
+        context["form_bank"] = CompanyCreateWizardBankDataForm()
+        context["form_invoices"] = CompanyCreateWizardConfigureInvoicesForm()
+
+        return context
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""

@@ -8,20 +8,95 @@
     <article class="card-body" id="app" ref="app"
              data-autocomplete-url="{% url "api:companies-autocomplete" %}"
              data-company-detail-url="{% url "api:company-detail" %}"
-             data-iban-url="{% url 'api:iban-lookup' %}?q=">
+             data-iban-url="{% url 'api:iban-lookup' %}?q="
+    >
 
       <form action="{% url 'companies:create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <vue-typeahead-bootstrap
-          v-model="query"
-          :data="companies"
-          :serializer="item => item.name + ', ' + item.city"
-          min.matching-chars="3"
-          placeholder="{% trans "Find company" %}"
-          @input="companyLookup"
-          @hit="selectedCompany = $event"
-        ></vue-typeahead-bootstrap>
-          {% crispy form %}
+        <div class="card-header border-bottom">
+          <!-- Wizard navigation-->
+          <div class="nav nav-pills nav-justified flex-column flex-xl-row nav-wizard" id="wizard-steps" role="tablist">
+            <!-- Wizard navigation item 1-->
+
+<!-- find a way to add aria-selected="true" -->
+            <a class="nav-item nav-link" href="#wizard1" data-bs-toggle="tab" role="tab"
+               aria-controls="wizard1"
+               :class="{'active': stepIndex === 1}" @click="stepIndex=1">
+              <div class="wizard-step-icon">1</div>
+              <div class="wizard-step-text">
+                <div class="wizard-step-text-name">{% trans "About company" %}</div>
+                <div class="wizard-step-text-details">Basic details and information</div>
+              </div>
+            </a>
+            <!-- Wizard navigation item 2-->
+            <a class="nav-item nav-link" id="wizard2-tab" href="#wizard2" data-bs-toggle="tab" role="tab"
+               aria-controls="wizard2"
+               :class="{'active': stepIndex === 2}" @click="stepIndex=2">
+              <div class="wizard-step-icon">2</div>
+              <div class="wizard-step-text">
+                <div class="wizard-step-text-name">{% trans "Payment details" %}</div>
+                <div class="wizard-step-text-details">Credit card information</div>
+              </div>
+            </a>
+            <!-- Wizard navigation item 3-->
+            <a class="nav-item nav-link" id="wizard3-tab" href="#wizard3" data-bs-toggle="tab" role="tab"
+               aria-controls="wizard3"
+               :class="{'active': stepIndex === 3}" @click="stepIndex=3">
+              <div class="wizard-step-icon">3</div>
+              <div class="wizard-step-text">
+                <div class="wizard-step-text-name">{% trans "Invoices setup" %}</div>
+                <div class="wizard-step-text-details">Notification and account options</div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <fieldset v-if="stepIndex===1" class="border-left-info shadow">
+          <legend>{% trans "Contact" %}</legend>
+          <vue-typeahead-bootstrap
+            v-model="query"
+            :data="companies"
+            :serializer="item => item.name + ', ' + item.city"
+            min.matching-chars="3"
+            placeholder="{% trans "Find company" %}"
+            @input="companyLookup"
+            @hit="selectedCompany = $event"
+          ></vue-typeahead-bootstrap>
+          <br>
+
+          {% crispy form_base %}
+          <div class="buttonHolder">
+            <input type="button" name="next-1" value="{% trans "Next" %}" class="btn btn btn-primary white"
+                   @click="nextStep()"
+            />
+          </div>
+        </fieldset>
+        <fieldset v-if="stepIndex===2" class="border-left-warning shadow">
+          <legend>{% trans "Business" %}</legend>
+
+          {% crispy form_bank %}
+          <div class="buttonHolder">
+            <input type="button" name="prev-2" value="{% trans "Previous" %}" class="btn btn btn-secondary white"
+                   @click="prevStep()"
+            />
+            <input type="button" name="next-2" value="{% trans "Next" %}" class="btn btn btn-primary white"
+                   @click="nextStep()"
+            />
+          </div>
+        </fieldset>
+        <fieldset v-if="stepIndex===3" class="border-left-primary shadow">
+          <legend>{% trans "Invoices" %}</legend>
+
+          {% crispy form_invoices %}
+          <div class="buttonHolder">
+            <input type="button" name="prev-3" value="{% trans "Previous" %}" class="btn btn btn-secondary white"
+                   @click="prevStep()"
+            />
+            <input type="submit" name="next-2" value="{% trans "Save" %}" class="btn btn btn-primary white">
+          </div>
+        </fieldset>
+
       </form>
     </article>
 

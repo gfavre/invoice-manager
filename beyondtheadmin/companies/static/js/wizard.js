@@ -20,18 +20,7 @@ const app = new Vue({
     query: '',
     swift: '',
     companies: [],
-    stepIndex: 0,
-    steps: [
-      {
-        name: 'About company'
-      },
-      {
-        name: 'Bank account'
-      },
-      {
-        name: 'Invoices'
-      },
-    ],
+    stepIndex: 1,
     selectedCompany: null,
     company: {
       name: '',
@@ -91,8 +80,14 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
         this.bank = '';
         this.swift = '';
       }
+    },
+    nextStep() {
+      this.stepIndex++;
+    },
+    prevStep() {
+      this.stepIndex--;
+    },
 
-    }
   },
 
   watch: {

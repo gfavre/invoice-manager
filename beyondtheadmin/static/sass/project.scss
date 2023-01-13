@@ -18,7 +18,7 @@ $red: #b94a48;
 @import "datatables";
 @import "page-header";
 @import "print";
-
+@import "wizard";
 
 ////////////////////////////////
 //Alerts//
@@ -83,7 +83,7 @@ fieldset {
 }
 
 .card-header-actions .card-header {
-  height: 3.5rem;
+  /*height: 3.5rem;*/
   display: flex;
   align-items: center;
   justify-content: space-between;
