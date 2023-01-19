@@ -176,7 +176,7 @@ class CompanyCreateWizardConfigureInvoicesForm(forms.ModelForm):
             "signature_text",
             "signature_image",
             "email_signature",
-            "from_email",
+            Field("from_email", **{"v-model": "from_email"}),
             "bcc_email",
             "thanks",
         )

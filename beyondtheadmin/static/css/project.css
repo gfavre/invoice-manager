@@ -750,12 +750,14 @@ a.badge-danger-soft:focus, a.badge-danger-soft.focus {
     background-color: inherit !important;
   }
 }
+.nav-wizard {
+  width: 100%;
+}
 .nav-wizard .nav-link {
   display: flex;
   align-items: center;
   padding: 2rem;
 }
-
 .nav-wizard .nav-link .wizard-step-icon {
   display: inline-flex;
   align-items: center;
@@ -767,46 +769,42 @@ a.badge-danger-soft:focus, a.badge-danger-soft.focus {
   border-radius: 0.35rem;
   background-color: #0061f2;
   color: white;
+  font-size: 1rem;
 }
-
-.nav-wizard .nav-link .wizard-step-icon i,
-.nav-wizard .nav-link .wizard-step-icon svg,
-.nav-wizard .nav-link .wizard-step-icon .feather {
+.nav-wizard .nav-link .wizard-step-icon i, .nav-wizard .nav-link .wizard-step-icon svg, .nav-wizard .nav-link .wizard-step-icon .feather {
   color: white;
 }
-
 .nav-wizard .nav-link .wizard-step-text {
   line-height: 1;
   text-align: left;
 }
-
 .nav-wizard .nav-link .wizard-step-text .wizard-step-text-name {
   font-size: 1rem;
   margin-bottom: 0.25rem;
   color: #0061f2;
 }
-
 .nav-wizard .nav-link .wizard-step-text .wizard-step-text-details {
   font-weight: 400;
   font-size: 0.875rem;
   color: #69707a;
 }
-
+.nav-wizard .nav-link.disabled .wizard-step-icon {
+  background-color: #e9ecef;
+  color: #adb5bd;
+}
+.nav-wizard .nav-link.disabled .wizard-step-text .wizard-step-text-name, .nav-wizard .nav-link.disabled .wizard-step-text .wizard-step-text-details {
+  color: #adb5bd;
+}
 .nav-wizard .nav-link.active .wizard-step-icon {
   background-color: #fff;
   color: #0061f2;
 }
-
-.nav-wizard .nav-link.active .wizard-step-icon i,
-.nav-wizard .nav-link.active .wizard-step-icon svg,
-.nav-wizard .nav-link.active .wizard-step-icon .feather {
+.nav-wizard .nav-link.active .wizard-step-icon i, .nav-wizard .nav-link.active .wizard-step-icon svg, .nav-wizard .nav-link.active .wizard-step-icon .feather {
   color: #0061f2;
 }
-
 .nav-wizard .nav-link.active .wizard-step-text .wizard-step-text-name {
   color: #fff;
 }
-
 .nav-wizard .nav-link.active .wizard-step-text .wizard-step-text-details {
   color: rgba(255, 255, 255, 0.5);
 }

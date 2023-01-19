@@ -29,6 +29,26 @@ const app = new Vue({
       city: '',
       zip_code: '',
       country: '',
+    },
+    from_email: '',
+
+  },
+  computed: {
+
+    step1Invalid() {
+      return this.company.name.length == 0;
+    },
+    step2Invalid() {
+      return this.ibanValid !== true;
+    },
+    step3NotClickable() {
+      return this.step1Invalid || this.step2Invalid;
+    },
+    step3Invalid() {
+      return this.from_email.length == 0;
+    },
+    submittable() {
+      return !this.step1Invalid && !this.step2Invalid && !this.step3Invalid;
     }
 
   },
@@ -89,7 +109,6 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
     },
 
   },
-
   watch: {
     selectedCompany: function (newVal, oldVal) {
       this.companyDetailLookup()
