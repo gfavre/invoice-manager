@@ -14,8 +14,12 @@ from beyondtheadmin.companies.models import Company
 
 from ..models import Invoice, InvoiceLine, InvoicePDF
 from ..pdf import build_content_for_pdf
-from ..serializers import (InvoiceLineSerializer, InvoiceListSerializer, InvoicePDFSerializer,
-                           InvoiceSerializer)
+from ..serializers import (
+    InvoiceLineSerializer,
+    InvoiceListSerializer,
+    InvoicePDFSerializer,
+    InvoiceSerializer,
+)
 from ..tasks import generate_pdf
 
 

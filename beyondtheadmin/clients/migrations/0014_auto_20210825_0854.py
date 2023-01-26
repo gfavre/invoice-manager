@@ -16,7 +16,11 @@ class Migration(migrations.Migration):
             model_name="client",
             name="country",
             field=django_countries.fields.CountryField(
-                blank=True, default="CH", max_length=2, null=True, verbose_name="Country"
+                blank=True,
+                default="CH",
+                max_length=2,
+                null=True,
+                verbose_name="Country",
             ),
         ),
     ]

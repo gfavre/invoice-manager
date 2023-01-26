@@ -1,0 +1,72 @@
+.nav-wizard {
+  width: 100%;
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+
+    .wizard-step-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.5rem;
+      width: 2.5rem;
+      flex-shrink: 0;
+      margin-right: 1rem;
+      border-radius: 0.35rem;
+      background-color: #0061f2;
+      color: white;
+      font-size: 1rem;
+
+      i, svg, .feather {
+        color: white;
+      }
+    }
+
+    .wizard-step-text {
+      line-height: 1;
+      text-align: left;
+
+      .wizard-step-text-name {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+        color: #0061f2;
+      }
+
+      .wizard-step-text-details {
+        font-weight: 400;
+        font-size: 0.875rem;
+        color: #69707a;
+      }
+    }
+
+    &.disabled {
+      .wizard-step-icon {
+        background-color: #e9ecef;
+        color: #adb5bd;
+      }
+
+      .wizard-step-text .wizard-step-text-name, .wizard-step-text .wizard-step-text-details {
+        color: #adb5bd;
+      }
+    }
+
+    &.active {
+      .wizard-step-icon {
+        background-color: #fff;
+        color: #0061f2;
+
+        i, svg, .feather {
+          color: #0061f2;
+        }
+      }
+      .wizard-step-text .wizard-step-text-name {
+        color: #fff;
+      }
+      .wizard-step-text .wizard-step-text-details {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+}

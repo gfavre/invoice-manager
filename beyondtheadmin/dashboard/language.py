@@ -31,7 +31,11 @@ def reverse(
     if lang is None:
         with override(None):
             return lang_implied_reverse(
-                view_name, args=args, kwargs=kwargs, urlconf=urlconf, current_app=current_app
+                view_name,
+                args=args,
+                kwargs=kwargs,
+                urlconf=urlconf,
+                current_app=current_app,
             )
     cur_language = get_language()
     if use_lang_prefix:
@@ -44,7 +48,7 @@ def reverse(
             raise NoReverseMatch(
                 'could not find reverse match for "{}" with language "{}"'.format(view_name, lang)
             )
-        url = url[len(settings.LANGUAGE_CODE) + 1:]
+        url = url[len(settings.LANGUAGE_CODE) + 1 :]
     activate(cur_language)
     return url
 
@@ -63,7 +67,9 @@ def get_hreflang_info(path, default=True):
                 (
                     "x-default",
                     reverse(
-                        reverse_match.view_name, use_lang_prefix=False, kwargs=reverse_match.kwargs
+                        reverse_match.view_name,
+                        use_lang_prefix=False,
+                        kwargs=reverse_match.kwargs,
                     ),
                 )
             )

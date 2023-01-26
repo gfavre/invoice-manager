@@ -15,7 +15,9 @@ class Migration(migrations.Migration):
             model_name="client",
             name="companies",
             field=models.ManyToManyField(
-                through="companies.CompanyClient", to="companies.Company", verbose_name="Companies"
+                through="companies.CompanyClient",
+                to="companies.Company",
+                verbose_name="Companies",
             ),
         ),
     ]

@@ -48,10 +48,19 @@ class Invoice(UUIDModel, StatusModel):
     due_date = models.DateField(_("Due date"), null=True, blank=False)
     displayed_date = models.DateField(_("Displayed date"), blank=True, null=True)
     vat_rate = models.DecimalField(
-        _("VAT rate"), max_digits=6, decimal_places=4, default=Decimal("0.077"), blank=True
+        _("VAT rate"),
+        max_digits=6,
+        decimal_places=4,
+        default=Decimal("0.077"),
+        blank=True,
     )
     total = models.DecimalField(
-        _("Total"), max_digits=7, decimal_places=2, default=0.0, blank=True, editable=False
+        _("Total"),
+        max_digits=7,
+        decimal_places=2,
+        default=0.0,
+        blank=True,
+        editable=False,
     )
 
     title = models.CharField(_("Title"), max_length=100, blank=True)
@@ -78,7 +87,9 @@ class Invoice(UUIDModel, StatusModel):
     def displayed_datetime(self):
         if self.due_date:
             return datetime.datetime(
-                self.displayed_date.year, self.displayed_date.month, self.displayed_date.day
+                self.displayed_date.year,
+                self.displayed_date.month,
+                self.displayed_date.day,
             )
         return None
 
@@ -174,7 +185,8 @@ class Invoice(UUIDModel, StatusModel):
 
     def get_pdf_generation_url(self):
         return reverse(
-            "api:invoices-pdf-detail", kwargs={"invoice_pk": self.pk, "version": self.version}
+            "api:invoices-pdf-detail",
+            kwargs={"invoice_pk": self.pk, "version": self.version},
         )
 
     def get_qrbill(self):

@@ -10,7 +10,10 @@ def create_dm_pdf(apps, schema_editor):
     InvoicePDF = apps.get_model("invoices", "InvoicePDF")
     for invoice in Invoice.objects.all():
         InvoicePDF.objects.create(
-            invoice=invoice, pdf=invoice.pdf, version=invoice.pdf_version, status="ready"
+            invoice=invoice,
+            pdf=invoice.pdf,
+            version=invoice.pdf_version,
+            status="ready",
         )
 
 

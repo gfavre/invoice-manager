@@ -18,7 +18,10 @@ class Migration(migrations.Migration):
             model_name="company",
             name="additional_phone",
             field=phonenumber_field.modelfields.PhoneNumberField(
-                blank=True, max_length=128, region=None, verbose_name="Additional phone number"
+                blank=True,
+                max_length=128,
+                region=None,
+                verbose_name="Additional phone number",
             ),
         ),
         migrations.AlterField(

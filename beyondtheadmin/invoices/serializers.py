@@ -103,17 +103,29 @@ class InvoiceListSerializer(serializers.ModelSerializer):
                 "label": _("View"),
                 "icon_class": "bi-file-earmark-text",
             },
-            {"url": obj.get_duplicate_url(), "label": _("Duplicate"), "icon_class": "bi-files"},
+            {
+                "url": obj.get_duplicate_url(),
+                "label": _("Duplicate"),
+                "icon_class": "bi-files",
+            },
         ]
         if obj.is_draft:
             actions += [
-                {"url": obj.get_edit_url(), "label": _("Edit"), "icon_class": "bi-pencil"},
+                {
+                    "url": obj.get_edit_url(),
+                    "label": _("Edit"),
+                    "icon_class": "bi-pencil",
+                },
                 {
                     "url": obj.get_send_url(),
                     "label": _("Send"),
                     "icon_class": "bi-box-arrow-right",
                 },
-                {"url": obj.get_cancel_url(), "label": _("Cancel"), "icon_class": "bi-trash"},
+                {
+                    "url": obj.get_cancel_url(),
+                    "label": _("Cancel"),
+                    "icon_class": "bi-trash",
+                },
             ]
         if obj.is_sent:
             actions += [

@@ -1,0 +1,18 @@
+{% extends "base-base.html" %}
+
+{% block body-attrs %}class="bg-gradient-primary"{% endblock %}
+
+{% block main_content %}
+  <div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+      <div class="col-xl-10 col-lg-12 col-md-9">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-4">
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

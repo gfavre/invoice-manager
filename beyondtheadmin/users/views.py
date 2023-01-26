@@ -43,6 +43,9 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self):
+        breakpoint()
+        if not self.request.user.companies.exists():
+            return reverse("companies:wizard")
         return reverse("users:detail", kwargs={"username": self.request.user.username})
 
 

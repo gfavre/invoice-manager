@@ -14,7 +14,9 @@ class Migration(migrations.Migration):
             model_name="client",
             name="slug",
             field=models.CharField(
-                help_text="Used to generate invoice code", max_length=15, verbose_name="Slug"
+                help_text="Used to generate invoice code",
+                max_length=15,
+                verbose_name="Slug",
             ),
         ),
     ]

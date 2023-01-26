@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
             model_name="user",
             name="companies",
             field=models.ManyToManyField(
-                null=True, related_name="users", to="companies.Company", verbose_name="Companies"
+                null=True,
+                related_name="users",
+                to="companies.Company",
+                verbose_name="Companies",
             ),
         ),
     ]

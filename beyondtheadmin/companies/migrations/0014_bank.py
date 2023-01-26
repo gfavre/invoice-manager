@@ -20,30 +20,43 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.AutoField(
-                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
                     ),
                 ),
                 (
                     "created",
                     model_utils.fields.AutoCreatedField(
-                        default=django.utils.timezone.now, editable=False, verbose_name="created"
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
                     ),
                 ),
                 (
                     "modified",
                     model_utils.fields.AutoLastModifiedField(
-                        default=django.utils.timezone.now, editable=False, verbose_name="modified"
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
                     ),
                 ),
                 ("name", models.CharField(max_length=255, verbose_name="Bank name")),
                 ("code", models.IntegerField(null=True, verbose_name="Code")),
-                ("swift", models.CharField(blank=True, max_length=11, verbose_name="BIC/Swift")),
+                (
+                    "swift",
+                    models.CharField(blank=True, max_length=11, verbose_name="BIC/Swift"),
+                ),
                 ("address", models.TextField(blank=True, verbose_name="Address")),
                 (
                     "zip_code",
                     models.CharField(blank=True, max_length=10, verbose_name="Postal code"),
                 ),
-                ("city", models.CharField(blank=True, max_length=255, verbose_name="City")),
+                (
+                    "city",
+                    models.CharField(blank=True, max_length=255, verbose_name="City"),
+                ),
                 (
                     "country",
                     django_countries.fields.CountryField(
