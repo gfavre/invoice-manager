@@ -1,3 +1,4 @@
+
 const app = new Vue({
   el: '#app',
   components: {
@@ -82,7 +83,6 @@ const app = new Vue({
       NL=18 chars, PK=24 chars, PS=29 chars, PL=28 chars, RO=24 chars, RS=22 chars, SA=24 chars,
       SK=24 chars, SI=19 chars, SM=27 chars, TN=24 chars, TR=26 chars, VG=24 chars, XK=20 chars
       */
-
       if (this.iban.replace(/\s/g, '').length < 15) {
         return;
       }

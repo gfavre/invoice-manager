@@ -22,15 +22,17 @@ class CompanyWizardView(LoginRequiredMixin, CreateView):
         CompanyCreateWizardConfigureInvoicesForm,
     ]
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["initial"].setdefault("from_email", self.request.user.email_from)
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        args = []
-        if self.request.POST:
-            args = self.request.POST
-        context["form_base"] = CompanyCreateWizardBaseDataForm(*args)
-        context["form_bank"] = CompanyCreateWizardBankDataForm(*args)
-        context["form_invoices"] = CompanyCreateWizardConfigureInvoicesForm(*args)
-
+        form_kwargs = self.get_form_kwargs()
+        context["form_base"] = CompanyCreateWizardBaseDataForm(**form_kwargs)
+        context["form_bank"] = CompanyCreateWizardBankDataForm(**form_kwargs)
+        context["form_invoices"] = CompanyCreateWizardConfigureInvoicesForm(**form_kwargs)
         return context
 
     def forms_valid(self, form):

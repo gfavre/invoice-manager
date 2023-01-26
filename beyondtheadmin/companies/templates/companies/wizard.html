@@ -21,14 +21,12 @@
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
 
-
     </header>
     <article class="card-body" id="app" ref="app"
              data-autocomplete-url="{% url "api:companies-autocomplete" %}"
              data-company-detail-url="{% url "api:company-detail" %}"
              data-iban-url="{% url 'api:iban-lookup' %}?q="
     >
-
       <form action="{% url 'companies:wizard' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="card-header border-bottom">

@@ -13,6 +13,16 @@ class User(AbstractUser):
         verbose_name=_("Companies"), to="companies.Company", related_name="users"
     )
 
+    @property
+    def email_from(self) -> str:
+        """Return email address for sending emails.
+
+        Returns:
+            str: Email address.
+
+        """
+        return f"{self.get_full_name()} <{self.email}>"
+
     def get_absolute_url(self):
         """Get url for user's detail view.
 
