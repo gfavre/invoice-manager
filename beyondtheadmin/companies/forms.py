@@ -14,8 +14,8 @@ class CompanyForm(forms.ModelForm):
         js = (
             "https://cdn.jsdelivr.net/npm/vue/dist/vue.js",
             "js/companies-form.js",
-            "js/bootstrap-autocomplete.min.js",
-            "js/companies-autocomplete.js",
+            # "js/bootstrap-autocomplete.min.js",
+            # "js/companies-autocomplete.js",
         )
 
     class Meta:
@@ -35,27 +35,22 @@ class CompanyForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 _("Contact"),
-                Field("name", **{"v-model": "company.name"}),
-                Field("address", **{"v-model": "company.address"}),
+                Field("name"),
+                Field("address"),
                 Row(
-                    Column(
-                        Field("country", **{"v-model": "company.country"}), css_class="col-md-4"
-                    ),
-                    Column(
-                        Field("zip_code", **{"v-model": "company.zip_code"}), css_class="col-md-2"
-                    ),
-                    Column(Field("city", **{"v-model": "company.city"})),
+                    Column(Field("country"), css_class="col-md-4"),
+                    Column(Field("zip_code"), css_class="col-md-2"),
+                    Column(Field("city")),
                 ),
                 "phone",
                 "additional_phone",
                 "email",
                 "website",
-                **{"v-if": "stepIndex===1", "id": "step-1"},
                 css_class="border-left-info shadow",
             ),
             Fieldset(
                 _("Business"),
-                Field("vat_id", **{"v-model": "company.vat_id"}),
+                Field("vat_id"),
                 Row(
                     Column(
                         Field("iban", **{"v-model": "iban", ":class": "classIbanValid"}),
@@ -67,7 +62,6 @@ class CompanyForm(forms.ModelForm):
                     Column(Field("bank", v_model="bank", rows=3), css_class="col-9"),
                     Column(Field("bic", v_model="swift"), css_class="col"),
                 ),
-                **{"v-if": "stepIndex===2", "id": "step-2"},
                 css_class="border-left-warning shadow",
             ),
             Fieldset(
@@ -81,7 +75,6 @@ class CompanyForm(forms.ModelForm):
                 "from_email",
                 "bcc_email",
                 "thanks",
-                **{"v-if": "stepIndex===3", "id": "step-3"},
                 css_class="border-left-primary shadow",
             ),
             ButtonHolder(Submit("submit", _("Save"), css_class="button white")),
