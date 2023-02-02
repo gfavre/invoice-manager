@@ -4,16 +4,6 @@ const app = new Vue({
   components: {
     VueTypeaheadBootstrap
   },
-  computed: {
-    classIbanValid() {
-      if (this.ibanValid === true) {
-        return 'is-valid';
-      } else if (this.ibanValid === false) {
-        return 'is-invalid';
-      }
-      return '';
-    }
-  },
   data: {
     bank: '',
     iban: '',
@@ -35,7 +25,14 @@ const app = new Vue({
 
   },
   computed: {
-
+    classIbanValid() {
+      if (this.ibanValid === true) {
+        return 'is-valid';
+      } else if (this.ibanValid === false) {
+        return 'is-invalid';
+      }
+      return '';
+    },
     step1Invalid() {
       return this.company.name.length == 0;
     },
@@ -51,7 +48,6 @@ const app = new Vue({
     submittable() {
       return !this.step1Invalid && !this.step2Invalid && !this.step3Invalid;
     }
-
   },
   methods: {
     async companyLookup(){
