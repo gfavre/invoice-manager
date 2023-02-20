@@ -1,10 +1,17 @@
-# -*- coding: utf-8 -*-
 from rest_framework import serializers
 
 from .models import Client
 
 
 class ClientSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Client
+        exclude = ("company",)
+
+
+class ClientSimpleSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     class Meta:

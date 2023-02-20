@@ -1,10 +1,10 @@
 <template>
-
+<h1>Create company</h1>
 </template>
 
 <script>
 export default {
-  name: "wizard.vue"
+  name: "CompanyForm"
 }
 </script>
 

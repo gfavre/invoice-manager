@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
-from .forms import ClientForm
-from .models import Client
+from ..forms import ClientForm
+from ..models import Client
 
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
@@ -16,6 +16,11 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
+
+
+class ClientAppView(LoginRequiredMixin, TemplateView):
+    model = Client
+    template_name = "clients/create_and_update_app.html"
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):

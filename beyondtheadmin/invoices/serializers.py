@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
-from beyondtheadmin.clients.serializers import ClientSerializer
+from beyondtheadmin.clients.serializers import ClientSimpleSerializer
 
 from .models import Invoice, InvoiceLine, InvoicePDF
 
@@ -67,7 +67,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 # noinspection PyMethodMayBeStatic
 class InvoiceListSerializer(serializers.ModelSerializer):
-    client = ClientSerializer()
+    client = ClientSimpleSerializer()
     url = serializers.HyperlinkedIdentityField(view_name="api:invoice-detail", lookup_field="pk")
     actions = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
