@@ -30,12 +30,15 @@
   </section>
 
   <section v-else>
+    <fieldset class="border-left-primary shadow" id="company_infos">
+    <legend class=" mb-1">Entreprise</legend>
     <h1>Company</h1>
     <company-search append="toto" placeholder="company lookup"
                     autocompleteUrl="http://127.0.0.1:8000/api/companies/"
                     companyDetailUrl="http://127.0.0.1:8000/api/company-detail/"
                     @callback="companyDetailLookupResult"></company-search>
     <company-form></company-form>
+    </fieldset>
     <dl v-if="selectedCompany != null">
       <dt>The company</dt>
       <dd>{{ selectedCompany }}</dd>
@@ -86,14 +89,8 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
+@import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
 </style>
 
 <i18n>
