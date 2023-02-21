@@ -33,10 +33,10 @@
     <fieldset class="border-left-primary shadow" id="company_infos">
     <legend class=" mb-1">Entreprise</legend>
     <h1>Company</h1>
-    <company-search append="toto" placeholder="company lookup"
+    <!--<company-search append="toto" placeholder="company lookup"
                     autocompleteUrl="http://127.0.0.1:8000/api/companies/"
                     companyDetailUrl="http://127.0.0.1:8000/api/company-detail/"
-                    @callback="companyDetailLookupResult"></company-search>
+                    @callback="companyDetailLookupResult"></company-search>-->
     <company-form></company-form>
     </fieldset>
     <dl v-if="selectedCompany != null">
@@ -52,7 +52,7 @@
 <script>
 import PersonForm from './components/person-form.vue';
 import CompanyForm from './components/company-form.vue';
-import companySearch from "./components/company-search.vue";
+//import companySearch from "./components/company-search.vue";
 
 import {useI18n} from 'vue-i18n'
 
@@ -63,7 +63,7 @@ export default {
   components: {
     'person-form': PersonForm,
     'company-form': CompanyForm,
-    'company-search': companySearch
+    //'company-search': companySearch
   },
   data() {
     return {

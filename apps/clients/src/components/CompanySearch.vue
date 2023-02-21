@@ -30,7 +30,7 @@
 import axios from 'axios';
 
 export default {
-  name: "companySearch",
+  name: "CompanySearch",
   computed: {
     isDropdownVisible() {
       return this.data.length > 0;

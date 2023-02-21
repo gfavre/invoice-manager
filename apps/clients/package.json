@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "swiss-zipcodes": "^1.0.9",
     "vue": "^3.2.13",
-    "vue-i18n": "^9.2.2"
+    "vue-i18n": "^9.2.2",
+    "vue3-country-region-select": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
