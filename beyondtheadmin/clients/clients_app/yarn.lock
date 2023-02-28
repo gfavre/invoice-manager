@@ -6144,6 +6144,11 @@
     "vue-i18n" "^8.17.0"
     "vue-i18n-extract" "1.0.2"
 
+"vue-cookies@^1.8.2":
+  "integrity" "sha512-+NfoC5l+7ybuVwpnqsf52qndnoYMjEb4EFhX4/j9RzzQP00dNzuJELsWuW2p8omNUzNlSgWGVyyWoOeJr347tw=="
+  "resolved" "https://registry.npmjs.org/vue-cookies/-/vue-cookies-1.8.2.tgz"
+  "version" "1.8.2"
+
 "vue-eslint-parser@^8.0.1":
   "integrity" "sha512-dzHGG3+sYwSf6zFBa0Gi9ZDshD7+ad14DGOdTLjruRVgZXe2J+DcZ9iUhyR48z5g1PqRa20yt3Njna/veLJL/g=="
   "resolved" "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-8.3.0.tgz"

@@ -66,7 +66,9 @@ class Client(UUIDModel):
         blank=True,
     )
 
-    slug = models.CharField(_("Slug"), help_text=_("Used to generate invoice code"), max_length=15)
+    slug = models.CharField(
+        _("Slug"), help_text=_("Used to generate invoice code"), max_length=15, blank=True
+    )
     invoice_current_count = models.IntegerField(
         _("Current count of invoices"),
         help_text=_("Used to generate invoice code"),
@@ -81,6 +83,10 @@ class Client(UUIDModel):
 
     class Meta:
         ordering = ("company_name", "contact_last_name", "country")
+
+    @property
+    def api_url(self):
+        return reverse_lazy("api:client-detail", kwargs={"pk": self.pk})
 
     @property
     def name(self):

@@ -26,7 +26,7 @@
     ></textarea>
   </div>
   <div class="form-row">
-    <city-auto-complete></city-auto-complete>
+    <city-auto-complete v-model:city="city" v-model:zipcode="zipCode"></city-auto-complete>
   </div>
   <div class="form-group">
     <label for="id_country">Pays</label>
@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import {CountrySelect} from 'vue3-country-region-select'
+//import axios from 'axios';
+import {CountrySelect} from 'vue3-country-region-select';
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 
 export default {
@@ -69,6 +70,11 @@ export default {
     onSelect(country) {
       console.log(country);
       // Check the country object example below.
+    },
+  },
+  watch: {
+    lastName(value) {
+      this.$emit('update:lastName', value)
     },
   }
 }

@@ -1,8 +1,10 @@
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..serializers import IDECompanySerializer
+from ..models import Company
+from ..serializers import CompanyListSerializer, CompanySerializer, IDECompanySerializer
 from ..utils.iban import OpenIban
 from ..utils.zefix import get_detail, search_zefix
 
@@ -12,7 +14,7 @@ QUERY_MIN_LENGTH = 3
 
 
 class CompanySearchView(APIView):
-    permission_classes = [AllowAny]  # IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("q")
@@ -40,7 +42,7 @@ class IBANSearchView(APIView):
 
 
 class CompanyDetailView(APIView):
-    permission_classes = [AllowAny]  # IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("uid")
@@ -51,3 +53,17 @@ class CompanyDetailView(APIView):
         serializer = IDECompanySerializer(data=data)
         serializer.is_valid()
         return Response(serializer.data)
+
+
+class CompaniesViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CompanyListSerializer
+        return self.serializer_class
+
+    def get_queryset(self):
+        return self.request.user.companies.all()

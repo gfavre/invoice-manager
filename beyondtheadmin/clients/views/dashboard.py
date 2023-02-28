@@ -20,7 +20,8 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 class ClientAppView(LoginRequiredMixin, TemplateView):
     model = Client
-    template_name = "clients/create_and_update_app.html"
+    # template_name = "clients/create_and_update_app.html"
+    template_name = "clients_app/index.html"
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):

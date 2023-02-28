@@ -14,5 +14,7 @@
 
 {% block javascript %}
 {{ block.super }}
-<script src="http://127.0.0.1:8080/js/app.js" type="application/javascript"></script>
+  <script src="{% static "clients_app/js/chunk-vendors.062285b0.js" %}" type="application/javascript"></script>
+
+<script src="{% static 'clients_app/js/app.4c5a50c5.js' %}" type="application/javascript"></script>
 {% endblock javascript %}

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Bank
+from .models import Bank, Company
 
 
 class BankSerializer(serializers.ModelSerializer):
@@ -37,3 +37,24 @@ class IBANInfosSerializer(serializers.Serializer):
             "iban_valid",
             "bank",
         )
+
+
+class CompanyListSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Company
+        fields = (
+            "name",
+            "id",
+            "url",
+        )
+
+    def get_url(self, obj: Company):
+        return obj.api_url
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = "__all__"

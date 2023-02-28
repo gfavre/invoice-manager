@@ -9,6 +9,9 @@ module.exports = defineConfig({
       }
     }
   },
+  indexPath: path.resolve(__dirname, '../templates/', 'clients_app', 'index.html'),
+  outputDir: path.resolve(__dirname, '../static/', 'clients_app'),
+  publicPath: process.env.VUE_APP_STATIC_URL,
 
   transpileDependencies: true,
 

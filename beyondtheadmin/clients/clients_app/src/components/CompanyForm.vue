@@ -1,7 +1,7 @@
 <template>
   <company-search append="toto" placeholder="company lookup"
-                  autocompleteUrl="http://127.0.0.1:8000/api/companies/"
-                  companyDetailUrl="http://127.0.0.1:8000/api/company-detail/"
+                  autocompleteUrl="/api/companies-search/"
+                  companyDetailUrl="/api/company-detail/"
                   @callback="companyDetailLookupResult"></company-search>
 
 
@@ -22,7 +22,7 @@
     ></textarea>
   </div>
   <div class="form-row">
-    <city-auto-complete></city-auto-complete>
+    <city-auto-complete v-model:city="city" v-model:zipcode="zipcode"></city-auto-complete>
   </div>
   <div id="div_id_country" class="form-group">
     <label for="id_country">Pays</label>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import {CountrySelect} from 'vue3-country-region-select'
+import CountrySelect from 'vue3-country-region-select'
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
 
@@ -98,10 +98,36 @@ export default {
       console.log(country);
       // Check the country object example below.
     },
-
+    save(clientId){
+      this.$http.patch(`/api/clients/${clientId}/`, {
+        company_name: this.name,
+        address: this.address,
+        country: this.country,
+        city: this.city,
+        zip_code: this.zipcode,
+        contact_first_name: this.contactFirstName,
+        contact_last_name: this.contactLastName,
+        contact_email: this.contactEmail,
+      }).then(response => {
+        this.$emit('company-saved', response.data)
+      })
+    },
+    setClient(client){
+      this.name = client.company_name;
+      this.address = client.address;
+      this.country = client.country;
+      this.city = client.city;
+      this.zipcode = client.zip_code;
+      this.contactFirstName = client.contact_first_name;
+      this.contactLastName = client.contact_last_name;
+      this.contactEmail = client.contact_email;
+    }
   },
-
-
+  watch: {
+    name(value) {
+      this.$emit('update:name', value)
+    },
+  }
 }
 </script>
 

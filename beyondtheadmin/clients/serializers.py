@@ -8,10 +8,13 @@ class ClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        exclude = ("company",)
+        fields = "__all__"
+
+    def get_url(self, obj: Client):
+        return obj.api_url
 
 
-class ClientSimpleSerializer(serializers.ModelSerializer):
+class ClientListSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     class Meta:
@@ -19,4 +22,4 @@ class ClientSimpleSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "slug", "language", "currency", "url")
 
     def get_url(self, obj: Client):
-        return obj.get_absolute_url()
+        return obj.api_url

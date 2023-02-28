@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   name: "CompanySearch",
@@ -49,7 +48,7 @@ export default {
       if (this.searchTerm.length < 3) {
         return;
       }
-      axios.get(this.autocompleteUrl, {
+      this.$http.get(this.autocompleteUrl, {
         params: {
           q: this.searchTerm
         }
@@ -62,7 +61,7 @@ export default {
           });
     },
     companyDetailLookup(companyUid) {
-      axios.get(this.companyDetailUrl, {
+      this.$http.get(this.companyDetailUrl, {
         params: {
           uid: companyUid
         }
