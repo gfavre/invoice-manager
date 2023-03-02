@@ -71,6 +71,30 @@ export default {
       console.log(country);
       // Check the country object example below.
     },
+    setClient(client) {
+      this.client = client;
+      this.firstName = client.contact_first_name;
+      this.lastName = client.contact_last_name;
+      this.address = client.address;
+      this.country = client.country;
+      this.city = client.city;
+      this.zipCode = client.zip_code;
+      this.email = client.contact_email;
+    },
+    save(clientId) {
+      this.$http.patch(`/api/clients/${clientId}/`, {
+        contact_first_name: this.firstName,
+        contact_last_name: this.lastName,
+        contact_email: this.email,
+        address: this.address,
+        city: this.city,
+        zip_code: this.zipCode,
+        country: this.country,
+        client_type: 'person',
+      }).then(response => {
+        this.$emit('company-saved', response.data)
+      });
+    },
   },
   watch: {
     lastName(value) {

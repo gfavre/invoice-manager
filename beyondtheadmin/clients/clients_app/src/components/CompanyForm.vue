@@ -1,9 +1,14 @@
 <template>
-  <company-search append="toto" placeholder="company lookup"
+  <div class="form-row">
+    <div class="col-md-6">
+      <company-search append="toto" placeholder="company lookup"
                   autocompleteUrl="/api/companies-search/"
                   companyDetailUrl="/api/company-detail/"
                   @callback="companyDetailLookupResult"></company-search>
+      </div>
+    </div>
 
+  <hr>
 
   <div id="div_id_company_name" class="form-group">
     <label for="id_company_name" class="requiredField">
@@ -60,7 +65,7 @@
 </template>
 
 <script>
-import CountrySelect from 'vue3-country-region-select'
+import {CountrySelect} from 'vue3-country-region-select'
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
 
@@ -108,6 +113,7 @@ export default {
         contact_first_name: this.contactFirstName,
         contact_last_name: this.contactLastName,
         contact_email: this.contactEmail,
+        client_type: 'company',
       }).then(response => {
         this.$emit('company-saved', response.data)
       })
@@ -121,7 +127,12 @@ export default {
       this.contactFirstName = client.contact_first_name;
       this.contactLastName = client.contact_last_name;
       this.contactEmail = client.contact_email;
-    }
+    },
+    onWindowClick(event) {
+      if (this.$refs.dropdown && !this.$refs.dropdown.contains(event.target)) {
+        this.cities = [];
+      }
+    },
   },
   watch: {
     name(value) {

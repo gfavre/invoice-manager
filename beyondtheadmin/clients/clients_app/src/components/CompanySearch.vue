@@ -14,7 +14,7 @@
           </span>
         </slot>
       </div>
-    <div class="dropdown-menu  shadow" :class="{show: isDropdownVisible}">
+    <div class="dropdown-menu  shadow" :class="{show: isDropdownVisible}" ref="dropdown">
       <a class="dropdown-item"
          v-for="item in data" :key="item.uid"
          @click="companyDetailLookup(item.uid)"
@@ -76,7 +76,12 @@ export default {
       this.isFocused = false;
       this.searchTerm = '';
       this.data = [];
-    }
+    },
+    onWindowClick(event) {
+      if (this.$refs.dropdown && !this.$refs.dropdown.contains(event.target)) {
+        this.data = [];
+      }
+    },
   },
   props: {
     appendText: String,
@@ -87,7 +92,13 @@ export default {
       required: true
     },
     placeholder: String,
-  }
+  },
+  mounted() {
+    window.addEventListener('click', this.onWindowClick);
+  },
+  beforeUnmount() {
+    window.removeEventListener('click', this.onWindowClick);
+  },
 };
 
 </script>

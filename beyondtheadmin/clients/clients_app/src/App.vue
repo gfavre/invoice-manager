@@ -43,14 +43,14 @@
     </div>
   </div>
 
-  <section v-if="clientType=='person'">
-    <fieldset class="border-left-primary shadow" id="company_infos">
+  <section v-show="isPerson">
+    <fieldset class="border-left-info shadow" id="company_infos">
       <legend class=" mb-1">Personne</legend>
       <person-form ref="personForm" @update:lastName="slugUpdate"></person-form>
     </fieldset>
   </section>
 
-  <section v-else>
+  <section v-show="isCompany">
     <fieldset class="border-left-primary shadow" id="company_infos">
       <legend class=" mb-1">Entreprise</legend>
       <company-form ref="companyForm" @update:name="slugUpdate"></company-form>
@@ -65,7 +65,6 @@
     <fieldset class="border-left-success shadow ">
       <legend class=" mb-1">Factures</legend>
       <InvoiceForm ref="invoiceForm"></InvoiceForm>
-
     </fieldset>
   </section>
 
@@ -75,7 +74,6 @@
            @click.prevent="saveClient" />
 
   </div>
-
 
 </template>
 
@@ -96,16 +94,15 @@ export default {
     InvoiceForm,
 
   },
-  created(){
-    this.$http.get('/api/companies/').then( response => {
-      this.companies = response.data.results;
-      if (this.companies.length == 1) {
-        this.company = this.companies[0].id
-      }
-    }).catch(error => {
-      console.log(error)
-    });
+  computed: {
+    isCompany() {
+      return this.clientType === 'company';
+    },
+    isPerson() {
+      return this.clientType === 'person';
+    },
   },
+
   data() {
     return {
       clientType: 'company',
@@ -135,7 +132,7 @@ export default {
         if (this.clientType === 'company') {
           this.$refs.companyForm.save(this.clientId);
         } else {
-          this.$refs.personForm.savePerson(this.clientId);
+          this.$refs.personForm.save(this.clientId);
         }
         this.$refs.invoiceForm.save(this.clientId);
       }
@@ -147,20 +144,30 @@ export default {
       });
     },
   },
-  mounted() {
+  created() {
+    this.$http.get('/api/companies/').then( response => {
+      this.companies = response.data.results;
+      if (this.companies.length == 1) {
+        this.company = this.companies[0].id
+      }
+    }).catch(error => {
+      console.log(error)
+    });
+
     const path = window.location.pathname;
     const match = path.match(/\/clients\/([\da-fA-F]{8}-([\da-fA-F]{4}-){3}[\da-fA-F]{12})\/edit/);
-    if (match) {
+    if (match)  {
       this.clientId = match[1];
-      this.$http.get(`/api/clients/${this.clientId}/`).then(response => {
-        this.client = response.data;
-        this.clientType = this.client.client_type;
-        this.company = this.client.company;
-        this.$refs.companyForm.setClient(this.client);
-        this.$refs.invoiceForm.setClient(this.client);
-      }).catch(error => {
-        console.log(error)
-      });
+        this.$http.get(`/api/clients/${this.clientId}/`).then(response => {
+          this.client = response.data;
+          this.clientType = this.client.client_type;
+          this.company = this.client.company;
+          this.$refs.companyForm.setClient(this.client);
+          this.$refs.invoiceForm.setClient(this.client);
+          this.$refs.personForm.setClient(this.client);
+        }).catch(error => {
+          console.log(error)
+        });
     }
   },
   setup() {
@@ -175,8 +182,6 @@ export default {
 </script>
 
 <style>
-
-@import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
 </style>
 
 <i18n>

@@ -1,14 +1,22 @@
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = defineConfig({
+  filenameHashing: false,
   configureWebpack: {
     resolve: {
       alias: {
         '@shared': path.join( __dirname, '../_shared' ),
       }
-    }
+    },
   },
+  filenameHashing: false,
+
+  chainWebpack: config => {
+    config.plugins.delete('html')
+  },
+
   indexPath: path.resolve(__dirname, '../templates/', 'clients_app', 'index.html'),
   outputDir: path.resolve(__dirname, '../static/', 'clients_app'),
   publicPath: process.env.VUE_APP_STATIC_URL,
