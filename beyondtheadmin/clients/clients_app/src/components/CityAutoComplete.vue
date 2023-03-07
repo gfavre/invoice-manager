@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-3">
     <div id="div_id_zip_code" class="form-group">
-      <label for="id_zip_code">Code postal</label>
+      <label for="id_zip_code">{{ zipcodeLabel }}</label>
       <div class="input-group">
         <input type="text" name="zip_code" maxlength="10"
                class="textinput textInput form-control" id="id_zip_code"
@@ -16,7 +16,7 @@
   </div>
   <div class="col-md-9">
     <div id="div_id_city" class="form-group">
-      <label for="id_city">Localité</label>
+      <label for="id_city">{{ cityLabel }}</label>
       <input type="text" name="city" maxlength="255" class="textinput textInput form-control" id="id_city"
              v-model="localCity">
     </div>
@@ -31,6 +31,14 @@ export default {
   props: {
     zipcode: String,
     city: String,
+    zipcodeLabel: {
+      type: String,
+      required: true,
+    },
+    cityLabel:  {
+      type: String,
+      required: true,
+    },
   },
   computed: {
     isCitiesDropdownVisible() {

@@ -1,7 +1,7 @@
 <template>
   <div id="div_id_company" class="form-group" v-if="companies.length > 1">
     <label for="id_company_0" class=" requiredField">
-      Client pour<span class="asteriskField">*</span>
+      {{ $t('Client for')}}<span class="asteriskField">*</span>
     </label>
     <div>
       <div class="custom-control custom-radio custom-control-inline"
@@ -20,7 +20,7 @@
 
   <div id="div_id_client_type" class="form-group">
     <label for="id_client_type_0" class=" requiredField">
-      {{ t("Type of client") }}<span class="asteriskField">*</span>
+      {{ $t("Type of client") }}<span class="asteriskField">*</span>
     </label>
     <div>
       <div class="custom-control custom-radio custom-control-inline">
@@ -28,7 +28,7 @@
                id="id_client_type_0" required=""
                v-model="clientType"/>
         <label class="custom-control-label" for="id_client_type_0">
-          <i class="bi bi-journal"></i> {{ t("company") }}
+          <i class="bi bi-journal"></i> {{ $t("Company") }}
         </label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
@@ -37,7 +37,7 @@
                v-model="clientType"/>
         <label class="custom-control-label" for="id_client_type_1">
           <i class="bi bi-person-fill"></i>
-          {{ t("person") }}
+          {{ $t("Person") }}
         </label>
       </div>
     </div>
@@ -45,33 +45,30 @@
 
   <section v-show="isPerson">
     <fieldset class="border-left-info shadow" id="company_infos">
-      <legend class=" mb-1">Personne</legend>
+      <legend class=" mb-1">{{ $t("Person") }}</legend>
       <person-form ref="personForm" @update:lastName="slugUpdate"></person-form>
     </fieldset>
   </section>
 
   <section v-show="isCompany">
     <fieldset class="border-left-primary shadow" id="company_infos">
-      <legend class=" mb-1">Entreprise</legend>
+      <legend class=" mb-1">{{ $t("Company") }}</legend>
       <company-form ref="companyForm" @update:name="slugUpdate"></company-form>
     </fieldset>
-    <dl v-if="selectedCompany != null">
-      <dt>The company</dt>
-      <dd>{{ selectedCompany }}</dd>
-    </dl>
   </section>
 
   <section>
     <fieldset class="border-left-success shadow ">
-      <legend class=" mb-1">Factures</legend>
-      <InvoiceForm ref="invoiceForm"></InvoiceForm>
+      <legend class=" mb-1">{{ $t("Invoices") }}</legend>
+      <InvoiceForm ref="invoiceForm" @company-saved="handleCompanySaved" :updated-slug="slug"></InvoiceForm>
     </fieldset>
   </section>
 
   <div class="buttonHolder">
     <input type="submit" name="submit" value="Enregistrer"
            class="btn btn-primary button white" id="submit-id-submit"
-           @click.prevent="saveClient" />
+           :class="{disabled: !isSaveable}"
+           @click.prevent="saveClient"/>
 
   </div>
 
@@ -82,7 +79,6 @@ import PersonForm from '@/components/PersonForm.vue';
 import CompanyForm from '@/components/CompanyForm.vue';
 import InvoiceForm from "@/components/InvoiceForm.vue";
 import {useI18n} from 'vue-i18n'
-import slugify from "slugify";
 
 
 export default {
@@ -101,6 +97,10 @@ export default {
     isPerson() {
       return this.clientType === 'person';
     },
+    isFormComplete() {
+      let base = this.isPerson ? this.$refs.personForm.isFormComplete() : this.$refs.companyForm.isFormComplete();
+      return this.company && base && this.$refs.invoiceForm.isFormComplete();
+    }
   },
 
   data() {
@@ -114,6 +114,23 @@ export default {
     }
   },
   methods: {
+    handleCompanySaved() {
+      /*
+      Whether to use push() to navigate to a new route or window.location to redirect to a new page depends
+      on your use case and the desired behavior.
+      If you are using Vue Router to manage client-side navigation in your app, you should generally use
+      push() to navigate to a new route. Vue Router is designed to handle client-side navigation in a
+      single-page application (SPA) by updating the URL and rendering the appropriate components without
+      triggering a full page reload. When you use push() to navigate to a new route, Vue Router will handle
+      the navigation and update the URL in the address bar without causing a full page reload.
+
+      On the other hand, if you want to redirect to a completely new page outside of your Vue app, you should
+      use window.location to redirect to the new page. This will cause a full page reload and navigate the browser to the new page.
+
+      this.$router.push({name: 'clients-list'});
+      */
+      window.location.href = '/clients/';
+    },
     async saveClient() {
       if (this.clientId === null) {
         try {
@@ -135,17 +152,15 @@ export default {
           this.$refs.personForm.save(this.clientId);
         }
         this.$refs.invoiceForm.save(this.clientId);
+
       }
     },
     slugUpdate(name) {
-      this.slug = slugify(name, {
-        lower: true, // convert to lowercase
-        strict: true // remove special characters
-      });
+      this.slug = name;
     },
   },
   created() {
-    this.$http.get('/api/companies/').then( response => {
+    this.$http.get('/api/companies/').then(response => {
       this.companies = response.data.results;
       if (this.companies.length == 1) {
         this.company = this.companies[0].id
@@ -156,18 +171,18 @@ export default {
 
     const path = window.location.pathname;
     const match = path.match(/\/clients\/([\da-fA-F]{8}-([\da-fA-F]{4}-){3}[\da-fA-F]{12})\/edit/);
-    if (match)  {
+    if (match) {
       this.clientId = match[1];
-        this.$http.get(`/api/clients/${this.clientId}/`).then(response => {
-          this.client = response.data;
-          this.clientType = this.client.client_type;
-          this.company = this.client.company;
-          this.$refs.companyForm.setClient(this.client);
-          this.$refs.invoiceForm.setClient(this.client);
-          this.$refs.personForm.setClient(this.client);
-        }).catch(error => {
-          console.log(error)
-        });
+      this.$http.get(`/api/clients/${this.clientId}/`).then(response => {
+        this.client = response.data;
+        this.clientType = this.client.client_type;
+        this.company = this.client.company;
+        this.$refs.companyForm.setClient(this.client);
+        this.$refs.invoiceForm.setClient(this.client);
+        this.$refs.personForm.setClient(this.client);
+      }).catch(error => {
+        console.log(error)
+      });
     }
   },
   setup() {
@@ -183,18 +198,3 @@ export default {
 
 <style>
 </style>
-
-<i18n>
-{
-  "fr": {
-    "company": "Entreprise",
-    "person": "Personne",
-    "Type of client": "Type de client"
-  },
-  "en": {
-    "company": "Company",
-    "person": "Person",
-    "Type of client": "Type of client"
-  }
-}
-</i18n>

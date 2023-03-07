@@ -1,10 +1,11 @@
 <template>
   <div class="form-row">
     <div class="col-md-6">
-      <company-search append="toto" placeholder="company lookup"
-                  autocompleteUrl="/api/companies-search/"
-                  companyDetailUrl="/api/company-detail/"
-                  @callback="companyDetailLookupResult"></company-search>
+      <company-search
+          autocompleteUrl="/api/companies-search/"
+          companyDetailUrl="/api/company-detail/"
+          :placeholder="$t('Search on company register')"
+          @callback="companyDetailLookupResult"></company-search>
       </div>
     </div>
 
@@ -12,7 +13,7 @@
 
   <div id="div_id_company_name" class="form-group">
     <label for="id_company_name" class="requiredField">
-      Nom de l'entreprise
+      {{ $t("Company name") }}
       <span class="asteriskField">*</span>
     </label>
     <input type="text" name="company_name" maxlength="255"
@@ -21,16 +22,21 @@
 
   </div>
   <div id="div_id_address" class="form-group">
-    <label for="id_address">Adresse</label>
+    <label for="id_address">{{ $t("Address") }}</label>
     <textarea name="address" cols="40" rows="2" class="textarea form-control" id="id_address"
               v-model="address"
     ></textarea>
   </div>
   <div class="form-row">
-    <city-auto-complete v-model:city="city" v-model:zipcode="zipcode"></city-auto-complete>
+    <city-auto-complete
+        v-model:city="city"
+        v-model:zipcode="zipcode"
+        :city-label="$t('City')"
+        :zipcode-label="$t('Postal code')"
+    ></city-auto-complete>
   </div>
   <div id="div_id_country" class="form-group">
-    <label for="id_country">Pays</label>
+    <label for="id_country">{{ $t("Country") }}</label>
     <country-select v-model="country" :country="country" topCountry="CH" :autocomplete="true"
                     class-name="form-control"/>
   </div>
@@ -38,7 +44,7 @@
   <div class="form-row ">
     <div class="col-md ">
       <div id="div_id_contact_first_name" class="form-group">
-        <label for="id_contact_first_name">Prénom du contact</label>
+        <label for="id_contact_first_name">{{ $t("Contact's first name") }}</label>
         <input type="text" name="contact_first_name" maxlength="255"
                  class="textinput textInput form-control" id="id_contact_first_name"
                 v-model="contactFirstName" ref="contactFirstName"
@@ -47,7 +53,7 @@
     </div>
     <div class="col-md ">
       <div id="div_id_contact_last_name" class="form-group">
-        <label for="id_contact_last_name">Nom du contact</label>
+        <label for="id_contact_last_name">{{ $t("Contact's last name") }}</label>
         <input type="text" name="contact_last_name" maxlength="255"
                class="textinput textInput form-control" id="id_contact_last_name"
                v-model="contactLastName"
@@ -56,7 +62,7 @@
     </div>
   </div>
   <div id="div_id_contact_email" class="form-group">
-    <label for="id_contact_email">E-mail de contact</label>
+    <label for="id_contact_email">{{ $t("Contact's email") }}</label>
     <input type="email" name="contact_email" maxlength="254"
            class="emailinput form-control" id="id_contact_email"
            v-model="contactEmail"
@@ -65,9 +71,10 @@
 </template>
 
 <script>
-import {CountrySelect} from 'vue3-country-region-select'
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
+import { CountrySelect } from 'vue3-country-region-select'
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: "CompanyForm",
@@ -103,6 +110,9 @@ export default {
       console.log(country);
       // Check the country object example below.
     },
+    isFormComplete(){
+      return this.name.length > 0;
+    },
     save(clientId){
       this.$http.patch(`/api/clients/${clientId}/`, {
         company_name: this.name,
@@ -133,6 +143,10 @@ export default {
         this.cities = [];
       }
     },
+  },
+  setup(){
+    const { t } = useI18n();
+    return { t }
   },
   watch: {
     name(value) {

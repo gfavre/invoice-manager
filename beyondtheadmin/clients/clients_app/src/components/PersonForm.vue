@@ -2,17 +2,22 @@
   <div class="form-row ">
     <div class="col-md ">
       <div class="form-group">
-        <label for="id_first_name">Prénom du contact</label>
+        <label for="id_first_name" class="requiredField">{{ $t("First name") }}
+          <span class="asteriskField">*</span>
+        </label>
         <input type="text" name="first_name" maxlength="255"
                class="textinput textInput form-control" id="id_first_name"
-               v-model="firstName" ref="FirstName"
+               v-model="firstName" ref="FirstName" required="required"
         />
       </div>
     </div>
     <div class="col-md ">
       <div class="form-group">
-        <label for="id_last_name">Nom du contact</label>
-        <input type="text" name="contact_last_name" maxlength="255"
+        <label for="id_last_name"  class="requiredField">
+          {{ $t("Last name") }}
+          <span class="asteriskField">*</span>
+        </label>
+        <input type="text" name="contact_last_name" maxlength="255" required="required"
                class="textinput textInput form-control" id="id_last_name"
                v-model="lastName"
         />
@@ -20,13 +25,17 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="id_address">Adresse</label>
+    <label for="id_address">{{ $t("Address") }}</label>
     <textarea name="address" cols="40" rows="2" class="textarea form-control" id="id_address"
               v-model="address"
     ></textarea>
   </div>
   <div class="form-row">
-    <city-auto-complete v-model:city="city" v-model:zipcode="zipCode"></city-auto-complete>
+    <city-auto-complete v-model:city="city"
+                        v-model:zipcode="zipCode"
+                        :city-label="$t('City')"
+                        :zipcode-label="$t('Postal code')"
+    ></city-auto-complete>
   </div>
   <div class="form-group">
     <label for="id_country">Pays</label>
@@ -45,8 +54,9 @@
 
 <script>
 //import axios from 'axios';
-import {CountrySelect} from 'vue3-country-region-select';
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
+import {CountrySelect} from 'vue3-country-region-select';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: "PersonForm",
@@ -67,6 +77,9 @@ export default {
     }
   },
   methods: {
+    isFormComplete(){
+      return this.firstName && this.lastName;
+    },
     onSelect(country) {
       console.log(country);
       // Check the country object example below.
@@ -95,6 +108,10 @@ export default {
         this.$emit('company-saved', response.data)
       });
     },
+  },
+  setup(){
+    const { t } = useI18n();
+    return { t }
   },
   watch: {
     lastName(value) {
