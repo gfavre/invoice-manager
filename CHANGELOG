@@ -5,13 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.3.0] - 2022-03-10
+
 # Changed
 - Client creation using vue.
+- Deletion of companies is now possible even with invoices.
 
 
 ## [1.2.0] - 2022-12-01
 # Changed
 Better registration
+
 
 ## [1.1.0] - 2022-11-25
 Time for a new release and to use CHANGELOG seriously.

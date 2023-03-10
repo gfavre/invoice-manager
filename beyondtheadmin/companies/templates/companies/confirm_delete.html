@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n  %}
+{% load i18n %}
 {% block content %}
   <section class="card card-header-actions mb-4">
     <header class="card-header ">
@@ -9,11 +9,14 @@
       <p class="lead">
         {% blocktrans with company=company %}Are you sure you want to delete "{{ company }}"?{% endblocktrans %}
       </p>
+      <p>
+        {% blocktrans with invoices=company.invoices.count clients=company.clients.count %}
+          This will remove {{ invoices }} invoices, and {{ clients }} clients{% endblocktrans %}
+      </p>
       <form action="{{ company.delete_url }}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
-
-        </form>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
+      </form>
     </article>
   </section>
 

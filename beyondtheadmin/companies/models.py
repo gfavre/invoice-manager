@@ -7,10 +7,22 @@ from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
 from django_countries.fields import CountryField
 from localflavor.generic.models import BICField, IBANField
+from model_utils import Choices
 from model_utils.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 from beyondtheadmin.utils.model_utils import UUIDModel
+
+
+STATUS = Choices(
+    ("active", _("Active")),
+    ("inactive", _("Inactive")),
+)
+
+
+class ActiveCompanyManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=STATUS.active)
 
 
 class Company(UUIDModel):
@@ -64,6 +76,14 @@ class Company(UUIDModel):
             "Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language"
         ),
     )
+    status = models.CharField(
+        _("Status"),
+        max_length=20,
+        choices=STATUS,
+        default=STATUS.active,
+    )
+    objects = ActiveCompanyManager()
+    all_objects = models.Manager()
 
     class Meta:
         ordering = ("name", "created")
@@ -125,6 +145,10 @@ class Company(UUIDModel):
         if self.country:
             output.append(self.country.name)
         return ", ".join(output)
+
+    def set_deleted(self):
+        self.status = STATUS.inactive
+        self.save()
 
     def open_invoices(self):
         from beyondtheadmin.invoices.models import Invoice

@@ -12,8 +12,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ["name", "zip_code", "city", "get_users"]
 
     def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related("users")
+        return Company.all_objects.prefetch_related("users")
 
     def get_users(self, obj):
         def get_user_link(user):

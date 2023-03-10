@@ -76,6 +76,16 @@ class CompanyDeleteView(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return super().get_queryset().filter(users=self.request.user)
 
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object: Company = self.get_object()
+        success_url = self.get_success_url()
+        self.object.set_deleted()
+        return HttpResponseRedirect(success_url)
+
 
 class CompanyDetailView(LoginRequiredMixin, DetailView):
     model = Company
