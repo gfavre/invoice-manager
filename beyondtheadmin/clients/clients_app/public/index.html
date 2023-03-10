@@ -12,7 +12,10 @@
         Please enable it to continue.</strong>
     </noscript>
 
-    <div id="app"></div>
+    <div id="app"
+         data-client-create-url="{% url 'api:client-list' %}"
+
+    ></div>
   </article>
 </section>
 {% endblock %}

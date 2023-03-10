@@ -47,7 +47,9 @@
     <input type="email" name="email" maxlength="254"
            class="emailinput form-control" id="id_email"
            v-model="email"
+           :class="{ 'is-invalid': emailError }"
     />
+    <div class="invalid-feedback">{{ emailErrorMessage }}</div>
   </div>
 
 </template>
@@ -74,15 +76,23 @@ export default {
       'city': '',
       'zipCode': '',
       'email': '',
+      'errors': {},
     }
+  },
+  computed: {
+    emailError() {
+      return !!this.errors.contact_email;
+    },
+    emailErrorMessage() {
+      return this.errors.contact_email ? this.errors.contact_email[0] : '';
+    },
+  },
+  props: {
+    clientUpdateUrl: String,
   },
   methods: {
     isFormComplete(){
-      return this.firstName && this.lastName;
-    },
-    onSelect(country) {
-      console.log(country);
-      // Check the country object example below.
+      return this.firstName.length > 0 && this.lastName.length > 0;
     },
     setClient(client) {
       this.client = client;
@@ -94,8 +104,9 @@ export default {
       this.zipCode = client.zip_code;
       this.email = client.contact_email;
     },
-    save(clientId) {
-      this.$http.patch(`/api/clients/${clientId}/`, {
+    save() {
+      this.errors = {};
+      this.$http.patch(this.clientUpdateUrl, {
         contact_first_name: this.firstName,
         contact_last_name: this.lastName,
         contact_email: this.email,
@@ -105,8 +116,14 @@ export default {
         country: this.country,
         client_type: 'person',
       }).then(response => {
-        this.$emit('company-saved', response.data)
-      });
+        this.$emit('saved', response.data)
+      }).catch(error => {
+        if (error.response && error.response.data) {
+            this.errors = error.response.data;
+          } else {
+            console.error(error);
+          }
+      })
     },
   },
   setup(){

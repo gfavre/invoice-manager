@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
@@ -19,9 +20,14 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 
 class ClientAppView(LoginRequiredMixin, TemplateView):
-    model = Client
-    # template_name = "clients/create_and_update_app.html"
     template_name = "clients_app/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["client"] = get_object_or_404(
+            Client, pk=self.kwargs["pk"], company__users=self.request.user
+        )
+        return context
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):

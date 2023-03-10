@@ -13,6 +13,12 @@ class ClientSerializer(serializers.ModelSerializer):
     def get_url(self, obj: Client):
         return obj.api_url
 
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save(update_fields=validated_data.keys())
+        return instance
+
 
 class ClientListSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()

@@ -15,7 +15,7 @@
         <label for="id_vat_rate" class="">{{ $t('VAT rate') }}</label>
         <input type="number" name="vat_rate" step="0.0001"
                class="numberinput form-control" id="id_vat_rate"
-               v-model="vatRate"
+               v-model.number="vatRate"
         >
       </div>
     </div>
@@ -26,7 +26,7 @@
         </label>
         <input type="number" name="default_hourly_rate" step="0.01"
                class="numberinput form-control" required="" id="id_default_hourly_rate"
-               v-model="defaultHourlyRate"
+               v-model.number="defaultHourlyRate"
         >
       </div>
     </div>
@@ -119,7 +119,9 @@ export default {
   },
   methods: {
     isFormComplete(){
-      return this.currency && this.defaultHourlyRate != "" && this.language && this.paymentDelayDays != "" && this.slug && this.vatRate != "";
+      return this.currency && this.validateNumberInput(this.defaultHourlyRate) &&
+          this.language && this.paymentDelayDays != "" && this.slug &&
+          this.validateNumberInput(this.vatRate);
     },
     setClient(client){
       this.currency = client.currency;
@@ -130,8 +132,8 @@ export default {
       this.vatRate = client.vat_rate;
       this.defaultHourlyRate = client.default_hourly_rate;
     },
-    save(clientId) {
-      this.$http.patch(`/api/clients/${clientId}/`, {
+    save() {
+      this.$http.patch(this.clientUpdateUrl, {
         currency: this.currency,
         invoice_current_count: this.invoiceCurrentCount,
         language: this.language,
@@ -140,15 +142,37 @@ export default {
         slug: this.slug,
         vat_rate: this.vatRate,
       }).then(response => {
-        this.$emit('company-saved', response.data)
+        this.$emit('saved', response.data)
       })
     },
+    validateNumberInput(value) {
+       return !isNaN(value) && value !== null && value !== '';
+    },
+    limitSlugify(text){
+      const slug = slugify(text, { lower: true, remove: /[*+~.()'"!:@]/g });
+      // Check if the slug is longer than 15 characters
+      if (slug.length > 15) {
+        // Find the first dash (-) in the slug
+        const dashIndex = slug.indexOf('-');
+        if (dashIndex > 0 && dashIndex <= 15) {
+          // If there is a dash before the 15th character, cut the slug there
+          return slug.slice(0, dashIndex);
+        } else {
+          // Otherwise, cut the slug at the 15th character
+          return slug.slice(0, 15);
+        }
+      } else {
+        // If the slug is 15 characters or less, return it as is
+        return slug;
+      }
+    }
   },
   props: {
     updatedSlug: {
       type: String,
       default: '',
     },
+    clientUpdateUrl: String,
   },
   setup(){
     const { t } = useI18n();
@@ -156,10 +180,7 @@ export default {
   },
   watch: {
     updatedSlug: function (newSlug) {
-      this.slug = slugify(newSlug, {
-        lower: true, // convert to lowercase
-        strict: true // remove special characters
-      });
+      this.slug = this.limitSlugify(newSlug);
     }
   }
 

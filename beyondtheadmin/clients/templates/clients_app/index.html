@@ -4,15 +4,22 @@
 {% block content %}
 <section class="card card-header-actions mb-4">
   <header class="card-header ">
-    {% trans "Create client" %}
+    {% if client %}{% trans "Edit client" %}{% else %}{% trans "Create client" %}{% endif %}
   </header>
   <article class="card-body">
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+      <strong>We're sorry but this app doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
     </noscript>
 
-    <div id="app"></div>
+    <div id="app"
+         data-client-id="{{ client.id|default_if_none:"" }}"
+         data-client-create-url="{% url 'api:client-list' %}"
+         data-client-update-url="{{ client.api_url|default_if_none:"" }}"
+         data-client-redirect-url="{% url 'clients:list' %}"
+         data-companies-url="{% url 'api:company-list' %}"
+
+    ></div>
   </article>
 </section>
 {% endblock %}

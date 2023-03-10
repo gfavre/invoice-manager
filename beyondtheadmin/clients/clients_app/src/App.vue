@@ -46,29 +46,38 @@
   <section v-show="isPerson">
     <fieldset class="border-left-info shadow" id="company_infos">
       <legend class=" mb-1">{{ $t("Person") }}</legend>
-      <person-form ref="personForm" @update:lastName="slugUpdate"></person-form>
+      <person-form ref="personForm"
+                   @saved="handleComponentSaved"
+                   @update:lastName="slugUpdate"
+                   :client-update-url="urls.clientUpdateUrl"></person-form>
     </fieldset>
   </section>
 
   <section v-show="isCompany">
     <fieldset class="border-left-primary shadow" id="company_infos">
       <legend class=" mb-1">{{ $t("Company") }}</legend>
-      <company-form ref="companyForm" @update:name="slugUpdate"></company-form>
+      <company-form ref="companyForm"
+                    @saved="handleComponentSaved"
+                    @update:name="slugUpdate"
+                    :client-update-url="urls.clientUpdateUrl"></company-form>
     </fieldset>
   </section>
 
   <section>
     <fieldset class="border-left-success shadow ">
       <legend class=" mb-1">{{ $t("Invoices") }}</legend>
-      <InvoiceForm ref="invoiceForm" @company-saved="handleCompanySaved" :updated-slug="slug"></InvoiceForm>
+      <InvoiceForm ref="invoiceForm"
+                   @saved="handleComponentSaved"
+                   :updated-slug="slug"
+                   :client-update-url="urls.clientUpdateUrl"></InvoiceForm>
     </fieldset>
   </section>
 
   <div class="buttonHolder">
     <input type="submit" name="submit" value="Enregistrer"
            class="btn btn-primary button white" id="submit-id-submit"
-           :class="{disabled: !isSaveable}"
-           @click.prevent="saveClient"/>
+           :class="{disabled: !isFormComplete}"
+           @click.prevent="isFormComplete? saveClient(): focusFirstError()"/>
 
   </div>
 
@@ -83,7 +92,6 @@ import {useI18n} from 'vue-i18n'
 
 export default {
   name: 'App',
-  //i18n,
   components: {
     PersonForm,
     CompanyForm,
@@ -98,8 +106,11 @@ export default {
       return this.clientType === 'person';
     },
     isFormComplete() {
-      let base = this.isPerson ? this.$refs.personForm.isFormComplete() : this.$refs.companyForm.isFormComplete();
-      return this.company && base && this.$refs.invoiceForm.isFormComplete();
+      let dataForm = this.isPerson ? this.$refs.personForm : this.$refs.companyForm;
+      //if (dataForm === undefined ||  this.$refs.invoiceForm === undefined) {
+      //  return false;
+      //}
+      return this.company.length > 0 && dataForm.isFormComplete() && this.$refs.invoiceForm.isFormComplete();
     }
   },
 
@@ -110,11 +121,18 @@ export default {
       client: null,
       clientId: null,
       companies: [],
-      company: ""
+      company: "",
+      savedComponentCount: 0,
+      urls: {
+        clientCreateUrl: '',
+        clientUpdateUrl: '',
+        clientRedirectUrl: '',
+        companiesUrl: '',
+      }
     }
   },
   methods: {
-    handleCompanySaved() {
+    handleComponentSaved() {
       /*
       Whether to use push() to navigate to a new route or window.location to redirect to a new page depends
       on your use case and the desired behavior.
@@ -125,55 +143,74 @@ export default {
       the navigation and update the URL in the address bar without causing a full page reload.
 
       On the other hand, if you want to redirect to a completely new page outside of your Vue app, you should
-      use window.location to redirect to the new page. This will cause a full page reload and navigate the browser to the new page.
+      use window.location to redirect to the new page. This will cause a full page reload and navigate the browser
+      to the new page.
 
       this.$router.push({name: 'clients-list'});
       */
-      window.location.href = '/clients/';
+      this.savedComponentCount ++;
+      if (this.savedComponentCount === 2) {
+        window.location = this.urls.clientRedirectUrl;
+      }
+    },
+    focusFirstError(){
+      const formInputs = document.querySelectorAll('input[required]');
+      const invalidInputs = Array.from(formInputs).filter(input => !input.validity.valid);
+      invalidInputs.forEach(input => {
+        input.classList.add('is-invalid');
+      });
+      const validInputs = Array.from(formInputs).filter(input => input.validity.valid);
+      validInputs.forEach(input => {
+        input.classList.remove('is-invalid');
+      });
+      invalidInputs[0].focus();
     },
     async saveClient() {
+      this.savedComponentCount = 0;
       if (this.clientId === null) {
         try {
           const data = {
             client_type: this.clientType,
             company: this.company,
           }
-          const response = await this.$http.post('/api/clients/', data)
+          const response = await this.$http.post(this.urls.clientCreateUrl, data)
           this.clientId = response.data.id;
+          this.urls.clientUpdateUrl = response.data.url;
         } catch (error) {
           console.log(error);
         }
       }
       if (this.clientId !== null) {
-        await this.$nextTick();
-        if (this.clientType === 'company') {
-          this.$refs.companyForm.save(this.clientId);
+        this.$refs.invoiceForm.save()
+        if (this.isCompany) {
+          this.$refs.companyForm.save();
         } else {
-          this.$refs.personForm.save(this.clientId);
+          this.$refs.personForm.save();
         }
-        this.$refs.invoiceForm.save(this.clientId);
-
       }
     },
     slugUpdate(name) {
       this.slug = name;
     },
   },
-  created() {
-    this.$http.get('/api/companies/').then(response => {
+  mounted() {
+    this.urls.clientCreateUrl = this.$el.parentNode.dataset.clientCreateUrl;
+    this.urls.clientUpdateUrl = this.$el.parentNode.dataset.clientUpdateUrl;
+    this.urls.clientRedirectUrl = this.$el.parentNode.dataset.clientRedirectUrl;
+    this.urls.companiesUrl = this.$el.parentNode.dataset.companiesUrl;
+    this.clientId = this.$el.parentNode.dataset.clientId;
+
+    this.$http.get(this.urls.companiesUrl).then(response => {
       this.companies = response.data.results;
-      if (this.companies.length == 1) {
+      if (this.companies.length === 1) {
         this.company = this.companies[0].id
       }
     }).catch(error => {
       console.log(error)
     });
 
-    const path = window.location.pathname;
-    const match = path.match(/\/clients\/([\da-fA-F]{8}-([\da-fA-F]{4}-){3}[\da-fA-F]{12})\/edit/);
-    if (match) {
-      this.clientId = match[1];
-      this.$http.get(`/api/clients/${this.clientId}/`).then(response => {
+    if (this.urls.clientUpdateUrl) {
+      this.$http.get(this.urls.clientUpdateUrl).then(response => {
         this.client = response.data;
         this.clientType = this.client.client_type;
         this.company = this.client.company;
@@ -185,6 +222,7 @@ export default {
       });
     }
   },
+
   setup() {
     const {t} = useI18n({
       inheritLocale: true,

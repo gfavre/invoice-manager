@@ -97,6 +97,9 @@ export default {
       contactEmail: "",
     };
   },
+  props: {
+    clientUpdateUrl: String,
+  },
   methods: {
     companyDetailLookupResult(company) {
       this.name = company.name;
@@ -106,15 +109,11 @@ export default {
       this.zipcode = company.zip_code;
       this.$refs.contactFirstName.focus();
     },
-    onSelect(country) {
-      console.log(country);
-      // Check the country object example below.
-    },
     isFormComplete(){
       return this.name.length > 0;
     },
-    save(clientId){
-      this.$http.patch(`/api/clients/${clientId}/`, {
+    save(){
+      this.$http.patch(this.clientUpdateUrl, {
         company_name: this.name,
         address: this.address,
         country: this.country,
@@ -125,7 +124,7 @@ export default {
         contact_email: this.contactEmail,
         client_type: 'company',
       }).then(response => {
-        this.$emit('company-saved', response.data)
+        this.$emit('saved', response.data);
       })
     },
     setClient(client){
