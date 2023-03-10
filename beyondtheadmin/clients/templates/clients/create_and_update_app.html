@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+{% block content %}
+  <section class="card card-header-actions mb-4" id="app">
+    <header class="card-header ">
+      {% trans "Create client" %}
+    </header>
+    <article class="card-body">
+
+    </article>
+  </section>
+
+{% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+  <script src="{% static "clients_app/js/chunk-vendors.062285b0.js" %}" type="application/javascript"></script>
+
+<script src="{% static 'clients_app/js/app.4c5a50c5.js' %}" type="application/javascript"></script>
+{% endblock javascript %}

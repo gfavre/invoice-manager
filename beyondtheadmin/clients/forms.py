@@ -33,6 +33,11 @@ class ClientForm(forms.ModelForm):
         widget=forms.RadioSelect,
         empty_label=None,
     )
+    slug = forms.CharField(
+        label=_("Slug"),
+        help_text=_("Used to generate invoice codes"),
+        required=True,
+    )
 
     class Media:
         js = (

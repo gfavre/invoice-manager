@@ -1,0 +1,160 @@
+<template>
+  <div class="form-row">
+    <div class="col-md-6">
+      <company-search
+          autocompleteUrl="/api/companies-search/"
+          companyDetailUrl="/api/company-detail/"
+          :placeholder="$t('Search on company register')"
+          @callback="companyDetailLookupResult"></company-search>
+      </div>
+    </div>
+
+  <hr>
+
+  <div id="div_id_company_name" class="form-group">
+    <label for="id_company_name" class="requiredField">
+      {{ $t("Company name") }}
+      <span class="asteriskField">*</span>
+    </label>
+    <input type="text" name="company_name" maxlength="255"
+           class="textinput textInput form-control" id="id_company_name" required=""
+           v-model="name"/>
+
+  </div>
+  <div id="div_id_address" class="form-group">
+    <label for="id_address">{{ $t("Address") }}</label>
+    <textarea name="address" cols="40" rows="2" class="textarea form-control" id="id_address"
+              v-model="address"
+    ></textarea>
+  </div>
+  <div class="form-row">
+    <city-auto-complete
+        v-model:city="city"
+        v-model:zipcode="zipcode"
+        :city-label="$t('City')"
+        :zipcode-label="$t('Postal code')"
+    ></city-auto-complete>
+  </div>
+  <div id="div_id_country" class="form-group">
+    <label for="id_country">{{ $t("Country") }}</label>
+    <country-select v-model="country" :country="country" topCountry="CH" :autocomplete="true"
+                    class-name="form-control"/>
+  </div>
+  <hr>
+  <div class="form-row ">
+    <div class="col-md ">
+      <div id="div_id_contact_first_name" class="form-group">
+        <label for="id_contact_first_name">{{ $t("Contact's first name") }}</label>
+        <input type="text" name="contact_first_name" maxlength="255"
+                 class="textinput textInput form-control" id="id_contact_first_name"
+                v-model="contactFirstName" ref="contactFirstName"
+          />
+      </div>
+    </div>
+    <div class="col-md ">
+      <div id="div_id_contact_last_name" class="form-group">
+        <label for="id_contact_last_name">{{ $t("Contact's last name") }}</label>
+        <input type="text" name="contact_last_name" maxlength="255"
+               class="textinput textInput form-control" id="id_contact_last_name"
+               v-model="contactLastName"
+        />
+      </div>
+    </div>
+  </div>
+  <div id="div_id_contact_email" class="form-group">
+    <label for="id_contact_email">{{ $t("Contact's email") }}</label>
+    <input type="email" name="contact_email" maxlength="254"
+           class="emailinput form-control" id="id_contact_email"
+           v-model="contactEmail"
+    />
+  </div>
+</template>
+
+<script>
+import CityAutoComplete from "@/components/CityAutoComplete.vue";
+import CompanySearch from "@/components/CompanySearch.vue";
+import { CountrySelect } from 'vue3-country-region-select'
+import { useI18n } from 'vue-i18n';
+
+export default {
+  name: "CompanyForm",
+  components: {
+    CompanySearch,
+    CountrySelect,
+    CityAutoComplete,
+  },
+
+  data() {
+    return {
+      name: "",
+      address: "",
+      country: "CH",
+      zipcode: "",
+      cities: [],
+      city: "",
+      contactFirstName: "",
+      contactLastName: "",
+      contactEmail: "",
+    };
+  },
+  props: {
+    clientUpdateUrl: String,
+  },
+  methods: {
+    companyDetailLookupResult(company) {
+      this.name = company.name;
+      this.address = company.address;
+      this.country = company.country;
+      this.city = company.city;
+      this.zipcode = company.zip_code;
+      this.$refs.contactFirstName.focus();
+    },
+    isFormComplete(){
+      return this.name.length > 0;
+    },
+    save(){
+      this.$http.patch(this.clientUpdateUrl, {
+        company_name: this.name,
+        address: this.address,
+        country: this.country,
+        city: this.city,
+        zip_code: this.zipcode,
+        contact_first_name: this.contactFirstName,
+        contact_last_name: this.contactLastName,
+        contact_email: this.contactEmail,
+        client_type: 'company',
+      }).then(response => {
+        this.$emit('saved', response.data);
+      })
+    },
+    setClient(client){
+      this.name = client.company_name;
+      this.address = client.address;
+      this.country = client.country;
+      this.city = client.city;
+      this.zipcode = client.zip_code;
+      this.contactFirstName = client.contact_first_name;
+      this.contactLastName = client.contact_last_name;
+      this.contactEmail = client.contact_email;
+    },
+    onWindowClick(event) {
+      if (this.$refs.dropdown && !this.$refs.dropdown.contains(event.target)) {
+        this.cities = [];
+      }
+    },
+  },
+  setup(){
+    const { t } = useI18n();
+    return { t }
+  },
+  watch: {
+    name(value) {
+      this.$emit('update:name', value)
+    },
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

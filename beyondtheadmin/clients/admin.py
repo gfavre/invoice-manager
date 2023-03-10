@@ -8,6 +8,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ("__str__", "invoice_current_count")
     list_filter = ("client_type",)
     search_fields = (
+        "id",
         "company_name",
         "zip_code",
         "city",

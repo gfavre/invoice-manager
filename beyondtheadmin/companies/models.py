@@ -74,6 +74,10 @@ class Company(UUIDModel):
         return self.name
 
     @property
+    def api_url(self):
+        return reverse("api:company-detail", kwargs={"pk": self.pk})
+
+    @property
     def all_invoices_api_url(self):
         return reverse("api:company-invoices", kwargs={"company_pk": self.pk})
 
