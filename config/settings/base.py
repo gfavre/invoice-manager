@@ -49,8 +49,11 @@ SHORT_DATE_FORMAT = "dS.m.Y"
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES = {"default": env.db(
+    "DATABASE_URL",
+    default="postgres:///beyondtheadmin",)}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # URLS
 # ------------------------------------------------------------------------------
