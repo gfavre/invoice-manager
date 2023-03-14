@@ -13,6 +13,7 @@
     </noscript>
 
     <div id="app"
+         data-language-code="{{ LANGUAGE_CODE }}"
          data-client-id="{{ client.id|default_if_none:"" }}"
          data-client-create-url="{% url 'api:client-list' %}"
          data-client-update-url="{{ client.api_url|default_if_none:"" }}"
