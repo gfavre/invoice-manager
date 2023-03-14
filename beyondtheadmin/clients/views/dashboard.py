@@ -24,9 +24,11 @@ class ClientAppView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["client"] = get_object_or_404(
-            Client, pk=self.kwargs["pk"], company__users=self.request.user
-        )
+        if "pk" in self.kwargs:
+            context["client_id"] = self.kwargs["pk"]
+            context["client"] = get_object_or_404(
+                Client, pk=self.kwargs["pk"], company__users=self.request.user
+            )
         return context
 
 
