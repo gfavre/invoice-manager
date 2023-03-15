@@ -20,6 +20,7 @@
         <input type="text" name="contact_last_name" maxlength="255" required="required"
                class="textinput textInput form-control" id="id_last_name"
                v-model="lastName"
+               @blur="nameChanged()"
         />
       </div>
     </div>
@@ -94,6 +95,9 @@ export default {
     isFormComplete(){
       return this.firstName.length > 0 && this.lastName.length > 0;
     },
+    nameChanged(){
+      this.$emit('update:lastName', this.lastName)
+    },
     setClient(client) {
       this.client = client;
       this.firstName = client.contact_first_name;
@@ -129,11 +133,6 @@ export default {
   setup(){
     const { t } = useI18n();
     return { t }
-  },
-  watch: {
-    lastName(value) {
-      this.$emit('update:lastName', value)
-    },
   }
 }
 </script>

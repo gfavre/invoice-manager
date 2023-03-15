@@ -190,7 +190,9 @@ export default {
       }
     },
     slugUpdate(name) {
-      this.slug = name;
+      if (this.slug === "") {
+        this.slug = name;
+      }
     },
   },
   mounted() {
@@ -215,6 +217,7 @@ export default {
         this.client = response.data;
         this.clientType = this.client.client_type;
         this.company = this.client.company;
+        this.slug = this.client.slug;
         this.$refs.companyForm.setClient(this.client);
         this.$refs.invoiceForm.setClient(this.client);
         this.$refs.personForm.setClient(this.client);

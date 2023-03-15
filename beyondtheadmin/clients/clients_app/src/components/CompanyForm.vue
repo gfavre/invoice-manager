@@ -18,7 +18,9 @@
     </label>
     <input type="text" name="company_name" maxlength="255"
            class="textinput textInput form-control" id="id_company_name" required=""
-           v-model="name"/>
+           v-model="name"
+           @blur="nameChanged"
+    />
 
   </div>
   <div id="div_id_address" class="form-group">
@@ -107,7 +109,9 @@ export default {
       this.country = company.country;
       this.city = company.city;
       this.zipcode = company.zip_code;
+      this.nameChanged();
       this.$refs.contactFirstName.focus();
+
     },
     isFormComplete(){
       return this.name.length > 0;
@@ -142,15 +146,13 @@ export default {
         this.cities = [];
       }
     },
+    nameChanged(){
+      this.$emit('update:name', this.name)
+    }
   },
   setup(){
     const { t } = useI18n();
     return { t }
-  },
-  watch: {
-    name(value) {
-      this.$emit('update:name', value)
-    },
   }
 }
 </script>
