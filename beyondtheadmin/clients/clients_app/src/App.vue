@@ -84,6 +84,8 @@
 </template>
 
 <script>
+'use strict';
+
 import PersonForm from '@/components/PersonForm.vue';
 import CompanyForm from '@/components/CompanyForm.vue';
 import InvoiceForm from "@/components/InvoiceForm.vue";
@@ -123,6 +125,7 @@ export default {
       companies: [],
       company: "",
       savedComponentCount: 0,
+      expectedComponentCount: 2,
       urls: {
         clientCreateUrl: '',
         clientUpdateUrl: '',
@@ -149,7 +152,7 @@ export default {
       this.$router.push({name: 'clients-list'});
       */
       this.savedComponentCount ++;
-      if (this.savedComponentCount === 2) {
+      if (this.savedComponentCount === this.expectedComponentCount) {
         window.location = this.urls.clientRedirectUrl;
       }
     },
@@ -165,8 +168,10 @@ export default {
       });
       invalidInputs[0].focus();
     },
+
     async saveClient() {
       this.savedComponentCount = 0;
+
       if (this.clientId === null) {
         try {
           const data = {
@@ -177,17 +182,31 @@ export default {
           this.clientId = response.data.id;
           this.urls.clientUpdateUrl = response.data.url;
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
+      } else {
+        this.expectedComponentCount += 1;
+        this.save();
       }
       if (this.clientId !== null) {
-        this.$refs.invoiceForm.save()
+        this.save();
+        this.$refs.invoiceForm.save();
         if (this.isCompany) {
           this.$refs.companyForm.save();
         } else {
           this.$refs.personForm.save();
         }
       }
+    },
+    save() {
+      const data = {
+        company: this.company,
+      }
+      this.$http.patch(this.urls.clientUpdateUrl, data).then(() => {
+        this.handleComponentSaved();
+      }).catch(error => {
+        console.error(error)
+      });
     },
     slugUpdate(name) {
       if (this.slug === "") {

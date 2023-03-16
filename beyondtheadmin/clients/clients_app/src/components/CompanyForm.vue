@@ -73,6 +73,8 @@
 </template>
 
 <script>
+'use strict';
+
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
 import { CountrySelect } from 'vue3-country-region-select'
@@ -129,7 +131,9 @@ export default {
         client_type: 'company',
       }).then(response => {
         this.$emit('saved', response.data);
-      })
+      }).catch(error => {
+        console.error(error);
+      });
     },
     setClient(client){
       this.name = client.company_name;

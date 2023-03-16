@@ -90,6 +90,8 @@
 </template>
 
 <script>
+'use strict';
+
 import slugify from "slugify";
 import { useI18n } from 'vue-i18n';
 
@@ -120,7 +122,7 @@ export default {
   methods: {
     isFormComplete(){
       return this.currency && this.validateNumberInput(this.defaultHourlyRate) &&
-          this.language && this.paymentDelayDays != "" && this.slug &&
+          this.language && this.paymentDelayDays !== "" && this.slug &&
           this.validateNumberInput(this.vatRate);
     },
     setClient(client){
@@ -143,7 +145,9 @@ export default {
         vat_rate: this.vatRate,
       }).then(response => {
         this.$emit('saved', response.data)
-      })
+      }).catch(error => {
+        console.error(error)
+      });
     },
     validateNumberInput(value) {
        return !isNaN(value) && value !== null && value !== '';
@@ -162,7 +166,7 @@ export default {
           return slug.slice(0, 15);
         }
       } else {
-        // If the slug is 15 characters or less, return it as is
+        // If the slug is 15 characters or fewer, return it as is
         return slug;
       }
     }

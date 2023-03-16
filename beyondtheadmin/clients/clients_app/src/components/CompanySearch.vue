@@ -7,14 +7,15 @@
            @focus="isFocused = true"
     />
     <div class="input-group-append">
-        <slot name="appendText">
+      <slot name="appendText">
           <span class="input-group-text">
             <i class="bi bi-search"></i>
             {{ appendText }}
           </span>
-        </slot>
-      </div>
-    <div class="dropdown-menu  shadow" :class="{show: isDropdownVisible}" ref="dropdown">
+      </slot>
+    </div>
+    <div class="dropdown-menu company-results shadow"
+         :class="{show: isDropdownVisible}" ref="dropdown">
       <a class="dropdown-item"
          v-for="item in data" :key="item.uid"
          @click="companyDetailLookup(item.uid)"
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+'use strict';
 
 export default {
   name: "CompanySearch",
@@ -65,14 +67,12 @@ export default {
         params: {
           uid: companyUid
         }
-      })
-          .then(response => {
-            this.selectedCompany = response.data
-            this.onCallback(this.selectedCompany)
-          })
-          .catch(error => {
-            console.log(error)
-          });
+      }).then(response => {
+        this.selectedCompany = response.data
+        this.onCallback(this.selectedCompany)
+      }).catch(error => {
+        console.error(error)
+      });
       this.isFocused = false;
       this.searchTerm = '';
       this.data = [];
@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style scoped>
-.dropdown-menu {
+.dropdown-menu.company-results {
   position: absolute;
   top: 100%;
   left: 0;
@@ -120,17 +120,20 @@ export default {
   list-style: none;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid rgba(0,0,0,.15);
+  border: 1px solid rgba(0, 0, 0, .15);
   border-radius: .25rem;
 }
-.dropdown-menu.show {
+
+.dropdown-menu.company-results.show {
   display: block;
 }
-.dropdown-item{
+
+.company-results .dropdown-item {
   padding: .75rem 1.25rem;
-  border-bottom: 1px solid rgba(0,0,0,.125);
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
 }
-.dropdown-item:hover{
+
+.company-results .dropdown-item:hover {
   background-color: #f8f9fa;
   cursor: pointer;
 }
