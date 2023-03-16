@@ -20,7 +20,7 @@ class CompanyForm(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = "__all__"
+        exclude = ["status", "created", "modified"]
 
         widgets = {
             "contrast_color": ColorWidget(),
