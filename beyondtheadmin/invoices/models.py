@@ -41,7 +41,7 @@ class Invoice(UUIDModel, StatusModel):
         "clients.Client",
         on_delete=models.PROTECT,
         related_name="invoices",
-        null=False,
+        null=True,
         verbose_name=_("Client"),
     )
     code = models.CharField(_("Code"), max_length=30, blank=True)
@@ -73,6 +73,15 @@ class Invoice(UUIDModel, StatusModel):
     qr_bill = models.TextField(_("QR Bill"), blank=True, null=True)
     sent_date = models.DateTimeField(_("Sent date"), blank=True, null=True)
     last_reminder_date = models.DateTimeField(_("Last reminder date"), blank=True, null=True)
+
+    created_by = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="invoices_created",
+        null=True,
+        blank=True,
+        verbose_name=_("Created by"),
+    )
 
     objects = models.Manager()
     visible = OpenInvoiceManager()
