@@ -22,29 +22,15 @@
             <div class="form-row form-row">
               <div class="form-group col-md-6 mb-0">
                 <div id="div_id_company" class="form-group">
-                  <label for="id_company" class=" requiredField">
-                    Entreprise<span class="asteriskField">*</span> </label>
-                  <div>
-                    <select name="company" class="select custom-select" id="id_company">
-                      <option v-for="company in companies"
-                              :key="company.id"
-                              :value="company.id">{{ company.name }}
-                      </option>
-                    </select>
-                  </div>
+                  <label for="id_company" class=" requiredField">Entreprise<span class="asteriskField">*</span></label>
+                  <typeahead-input :items="companies" @select="onCompanySelect" :value="selectedCompany"></typeahead-input>
                 </div>
               </div>
               <div class="form-group col-md-6 mb-0">
                 <div id="div_id_client" class="form-group">
                   <label for="id_client" class=" requiredField">Client<span class="asteriskField">*</span> </label>
-                  <div>
-                    <select name="company" class="select custom-select" id="id_company">
-                      <option v-for="client in clients"
-                              :key="client.id"
-                              :value="client.id">{{ client.name }}
-                      </option>
-                    </select>
-                  </div>
+                  <typeahead-input :items="clients" @select="onClientSelect" :value="selectedClient"></typeahead-input>
+
                 </div>
               </div>
             </div>
@@ -157,15 +143,15 @@
       </div>
     </section>
   </div>
-
 </template>
 
 <script>
 import InvoiceLine from './components/InvoiceLine.vue'
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
 import {QuillEditor} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import TypeaheadInput from '@/components/TypeaheadInput.vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 
 export default {
@@ -173,7 +159,8 @@ export default {
   components: {
     InvoiceLine,
     VueDatePicker,
-    QuillEditor
+    QuillEditor,
+    TypeaheadInput,
   },
   data() {
     return {
@@ -217,21 +204,26 @@ export default {
         invoice_note: '',
         thanks: '',
       },
+      selectedCompany: 'Company 1',
       clients: [
         {
           id: 1,
-          name: 'Client 1',
+          name: 'Twist Lab',
         },
         {
           id: 2,
-          name: 'Client 2',
+          name: 'Montreux',
         },
         {
           id: 3,
-          name: 'Client 3',
-        }
-
+          name: 'Nyon',
+        },
+          {
+          id: 4,
+          name: 'Twisted inc',
+        },
       ],
+      selectedClient: 'Twist',
       client: {
         name: '',
         address: '',
@@ -279,6 +271,14 @@ export default {
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
       return `${day}.${month}.${year}`;
+    },
+    onClientSelect(client) {
+      // Handle client selection here
+      console.log(client)
+    },
+    onCompanySelect(company) {
+      // Handle company selection here
+      console.log(company)
     },
     updateDueDate() {
       if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
