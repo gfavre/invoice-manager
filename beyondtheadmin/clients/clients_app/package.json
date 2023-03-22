@@ -9,6 +9,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^4.2.2",
     "axios": "^1.3.4",
     "core-js": "^3.8.3",
     "slugify": "^1.6.5",

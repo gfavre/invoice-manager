@@ -16,19 +16,20 @@
       </div>
     </header>
     <section class="container headed-content">
-      <div class="datatable card">
+      <div class="card">
         <div class="card-body">
           <form>
             <div class="form-row form-row">
               <div class="form-group col-md-6 mb-0">
                 <div id="div_id_company" class="form-group">
                   <label for="id_company" class=" requiredField">
-                  Entreprise<span class="asteriskField">*</span> </label>
+                    Entreprise<span class="asteriskField">*</span> </label>
                   <div>
                     <select name="company" class="select custom-select" id="id_company">
                       <option v-for="company in companies"
                               :key="company.id"
-                              :value="company.id">{{ company.name }}</option>
+                              :value="company.id">{{ company.name }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -40,7 +41,8 @@
                     <select name="company" class="select custom-select" id="id_company">
                       <option v-for="client in clients"
                               :key="client.id"
-                              :value="client.id">{{ client.name }}</option>
+                              :value="client.id">{{ client.name }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -49,38 +51,29 @@
             <div class="form-row form-row">
               <div class="form-group col-md-6 mb-0">
                 <div id="div_id_displayed_date" class="form-group">
-                  <label for="id_displayed_date" class="">
-                    Date affichée
-                  </label>
-                  <div>
-                    <div class="input-group date">
-                      <input type="text" name="displayed_date" value="16.03.2023"
-                             class="form-control datepickerinput" id="id_displayed_date">
-                      <div class="input-group-addon input-group-append" data-target="#datetimepicker1"
-                           data-toggle="datetimepickerv">
-                        <div class="input-group-text">
-                          <i class="glyphicon glyphicon-calendar"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <label for="id_displayed_date" class="">Date affichée</label>
+                  <VueDatePicker v-model="invoice.displayed_date"
+                                 :enable-time-picker="false"
+                                 :format="formatDate"
+                                 locale="ch-fr"
+                                 placeholder="Select Date"
+                                 @update:model-value="updateDueDate"
+                                 close-on-scroll auto-apply
+                  ></VueDatePicker>
                 </div>
               </div>
               <div class="form-group col-md-6 mb-0">
-                <div id="div_id_due_date" class="form-group"><label for="id_due_date" class=" requiredField">
-                  Date d'échéance<span class="asteriskField">*</span> </label>
-                  <div>
-                    <div class="input-group date">
-                      <input type="text" name="due_date"
-                             value="(datetime.datetime(2023, 4, 15, 16, 40, 25, 150590, tzinfo=<UTC>),)"
-                             class="form-control datepickerinput" required=""
-                             id="id_due_date">
-                      <div class="input-group-addon input-group-append" data-target="#datetimepicker1"
-                           data-toggle="datetimepickerv">
-                        <div class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
+                <div id="div_id_due_date" class="form-group">
+                  <label for="id_due_date" class=" requiredField">Date d'échéance<span class="asteriskField">*</span>
+                  </label>
+                  <VueDatePicker v-model="invoice.due_date"
+                                 :enable-time-picker="false"
+                                 :format="formatDate"
+                                 :min-date="invoice.displayed_date"
+                                 locale="ch-fr"
+                                 placeholder="Select Date"
+                                 close-on-scroll auto-apply
+                  ></VueDatePicker>
                 </div>
               </div>
             </div>
@@ -89,112 +82,115 @@
             </label>
               <div>
                 <input type="text" name="title" maxlength="100" class="textinput textInput form-control"
-                          id="id_title">
+                       id="id_title">
               </div>
             </div>
             <div id="div_id_description" class="form-group">
               <label for="id_description" class="">Description</label>
-              <div>
-                <div class="django-ckeditor-widget" data-field-id="id_description" style="display: inline-block;">
-                  <textarea class="ckeditorwidget form-control" cols="40" id="id_description" name="description"
-                            rows="10" data-processed="1"
-                            data-config="{&quot;skin&quot;: &quot;moono-lisa&quot;, &quot;toolbar_Basic&quot;: [[&quot;Source&quot;, &quot;-&quot;, &quot;Bold&quot;, &quot;Italic&quot;]], &quot;toolbar_Full&quot;: [[&quot;Styles&quot;, &quot;Format&quot;, &quot;Bold&quot;, &quot;Italic&quot;, &quot;Underline&quot;, &quot;Strike&quot;, &quot;SpellChecker&quot;, &quot;Undo&quot;, &quot;Redo&quot;], [&quot;Link&quot;, &quot;Unlink&quot;, &quot;Anchor&quot;], [&quot;Image&quot;, &quot;Flash&quot;, &quot;Table&quot;, &quot;HorizontalRule&quot;], [&quot;TextColor&quot;, &quot;BGColor&quot;], [&quot;Smiley&quot;, &quot;SpecialChar&quot;], [&quot;Source&quot;]], &quot;toolbar&quot;: &quot;Full&quot;, &quot;height&quot;: 291, &quot;width&quot;: 835, &quot;filebrowserWindowWidth&quot;: 940, &quot;filebrowserWindowHeight&quot;: 725, &quot;language&quot;: &quot;fr&quot;}"
-                            data-external-plugin-resources="[]" data-id="id_description" data-type="ckeditortype"
-                            style="visibility: hidden; display: none;"></textarea>
-                </div>
-              </div>
+              <QuillEditor theme="snow"
+                           :toolbar="[['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'script': 'sub'}, { 'script': 'super' }],
+                            [{ 'color': [] }], ['link'] ]"
+                           :style="{ minHeight: '8em' }"
+
+              />
             </div>
             <div class="form-row form-row">
               <div class="form-group col-md-6 mb-0">
-                <div id="div_id_period_start" class="form-group"><label for="id_period_start" class="">
-                  Début de la période de facturation
-                </label>
-                  <div>
-                    <div class="input-group date"><input type="text" name="period_start"
-                                                         class="form-control datepickerinput" id="id_period_start"
-                                                         dp_config="{&quot;id&quot;: &quot;dp_3&quot;, &quot;picker_type&quot;: &quot;DATE&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;DD.MM.YYYY&quot;, &quot;locale&quot;: &quot;fr&quot;}}">
-                      <div class="input-group-addon input-group-append" data-target="#datetimepicker1"
-                           data-toggle="datetimepickerv">
-                        <div class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
+                <div id="div_id_period_start" class="form-group">
+                  <label for="id_period_start" class="">Début de la période de facturation</label>
+                  <VueDatePicker v-model="invoice.period_start"
+                                 :enable-time-picker="false"
+                                 :format="formatDate"
+                                 locale="ch-fr"
+                                 placeholder="Select Date"
+                                 @update:model-value="updatePeriodEnd"
+                                 close-on-scroll auto-apply
+                  ></VueDatePicker>
                 </div>
               </div>
               <div class="form-group col-md-6 mb-0">
-                <div id="div_id_period_end" class="form-group"><label for="id_period_end" class="">
-                  Fin de la période de facturation
-                </label>
-                  <div>
-                    <div class="input-group date"><input type="text" name="period_end"
-                                                         class="form-control datepickerinput" id="id_period_end"
-                                                         dp_config="{&quot;id&quot;: &quot;dp_4&quot;, &quot;picker_type&quot;: &quot;DATE&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;DD.MM.YYYY&quot;, &quot;locale&quot;: &quot;fr&quot;}}">
-                      <div class="input-group-addon input-group-append" data-target="#datetimepicker1"
-                           data-toggle="datetimepickerv">
-                        <div class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
+                <div id="div_id_period_end" class="form-group">
+                  <label for="id_period_end" class="">Fin de la période de facturation</label>
+                  <VueDatePicker v-model="invoice.period_end"
+                                 :enable-time-picker="false"
+                                 :format="formatDate"
+                                 :min-date="invoice.period_start"
+                                 locale="ch-fr"
+                                 placeholder="Select Date"
+                                 close-on-scroll auto-apply
+                  ></VueDatePicker>
                 </div>
-              </div>
-            </div>
-            <div id="div_id_vat_rate" class="form-group">
-              <label for="id_vat_rate" class="">Taux de TVA</label>
-              <div>
-                <input type="number" name="vat_rate" value="0.0770" step="0.0001" class="numberinput form-control" id="id_vat_rate">
               </div>
             </div>
             <div class="card border-left-info shadow mb-3">
-              <div class="card-body"><h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
+              <div class="card-body">
+                <h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
                 <div class="lines">
-
-                  <div id="add-line" class="pt-2"><input type="button" name="add" value="Ajouter une ligne"
-                                                         class="btn btn btn-info" id="button-id-add">
-
+                  <div v-for="line in invoice.lines" :key="line.id">
+                    <invoice-line
+                        :line-id="line.id"
+                        :initial-description="line.description"
+                        :initial-quantity="line.quantity"
+                        :initial-price="line.price"
+                        @update-line="handleUpdateLine"
+                    />
                   </div>
-
+                  <button @click="addLine" class="btn btn btn-info">Add Line</button>
                 </div>
-
-              </div>
-              <div><input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
-
               </div>
             </div>
+
+            <div id="div_id_vat_rate" class="form-group col-3">
+              <label for="id_vat_rate" class="">Taux de TVA</label>
+              <div class="input-group">
+                <input type="text" v-model="vatRatePercent" @input="validateFloatValue"
+                       id="id_vat_rate" class="form-control">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+            <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
           </form>
-
-
         </div>
       </div>
     </section>
   </div>
 
-
-  <div class="invoice-form">
-    <h1>Create Invoice</h1>
-    <div v-for="line in invoice.lines" :key="line.id">
-      <invoice-line
-          :line-id="line.id"
-          :initial-description="line.description"
-          :initial-quantity="line.quantity"
-          :initial-price="line.price"
-          @update-line="handleUpdateLine"
-      />
-    </div>
-    <button @click="addLine">Add Line</button>
-  </div>
 </template>
 
 <script>
 import InvoiceLine from './components/InvoiceLine.vue'
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import {QuillEditor} from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
 
 export default {
   name: 'App',
   components: {
-    InvoiceLine
+    InvoiceLine,
+    VueDatePicker,
+    QuillEditor
   },
   data() {
     return {
-      companies: [],
+      companies: [
+        {
+          id: 1,
+          name: 'Company 1',
+        },
+        {
+          id: 2,
+          name: 'Company 2',
+        },
+        {
+          id: 3,
+          name: 'Company 3',
+        }
+      ],
       company: {
         name: '',
         address: '',
@@ -254,8 +250,8 @@ export default {
       invoice: {
         code: "",
         due_date: "",
-        displayed_date: "",
-        vat_rate: 0.077,
+        displayed_date: new Date(),
+        vat_rate: "",
         total: 0,
         title: "",
         description: "",
@@ -263,6 +259,7 @@ export default {
         period_end: "",
         lines: [],
       },
+      vatRatePercent: "",
       urls: {
         companiesUrl: "",
       },
@@ -277,6 +274,57 @@ export default {
         price: 0,
       })
     },
+    formatDate(date) {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    },
+    updateDueDate() {
+      if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
+        // Calculate the new due date based on the payment_delay_days
+        const new_due_date = new Date(this.invoice.displayed_date.getTime() + (this.client.payment_delay_days * 24 * 60 * 60 * 1000));
+        this.invoice.due_date = new_due_date;
+      }
+    },
+    updatePeriodEnd() {
+      if (!this.invoice.period_end || this.invoice.period_end < this.invoice.period_start) {
+        const year = this.invoice.period_start.getFullYear();
+        const month = this.invoice.period_start.getMonth();
+
+        if (this.invoice.period_start.getDate() === 1) {
+          const lastDayOfMonth = new Date(
+              this.invoice.period_start.getFullYear(),
+              this.invoice.period_start.getMonth() + 1,
+              0
+          );
+          this.invoice.period_end = lastDayOfMonth
+        } else {
+          let endYear, endMonth;
+          if (month === 11) {
+            endMonth = 0;
+            endYear = year + 1;
+          } else {
+            endMonth = month + 1;
+            endYear = year;
+          }
+          this.invoice.period_end = new Date(endYear, endMonth, this.invoice.period_start.getDate() - 1);
+        }
+      }
+    },
+    validateFloatValue() {
+      // Remove any non-digit or non-decimal characters
+      let value = this.vatRatePercent.replace(/[^0-9.]/g, '');
+
+      // Only allow one decimal point
+      const decimalIndex = value.indexOf('.');
+      if (decimalIndex !== -1) {
+        value = value.slice(0, decimalIndex + 1) + value.slice(decimalIndex + 1).replace(/\./g, '');
+      }
+
+      // Set the validated value back to the component
+      this.vatRatePercent = value;
+    },
   },
 
   mounted() {
@@ -289,8 +337,15 @@ export default {
     }).catch(error => {
       console.error(error)
     });
+    this.updateDueDate();
+    this.vatRatePercent = 7.7
 
-  }
+  },
+  watch: {
+    vatRatePercent: function (value) {
+      this.invoice.vat_rate = value / 100;
+    },
+  },
 }
 </script>
 
