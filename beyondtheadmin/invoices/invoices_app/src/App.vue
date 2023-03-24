@@ -122,6 +122,7 @@
                       :line-id="line.id"
                       :invoice-id="this.invoice.id"
                       :uuid="line.uuid"
+                      @update-line="handleUpdateLine(line)"
                       @save="saveLine(index)"
                       @remove="removeLine(index)"
                     />
@@ -282,12 +283,7 @@ export default {
       return `${day}.${month}.${year}`;
     },
     handleUpdateLine(line) {
-      this.invoice.lines = this.invoice.lines.map((l) => {
-        if (l.id === line.id) {
-          return line;
-        }
-        return l;
-      })
+      console.log(line)
     },
     onClientSelect(client) {
       // Handle client selection here

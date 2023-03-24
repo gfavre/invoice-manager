@@ -116,24 +116,16 @@ export default {
           unit: this.localUnit,
           price: this.localPrice,
           total: this.total,
-          lineNumber: this.lineNumber,
+          uuid: this.uuid,
         });
       },
-      watch: {
-        localDescription() {
-          this.updateLine();
-        },
-        localQuantity() {
-          this.updateLine();
-        },
-        localUnit() {
-          this.updateLine();
-        },
-        localPrice() {
-          this.updateLine();
-        },
-      },
     },
+      watch: {
+        total() {
+           this.updateLine();
+        }
+      },
+
   };
 
 </script>
