@@ -18,7 +18,6 @@
     <section class="container headed-content">
       <div class="card">
         <div class="card-body">
-          <form>
             <div class="form-row form-row">
               <div class="form-group col-md-6 mb-0">
                 <div id="div_id_company" class="form-group">
@@ -113,16 +112,20 @@
               <div class="card-body">
                 <h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
                 <div class="lines">
-                  <div v-for="line in invoice.lines" :key="line.id">
                     <invoice-line
-                        :line-id="line.id"
-                        :initial-description="line.description"
-                        :initial-quantity="line.quantity"
-                        :initial-price="line.price"
-                        @update-line="handleUpdateLine"
+                      v-for="line in invoice.lines"
+                      :key="line.uuid"
+                      :description="line.description"
+                      :quantity="line.quantity"
+                      :unit="line.unit"
+                      :price="line.price"
+                      :line-id="line.id"
+                      :invoice-id="this.invoice.id"
+                      :uuid="line.uuid"
+                      @save="saveLine(index)"
+                      @remove="removeLine(index)"
                     />
-                  </div>
-                  <button @click="addLine" class="btn btn btn-info">Add Line</button>
+                  <button type="button" @click="addLine" class="btn btn btn-info">Add Line</button>
                 </div>
               </div>
             </div>
@@ -138,7 +141,6 @@
               </div>
             </div>
             <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
-          </form>
         </div>
       </div>
     </section>
@@ -152,6 +154,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import TypeaheadInput from '@/components/TypeaheadInput.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default {
@@ -240,6 +243,7 @@ export default {
         slug: '',
       },
       invoice: {
+        id: 1, // FIXME!!
         code: "",
         due_date: "",
         displayed_date: new Date(),
@@ -260,17 +264,30 @@ export default {
   methods: {
     addLine() {
       this.invoice.lines.push({
-        id: this.invoice.lines.length + 1,
-        description: "",
-        quantity: 0,
-        price: 0,
-      })
+          uuid: uuidv4(),
+        description:"", quantity:0, unit:"hour", price:0, id: null
+      });
+
+    },
+    removeLine(index) {
+      this.invoice.lines.splice(index, 1);
+    },
+    saveLine(line) {
+      console.log(line)
     },
     formatDate(date) {
       const day = date.getDate();
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
       return `${day}.${month}.${year}`;
+    },
+    handleUpdateLine(line) {
+      this.invoice.lines = this.invoice.lines.map((l) => {
+        if (l.id === line.id) {
+          return line;
+        }
+        return l;
+      })
     },
     onClientSelect(client) {
       // Handle client selection here
@@ -339,6 +356,7 @@ export default {
     });
     this.updateDueDate();
     this.vatRatePercent = 7.7
+    this.addLine();
 
   },
   watch: {

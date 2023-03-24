@@ -1,92 +1,139 @@
 <template>
-  <div class="invoice-line">
-    <input type="text" v-model="description">
-    <input type="number" v-model="quantity">
-    <input type="number" v-model="price">
-    <button @click="updateLine">Update</button>
-  </div>
-
-  <!--
-     <div id="item-" data-item-id="" data-item-url="" class="row invoice-line">
-      <div class="col-4">
-        <label for="description-" class="form-label">
+  <div class="row mb-2">
+    <div class="col-4">
+      <label :for="'description-' + uuid" class="form-label">
           Description
         </label>
-        <textarea class="form-control description" id="description-" rows="3"></textarea>
-      </div>
-      <div class="col">
-        <label for="quantity-" class="form-label">
+      <textarea class="form-control" rows="2"
+                :id="'description-' + uuid"
+                v-model="localDescription"></textarea>
+      {{ uuid }}
+    </div>
+    <div class="col">
+      <label :for="'quantity-' + uuid" class="form-label">
           Quantité
-        </label>
-        <input type="number" step="any" value="" class="form-control quantity" id="quantity-">
-      </div>
-      <div class="col">
-        <label for="unit-" class="form-label">
+      </label>
+      <input type="number" class="form-control"
+             :id="'quantity-' + uuid" v-model.number="localQuantity"/>
+    </div>
+    <div class="col">
+      <label :for="'unit-' + uuid" class="form-label">
           Unité
         </label>
-        <select class="unit form-control" id="unit-">
-          <option value="h">Heure</option>
-          <option value="nb">Nombre</option>
-        </select>
-      </div>
-      <div class="col">
-        <label for="price_per_unit-" class="form-label">
+      <select class="form-control"
+              v-model="localUnit" :id="'unit-' + uuid">
+        <option value="hour">Hour</option>
+        <option value="number">Number</option>
+      </select>
+    </div>
+    <div class="col">
+      <label :for="'price-' + uuid" class="form-label">
           Prix unitaire
-        </label>
-        <input type="number" step=".01" value="0" class="form-control price_per_unit" id="price_per_unit-">
+      </label>
+      <div class="input-group">
+        <input type="number" class="form-control"  step="0.01"
+               v-model.number="localPrice" :id="'price-' + uuid"/>
       </div>
-      <div class="col">
-        <label for="total-" class="form-label">
+    </div>
+        <div class="col">
+        <label class="form-label" :for="'total-' + uuid">
           Total
         </label>
-        <span class="form-text total" id="total-"></span>
+        <span class="form-text total" :id="'total-' + uuid">{{ total }}</span>
       </div>
-      <span class="item-action">
-        <label>&nbsp;</label><br>
-        <a href="" class="remove-line form-text" data-api-url="">Supprimer</a>
-      </span>
+    <div class="col">
+      <label>&nbsp;</label><br>
+        <a href="#" class="btn btn-link remove-line " @click="removeLine()">Supprimer</a>
     </div>
-    -->
-
-
+  </div>
 </template>
 
 <script>
 export default {
-  name: "InvoiceLine",
   props: {
+    description: String,
+    quantity: {
+      type: Number,
+      validator: (value) => {
+        return !isNaN(parseFloat(value)) && isFinite(value);
+      },
+    },
+    unit: String,
+    price: {
+      type: Number,
+      validator: (value) => {
+        return !isNaN(parseFloat(value)) && isFinite(value);
+      },
+    },
     lineId: {
       type: Number,
-      required: true
+      required: false,
     },
-    initialDescription: {
-      type: String,
-      required: true
-    },
-    initialQuantity: {
-      type: Number,
-      required: true
-    },
-    initialPrice: {
-      type: Number,
-      required: true
-    }
+    invoiceId: Number,
+    uuid: String,
   },
   data() {
     return {
-      description: this.initialDescription,
-      quantity: this.initialQuantity,
-      price: this.initialPrice
+      localDescription: this.description || '',
+      localQuantity: this.quantity || 0,
+      localUnit: this.unit || 'hour',
+      localPrice: this.price || 0,
     };
   },
-  methods: {
-    updateLine() {
-      // call the REST API to update the line
-      // you can use Axios or another library to make the API call
-      // the line ID and updated data can be passed as parameters
-      // once the API call is complete, you can update the component's data as needed
-      // you can also emit an event to notify the parent component that the line has been updated
-    }
-  }
-};
+  computed: {
+      total() {
+        return (this.localQuantity * this.localPrice).toFixed(2);
+      },
+    },
+    methods: {
+      async saveLine() {
+        const data = {
+          id: this.lineId,
+          description: this.localDescription,
+          quantity: this.localQuantity,
+          unit: this.localUnit,
+          price: this.localPrice,
+          invoiceId: this.invoiceId,
+        };
+        console.log(data)
+
+        // Call your API to save the line data
+        // ...
+
+        this.$emit('save');
+      },
+      async removeLine() {
+        // Call your API to remove the line
+        // ...
+
+        this.$emit('remove');
+      },
+      updateLine() {
+        this.$emit('update-line', {
+          id: this.lineId,
+          description: this.localDescription,
+          quantity: this.localQuantity,
+          unit: this.localUnit,
+          price: this.localPrice,
+          total: this.total,
+          lineNumber: this.lineNumber,
+        });
+      },
+      watch: {
+        localDescription() {
+          this.updateLine();
+        },
+        localQuantity() {
+          this.updateLine();
+        },
+        localUnit() {
+          this.updateLine();
+        },
+        localPrice() {
+          this.updateLine();
+        },
+      },
+    },
+  };
+
 </script>

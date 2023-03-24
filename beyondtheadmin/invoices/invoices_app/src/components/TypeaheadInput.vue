@@ -56,6 +56,7 @@ export default {
       this.$emit('select', item);
     },
   },
+  emits: ['select'],
   watch: {
     value(newValue) {
       this.searchQuery = newValue;
