@@ -142,9 +142,9 @@
               </div>
             </div>
           <dl>
-            <dt>Total HT</dt><dd>{{ round(subtotal) }}</dd>
-            <dt>VAT</dt><dd>{{ round(vat) }}</dd>
-            <dt>Total TTC</dt><dd>{{ round(total) }}</dd>
+            <dt>Total HT</dt><dd>{{ $formatAmount(invoice.subtotal) }}</dd>
+            <dt>VAT</dt><dd>{{ $formatAmount(invoice.vat) }}</dd>
+            <dt>Total TTC</dt><dd>{{ $formatAmount(invoice.total) }}</dd>
 
           </dl>
             <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
@@ -171,21 +171,6 @@ export default {
     VueDatePicker,
     QuillEditor,
     TypeaheadInput,
-  },
-  computed: {
-    /* ce qu'il faut faire: appeler une fonction updatertotal au bon moment,
-    on a des problèmes de non détection des mutations sinon
-     */
-    subtotal() {
-      return this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
-    },
-    vat() {
-      return this.subtotal * (this.vatRatePercent / 100);
-    },
-    total() {
-      return this.subtotal + this.vat*100;
-    },
-
   },
   data() {
     return {
@@ -269,13 +254,15 @@ export default {
         code: "",
         due_date: "",
         displayed_date: new Date(),
-        vat_rate: "",
-        total: 0,
+        vat_rate: 0.077,
         title: "",
         description: "",
         period_start: "",
         period_end: "",
         lines: [],
+        subtotal: 0,
+        vat: 0,
+        total: 0,
       },
       vatRatePercent: 7.7,
       urls: {
@@ -307,8 +294,7 @@ export default {
     handleUpdateLine(line) {
       const index = this.invoice.lines.findIndex((l) => l.uuid === line.uuid);
       this.invoice.lines[index] = line;
-      console.log(line)
-      console.log(line.total)
+      this.updateTotal()
     },
     onClientSelect(client) {
       // Handle client selection here
@@ -353,6 +339,11 @@ export default {
         }
       }
     },
+    updateTotal() {
+      this.invoice.subtotal =  this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
+      this.invoice.vat = this.invoice.subtotal * this.invoice.vat_rate;
+      this.invoice.total = this.invoice.subtotal + this.invoice.vat;
+    },
     validateFloatValue() {
       // Remove any non-digit or non-decimal characters
       let value = this.vatRatePercent.replace(/[^0-9.]/g, '');
@@ -381,11 +372,13 @@ export default {
     this.updateDueDate();
     this.vatRatePercent = 7.7
     this.addLine();
+    this.updateTotal();
 
   },
   watch: {
     vatRatePercent: function (value) {
       this.invoice.vat_rate = value / 100;
+      this.updateTotal();
     },
   },
 }

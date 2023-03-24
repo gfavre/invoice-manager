@@ -13,4 +13,9 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 const app = createApp(App)
 app.config.globalProperties.$http = axios;
+app.config.globalProperties.$formatAmount = function(float) {
+  let formatted = float.toFixed(2);
+  formatted = formatted.replace(/\.00$/, '.-');
+  return formatted;
+}
 app.use(i18n).use(VueCookies).mount('#app');

@@ -39,7 +39,7 @@
         <label class="form-label" :for="'total-' + uuid">
           Total
         </label>
-        <span class="form-text total" :id="'total-' + uuid">{{ total }}</span>
+        <span class="form-text total" :id="'total-' + uuid">{{ $formatAmount(total) }}</span>
       </div>
     <div class="col">
       <label>&nbsp;</label><br>
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
       total() {
-        return (this.localQuantity * this.localPrice).toFixed(2);
+        return Math.round(this.localQuantity * this.localPrice * 100) / 100;
       },
     },
     methods: {
