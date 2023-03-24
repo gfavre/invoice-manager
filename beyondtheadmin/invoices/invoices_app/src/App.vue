@@ -122,7 +122,7 @@
                       :line-id="line.id"
                       :invoice-id="this.invoice.id"
                       :uuid="line.uuid"
-                      @update-line="handleUpdateLine(line)"
+                      @update-line="handleUpdateLine"
                       @save="saveLine(index)"
                       @remove="removeLine(index)"
                     />
@@ -141,6 +141,12 @@
                 </div>
               </div>
             </div>
+          <dl>
+            <dt>Total HT</dt><dd>{{ round(subtotal) }}</dd>
+            <dt>VAT</dt><dd>{{ round(vat) }}</dd>
+            <dt>Total TTC</dt><dd>{{ round(total) }}</dd>
+
+          </dl>
             <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
         </div>
       </div>
@@ -165,6 +171,21 @@ export default {
     VueDatePicker,
     QuillEditor,
     TypeaheadInput,
+  },
+  computed: {
+    /* ce qu'il faut faire: appeler une fonction updatertotal au bon moment,
+    on a des problèmes de non détection des mutations sinon
+     */
+    subtotal() {
+      return this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
+    },
+    vat() {
+      return this.subtotal * (this.vatRatePercent / 100);
+    },
+    total() {
+      return this.subtotal + this.vat*100;
+    },
+
   },
   data() {
     return {
@@ -256,17 +277,18 @@ export default {
         period_end: "",
         lines: [],
       },
-      vatRatePercent: "",
+      vatRatePercent: 7.7,
       urls: {
         companiesUrl: "",
       },
     }
   },
+
   methods: {
     addLine() {
       this.invoice.lines.push({
           uuid: uuidv4(),
-        description:"", quantity:0, unit:"hour", price:0, id: null
+        description:"", quantity:0, unit:"hour", price:0, id: null, total: 0
       });
 
     },
@@ -283,7 +305,10 @@ export default {
       return `${day}.${month}.${year}`;
     },
     handleUpdateLine(line) {
+      const index = this.invoice.lines.findIndex((l) => l.uuid === line.uuid);
+      this.invoice.lines[index] = line;
       console.log(line)
+      console.log(line.total)
     },
     onClientSelect(client) {
       // Handle client selection here
@@ -292,6 +317,9 @@ export default {
     onCompanySelect(company) {
       // Handle company selection here
       console.log(company)
+    },
+    round(value) {
+      return parseFloat(value).toFixed(2);
     },
     updateDueDate() {
       if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
