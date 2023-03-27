@@ -7,7 +7,7 @@
         </svg>
       </span>
     </div>
-    <input type="text" class="form-control" v-model="searchQuery" @input="searchItems" @focus="searchItems" />
+    <input type="text" class="form-control typeahead" v-model="searchQuery" @input="searchItems" @focus="searchItems" />
   </div>
     <div class="dropdown">
       <ul class="dropdown-menu show" :class="{ 'd-none': !isDropdownOpen }" ref="dropdownMenu">
@@ -47,16 +47,30 @@ export default {
     },
   },
   methods: {
+    closeDropdown() {
+      this.isDropdownOpen = false;
+    },
     searchItems() {
       this.isDropdownOpen = true;
     },
     selectItem(item) {
       this.searchQuery = item.name;
-      this.isDropdownOpen = false;
+      this.closeDropdown();
       this.$emit('select', item);
+    },
+    onWindowClick(event) {
+      if (this.$refs.dropdownMenu && (this.$refs.dropdownMenu.contains(event.target) && this.$refs.dropdownMenu.classList.contains('typeahead'))){
+        this.closeDropdown()
+      }
     },
   },
   emits: ['select'],
+  mounted() {
+    window.addEventListener('click', this.onWindowClick);
+  },
+  beforeUnmount() {
+    window.removeEventListener('click', this.onWindowClick);
+  },
   watch: {
     value(newValue) {
       this.searchQuery = newValue;
