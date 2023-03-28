@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block content %}
+<section class="card card-header-actions mb-4">
+  <header class="card-header ">
+    {% trans "Edit invoice" %}
+  </header>
+  <article class="card-body">
+    <noscript>
+      <strong>We're sorry but this app doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+    </noscript>
+
+    <div id="app"
+         data-language-code="{{ LANGUAGE_CODE }}"
+         data-client-create-url="{% url 'api:client-list' %}"
+         data-client-redirect-url="{% url 'clients:list' %}"
+         data-companies-url="{% url 'api:company-list' %}"
+
+    ></div>
+  </article>
+</section>
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static "invoices_app/js/chunk-vendors.js" %}" type="text/javascript"></script>
+<script src="{% static "invoices_app/js/app.js" %}" type="text/javascript"></script>
+{% endblock javascript %}
+
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "invoices_app/css/app.css" %}">
+{% endblock css %}

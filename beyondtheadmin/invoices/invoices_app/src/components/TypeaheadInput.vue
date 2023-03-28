@@ -59,8 +59,11 @@ export default {
       this.$emit('select', item);
     },
     onWindowClick(event) {
-      if (this.$refs.dropdownMenu && (this.$refs.dropdownMenu.contains(event.target) && this.$refs.dropdownMenu.classList.contains('typeahead'))){
-        this.closeDropdown()
+      if (this.$refs.dropdownMenu) {
+        /*  clic dans le menu => on ferme                   OU clic PAS dans le input, i.e. clic est ailleurs dans la fenêtre */
+        if (this.$refs.dropdownMenu.contains(event.target) || !event.target.classList.contains('typeahead')){
+          this.closeDropdown()
+        }
       }
     },
   },

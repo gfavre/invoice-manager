@@ -199,7 +199,7 @@ class Invoice(UUIDModel, StatusModel):
         )
 
     def get_qrbill(self):
-        if not self.due_date:
+        if not (self.due_date and self.company and self.client):
             raise ValueError
         qr_bill = QRBill(
             account=self.company.iban,
@@ -245,8 +245,7 @@ class Invoice(UUIDModel, StatusModel):
     def get_vat(self):
         return (self.subtotal * self.vat_rate).quantize(Decimal(".01"), rounding=ROUND_UP)
 
-    def save(self, update_version=True, generate_code=True, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def save(self, update_version=True, generate_code=False, *args, **kwargs):
         if not self.code and generate_code:
             self.code = self.get_code()
             self.client.invoice_current_count += 1

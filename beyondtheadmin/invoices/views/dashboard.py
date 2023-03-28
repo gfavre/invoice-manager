@@ -2,23 +2,45 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils.timezone import now
 from django.utils.translation import activate, get_language
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import CreateView, FormView, RedirectView, TemplateView, UpdateView
+from django.views import View
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    FormView,
+    RedirectView,
+    TemplateView,
+    UpdateView,
+)
 from django.views.generic.detail import SingleObjectMixin
 
 from beyondtheadmin.clients.models import Client
+from beyondtheadmin.users.models import User
 
 from ..forms import BaseInvoiceForm, EmailForm, InvoiceEditForm, InvoiceStatusForm
 from ..models import Invoice
 from ..tasks import send_invoice_email
 
 
-class InvoiceCancelView(LoginRequiredMixin, UpdateView):
+class InvoiceSingletonMixin(SingleObjectMixin):
+    def get_object(self, queryset=None) -> Invoice:
+        return super().get_object(queryset=queryset)  # type: ignore
+
+
+class UserInvoiceMixin(InvoiceSingletonMixin):
+    def get_queryset(self):
+        return Invoice.objects.filter(
+            Q(company__users=self.request.user) | Q(created_by=self.request.user)  # type: ignore
+        )
+
+
+class InvoiceCancelView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_cancel.html"
     form_class = InvoiceStatusForm
@@ -28,11 +50,30 @@ class InvoiceCancelView(LoginRequiredMixin, UpdateView):
             "status": Invoice.STATUS.canceled,
         }
 
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
     def get_success_url(self):
         return self.get_object().company.detail_url
+
+
+class CreateOrUpdateDraftInvoiceView(View):
+    # noinspection PyMethodMayBeStatic
+    def get(self, request, *args, **kwargs):
+        # Check if there's an existing draft invoice for the current user
+        draft_invoice, created = Invoice.objects.get_or_create(
+            created_by=request.user, status=Invoice.STATUS.draft
+        )
+        # Redirect to the update view for the draft invoice
+        return redirect("invoices:update", pk=draft_invoice.pk, permanent=False)
+
+
+class InvoiceAppView(LoginRequiredMixin, UserInvoiceMixin, DetailView):
+    model = Invoice
+    template_name = "invoices_app/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["invoice_id"] = self.kwargs["pk"]
+        context["invoice"] = self.get_object()
+        return context
 
 
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
@@ -41,8 +82,9 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
     form_class = BaseInvoiceForm
 
     def get_form_kwargs(self):
+        user: User = self.request.user
         kwargs = super().get_form_kwargs()
-        kwargs["companies"] = self.request.user.companies.all()
+        kwargs["companies"] = user.companies.all()
         kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
         return kwargs
 
@@ -57,7 +99,12 @@ class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
     pattern_name = "pk"
 
     def get_redirect_url(self, *args, **kwargs):
-        source = get_object_or_404(Invoice, pk=kwargs["pk"], company__users=self.request.user)
+        try:
+            source = Invoice.objects.filter(
+                Q(company__users=self.request.user) | Q(created_by=self.request.user)  # type: ignore
+            ).get(pk=kwargs["pk"])
+        except Invoice.DoesNotExist:
+            raise Http404()
         duplicata = source.duplicate()
         return duplicata.get_edit_url()
 
@@ -66,7 +113,7 @@ class InvoiceListView(LoginRequiredMixin, TemplateView):
     template_name = "invoices/list.html"
 
 
-class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
+class InvoiceMarkPaidView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_paid.html"
     form_class = InvoiceStatusForm
@@ -76,14 +123,11 @@ class InvoiceMarkPaidView(LoginRequiredMixin, UpdateView):
             "status": Invoice.STATUS.paid,
         }
 
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
     def get_success_url(self):
         return self.get_object().company.detail_url
 
 
-class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
+class InvoiceSendMailView(LoginRequiredMixin, UserInvoiceMixin, FormView):
     """
     GET: Form with mail text and invoice as PDF
     POST: send
@@ -120,9 +164,6 @@ class InvoiceSendMailView(SingleObjectMixin, LoginRequiredMixin, FormView):
         activate(current_lang)
         return initial
 
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
     def get_success_message(self):
         return _("Your invoice has been sent to %(email)s") % {
             "email": self.get_object().client.contact_email
@@ -158,7 +199,7 @@ class InvoiceSendReminderEmailView(InvoiceSendMailView):
         }
 
 
-class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
+class InvoiceSnailMailUpdateView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_print.html"
     form_class = InvoiceStatusForm
@@ -168,26 +209,20 @@ class InvoiceSnailMailUpdateView(LoginRequiredMixin, UpdateView):
             "status": Invoice.STATUS.sent,
         }
 
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
     def get_success_url(self):
         return self.get_object().company.detail_url
 
 
-class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
+class InvoiceUpdateView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
     form_class = InvoiceEditForm
     model = Invoice
     template_name = "invoices/update.html"
 
-    def get_queryset(self):
-        return Invoice.objects.filter(company__users=self.request.user)
-
     def get_form_kwargs(self):
+        user: User = self.request.user
         kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
-        # FIXME: at some points clients have to be find out with the company using a realtime api call...
-        kwargs["companies"] = self.request.user.companies.all()
+        kwargs["companies"] = user.companies.all()
         kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
         return kwargs
 
