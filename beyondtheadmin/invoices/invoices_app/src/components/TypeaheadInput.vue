@@ -11,7 +11,8 @@
   </div>
     <div class="dropdown">
       <ul class="dropdown-menu show" :class="{ 'd-none': !isDropdownOpen }" ref="dropdownMenu">
-        <li v-for="item in highlightedItems" :key="item.id" class="dropdown-item" @click="selectItem(item)">
+        <li v-for="(item, index) in highlightedItems" :key="item.id" class="dropdown-item"
+            @click="selectItem(item)" :class="{ 'bg-light': index === highlightedIndex }">
           <span v-html="item.highlightedName"></span>
         </li>
       </ul>
@@ -34,16 +35,23 @@ export default {
     return {
       searchQuery: this.value,
       isDropdownOpen: false,
+      highlightedIndex: 0,
     };
   },
   computed: {
     highlightedItems() {
       const regex = new RegExp(`(${this.searchQuery})`, 'gi');
-      return this.items.map(item => {
+      return this.reactiveItems.map(item => {
         const highlightedName = item.name.replace(regex, '<strong>$1</strong>');
         return { ...item, highlightedName };
       }).filter(item => item.highlightedName !== item.name);
       //return this.items.filter((item) => item.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
+    },
+    reactiveItems() {
+      /* note for self: this.items is a prop, so it's not reactive. We need to return a copy of it to make it
+      reactive. By using the spread operator (...), it creates a new array with the same elements as items, which can
+      be modified without affecting the original array. */
+      return [...this.items];
     },
   },
   methods: {
@@ -58,9 +66,43 @@ export default {
       this.closeDropdown();
       this.$emit('select', item);
     },
+    onKeydown(event) {
+      switch (event.key) {
+        case 'ArrowDown':
+          this.highlightNext();
+          break;
+        case 'ArrowUp':
+          this.highlightPrevious();
+          break;
+        case 'Enter':
+          this.selectItem(this.highlightedItems[this.highlightedIndex]);
+          break;
+        case 'Tab':
+          this.closeDropdown();
+          break;
+        case 'Escape':
+          this.closeDropdown();
+          break;
+      }
+    },
+    highlightPrevious() {
+      if (!this.isDropdownOpen) {
+        return;
+      }
+      if (this.highlightedIndex > 0) {
+        this.highlightedIndex--;
+      }
+    },
+    highlightNext() {
+      if (!this.isDropdownOpen) {
+        return;
+      }
+      if (this.highlightedIndex < this.highlightedItems.length - 1) {
+        this.highlightedIndex++;
+      }
+    },
     onWindowClick(event) {
       if (this.$refs.dropdownMenu) {
-        /*  clic dans le menu => on ferme                   OU clic PAS dans le input, i.e. clic est ailleurs dans la fenêtre */
         if (this.$refs.dropdownMenu.contains(event.target) || !event.target.classList.contains('typeahead')){
           this.closeDropdown()
         }
@@ -70,13 +112,18 @@ export default {
   emits: ['select'],
   mounted() {
     window.addEventListener('click', this.onWindowClick);
+    window.addEventListener('keydown', this.onKeydown);
   },
   beforeUnmount() {
     window.removeEventListener('click', this.onWindowClick);
+    window.removeEventListener('keydown', this.onKeydown);
   },
   watch: {
     value(newValue) {
       this.searchQuery = newValue;
+    },
+    items(newValue) {
+      this.reactiveItems = [...newValue];
     },
   },
 };

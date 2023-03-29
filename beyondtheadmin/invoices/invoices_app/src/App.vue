@@ -174,20 +174,7 @@ export default {
   },
   data() {
     return {
-      companies: [
-        {
-          id: 1,
-          name: 'Company 1',
-        },
-        {
-          id: 2,
-          name: 'Company 2',
-        },
-        {
-          id: 3,
-          name: 'Company 3',
-        }
-      ],
+      companies: [],
       company: {
         name: '',
         address: '',
@@ -214,7 +201,7 @@ export default {
         invoice_note: '',
         thanks: '',
       },
-      selectedCompany: 'Company 1',
+      selectedCompany: '',
       clients: [
         {
           id: 1,
