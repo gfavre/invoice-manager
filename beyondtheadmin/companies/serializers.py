@@ -1,3 +1,4 @@
+from django_countries.serializers import CountryFieldMixin
 from rest_framework import serializers
 
 from .models import Bank, Company
@@ -54,7 +55,27 @@ class CompanyListSerializer(serializers.ModelSerializer):
         return obj.api_url
 
 
-class CompanySerializer(serializers.ModelSerializer):
+class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = "__all__"
+        fields = (
+            "id",
+            "name",
+            "address",
+            "zip_code",
+            "city",
+            "country",
+            "phone",
+            "additional_phone",
+            "email",
+            "website",
+            "vat_id",
+            "name_for_bank",
+            "bank",
+            "bic",
+            "iban",
+            "logo",
+            "contrast_color",
+            "signature_text",
+            "signature_image",
+        )

@@ -22,6 +22,18 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='client',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='invoices', to='clients.client', verbose_name='Client'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='invoices', to='clients.client', verbose_name='Client', blank=True),
+        ),
+        migrations.AlterField(
+            model_name="invoice",
+            name="company",
+            field=models.ForeignKey(
+                null=True,
+                blank=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="invoices",
+                to="companies.company",
+                verbose_name="Company",
+            ),
         ),
     ]

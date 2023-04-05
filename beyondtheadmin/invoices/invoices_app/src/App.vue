@@ -18,136 +18,151 @@
     <section class="container headed-content">
       <div class="card">
         <div class="card-body">
-            <div class="form-row form-row">
-              <div class="form-group col-md-6 mb-0">
-                <div id="div_id_company" class="form-group">
-                  <label for="id_company" class=" requiredField">Entreprise<span class="asteriskField">*</span></label>
-                  <typeahead-input :items="companies" @select="onCompanySelect" :value="selectedCompany"></typeahead-input>
-                </div>
+          <div class="form-row form-row">
+            <div class="form-group col-md-6 mb-0">
+              <div id="div_id_company" class="form-group">
+                <label for="id_company" class=" requiredField">Entreprise<span class="asteriskField">*</span></label>
+                <typeahead-input :items="companies" @select="onCompanySelect"
+                                 :value="selectedCompany"></typeahead-input>
               </div>
-              <div class="form-group col-md-6 mb-0">
-                <div id="div_id_client" class="form-group">
-                  <label for="id_client" class=" requiredField">Client<span class="asteriskField">*</span> </label>
-                  <typeahead-input :items="clients" @select="onClientSelect" :value="selectedClient"></typeahead-input>
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              <div id="div_id_client" class="form-group">
+                <label for="id_client" class=" requiredField">Client<span class="asteriskField">*</span> </label>
+                <typeahead-input :items="clients" @select="handleClientSelect" :value="selectedClient"></typeahead-input>
+              </div>
+            </div>
+          </div>
+          <div class="form-row form-row">
+            <div class="form-group col-md-6 mb-0">
+              <div id="div_id_displayed_date" class="form-group">
+                <label for="id_displayed_date" class="">Date affichée</label>
+                <VueDatePicker v-model="invoice.displayed_date"
+                               :enable-time-picker="false"
+                               :format="formatDate"
+                               locale="ch-fr"
+                               placeholder="Select Date"
+                               @update:model-value="updateDueDate"
+                               close-on-scroll auto-apply
+                ></VueDatePicker>
+              </div>
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              <div id="div_id_due_date" class="form-group">
+                <label for="id_due_date" class=" requiredField">Date d'échéance<span class="asteriskField">*</span>
+                </label>
+                <VueDatePicker v-model="invoice.due_date"
+                               :enable-time-picker="false"
+                               :format="formatDate"
+                               :min-date="invoice.displayed_date"
+                               locale="ch-fr"
+                               placeholder="Select Date"
+                               close-on-scroll auto-apply
+                ></VueDatePicker>
+                <small id="due_date_help" class="form-text text-muted" v-if="client.id">
+                  Usual payment delay for {{ client.name }} is {{ client.payment_delay_days }} days
+                </small>
 
-                </div>
               </div>
             </div>
-            <div class="form-row form-row">
-              <div class="form-group col-md-6 mb-0">
-                <div id="div_id_displayed_date" class="form-group">
-                  <label for="id_displayed_date" class="">Date affichée</label>
-                  <VueDatePicker v-model="invoice.displayed_date"
-                                 :enable-time-picker="false"
-                                 :format="formatDate"
-                                 locale="ch-fr"
-                                 placeholder="Select Date"
-                                 @update:model-value="updateDueDate"
-                                 close-on-scroll auto-apply
-                  ></VueDatePicker>
-                </div>
-              </div>
-              <div class="form-group col-md-6 mb-0">
-                <div id="div_id_due_date" class="form-group">
-                  <label for="id_due_date" class=" requiredField">Date d'échéance<span class="asteriskField">*</span>
-                  </label>
-                  <VueDatePicker v-model="invoice.due_date"
-                                 :enable-time-picker="false"
-                                 :format="formatDate"
-                                 :min-date="invoice.displayed_date"
-                                 locale="ch-fr"
-                                 placeholder="Select Date"
-                                 close-on-scroll auto-apply
-                  ></VueDatePicker>
-                </div>
-              </div>
-            </div>
-            <div id="div_id_title" class="form-group"><label for="id_title" class="">
+          </div>
+          <div id="div_id_title" class="form-group">
+            <label for="id_title" class="">
               Titre
             </label>
-              <div>
-                <input type="text" name="title" maxlength="100" class="textinput textInput form-control"
-                       id="id_title">
-              </div>
+            <div>
+              <input type="text" name="title" maxlength="100"
+                     class="textinput textInput form-control" id="id_title"
+                     v-model="invoice.title" />
             </div>
-            <div id="div_id_description" class="form-group">
-              <label for="id_description" class="">Description</label>
-              <QuillEditor theme="snow"
-                           :toolbar="[['bold', 'italic', 'underline', 'strike'],
+          </div>
+          <div id="div_id_description" class="form-group">
+            <label for="id_description" class="">Description</label>
+            <QuillEditor theme="snow"
+                         :toolbar="[['bold', 'italic', 'underline', 'strike'],
                             [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'script': 'sub'}, { 'script': 'super' }],
                             [{ 'color': [] }], ['link'] ]"
-                           :style="{ minHeight: '8em' }"
+                         :style="{ minHeight: '8em' }"
+                         v-model="invoice.description" />
 
-              />
-            </div>
-            <div class="form-row form-row">
-              <div class="form-group col-md-6 mb-0">
-                <div id="div_id_period_start" class="form-group">
-                  <label for="id_period_start" class="">Début de la période de facturation</label>
-                  <VueDatePicker v-model="invoice.period_start"
-                                 :enable-time-picker="false"
-                                 :format="formatDate"
-                                 locale="ch-fr"
-                                 placeholder="Select Date"
-                                 @update:model-value="updatePeriodEnd"
-                                 close-on-scroll auto-apply
-                  ></VueDatePicker>
-                </div>
-              </div>
-              <div class="form-group col-md-6 mb-0">
-                <div id="div_id_period_end" class="form-group">
-                  <label for="id_period_end" class="">Fin de la période de facturation</label>
-                  <VueDatePicker v-model="invoice.period_end"
-                                 :enable-time-picker="false"
-                                 :format="formatDate"
-                                 :min-date="invoice.period_start"
-                                 locale="ch-fr"
-                                 placeholder="Select Date"
-                                 close-on-scroll auto-apply
-                  ></VueDatePicker>
-                </div>
+          </div>
+          <div class="form-row form-row">
+            <div class="form-group col-md-6 mb-0">
+              <div id="div_id_period_start" class="form-group">
+                <label for="id_period_start" class="">Début de la période de facturation</label>
+                <VueDatePicker v-model="invoice.period_start"
+                               :enable-time-picker="false"
+                               :format="formatDate"
+                               locale="ch-fr"
+                               placeholder="Select Date"
+                               @update:model-value="updatePeriodEnd"
+                               close-on-scroll auto-apply
+                ></VueDatePicker>
               </div>
             </div>
-            <div class="card border-left-info shadow mb-3">
-              <div class="card-body">
-                <h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
-                <div class="lines">
-                    <invoice-line
-                      v-for="line in invoice.lines"
-                      :key="line.uuid"
-                      :description="line.description"
-                      :quantity="line.quantity"
-                      :unit="line.unit"
-                      :price="line.price"
-                      :line-id="line.id"
-                      :invoice-id="this.invoice.id"
-                      :uuid="line.uuid"
-                      @update-line="handleUpdateLine"
-                      @save="saveLine(index)"
-                      @remove="removeLine(index)"
-                    />
-                  <button type="button" @click="addLine" class="btn btn btn-info">Add Line</button>
-                </div>
+            <div class="form-group col-md-6 mb-0">
+              <div id="div_id_period_end" class="form-group">
+                <label for="id_period_end" class="">Fin de la période de facturation</label>
+                <VueDatePicker v-model="invoice.period_end"
+                               :enable-time-picker="false"
+                               :format="formatDate"
+                               :min-date="invoice.period_start"
+                               locale="ch-fr"
+                               placeholder="Select Date"
+                               close-on-scroll auto-apply
+                ></VueDatePicker>
               </div>
             </div>
+          </div>
+          <div class="card border-left-info shadow mb-3">
+            <div class="card-body">
+              <h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
 
-            <div id="div_id_vat_rate" class="form-group col-3">
-              <label for="id_vat_rate" class="">Taux de TVA</label>
-              <div class="input-group">
-                <input type="text" v-model="vatRatePercent" @input="validateFloatValue"
-                       id="id_vat_rate" class="form-control">
-                <div class="input-group-append">
-                  <span class="input-group-text">%</span>
-                </div>
+              <div class="lines">
+                <invoice-line
+                    v-for="line in invoice.lines"
+                    :key="line.uuid"
+                    :description="line.description"
+                    :quantity="line.quantity"
+                    :unit="line.unit"
+                    :price="line.price_per_unit"
+                    :line-id="line.id"
+                    :invoice-id="invoice.id"
+                    :uuid="line.uuid"
+                    :api-url="urls.linesUrl"
+                    @update-line="handleUpdateLine"
+                    @remove="removeLine"
+                    ref="invoiceLines"
+                />
+                <button type="button" @click="addLine" class="btn btn btn-info">Add Line</button>
+
+              </div>
+                           <small id="price_help" class="form-text text-muted" v-if="client.id">
+                Usual hourly rate for {{ client.name }} is {{ client.default_hourly_rate }}
+              </small>
+            </div>
+          </div>
+
+          <div id="div_id_vat_rate" class="form-group col-3">
+            <label for="id_vat_rate" class="">Taux de TVA</label>
+            <div class="input-group">
+              <input type="text" v-model="vatRatePercent" @input="validateFloatValue"
+                     id="id_vat_rate" class="form-control">
+              <div class="input-group-append">
+                <span class="input-group-text">%</span>
               </div>
             </div>
+          </div>
           <dl>
-            <dt>Total HT</dt><dd>{{ $formatAmount(invoice.subtotal) }}</dd>
-            <dt>VAT</dt><dd>{{ $formatAmount(invoice.vat) }}</dd>
-            <dt>Total TTC</dt><dd>{{ $formatAmount(invoice.total) }}</dd>
+            <dt>Total HT</dt>
+            <dd>{{ $formatAmount(invoice.subtotal) }}</dd>
+            <dt>VAT</dt>
+            <dd>{{ $formatAmount(invoice.vat) }}</dd>
+            <dt>Total TTC</dt>
+            <dd>{{ $formatAmount(invoice.total) }}</dd>
 
           </dl>
-            <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
+          <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
         </div>
       </div>
     </section>
@@ -161,7 +176,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import TypeaheadInput from '@/components/TypeaheadInput.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 
 export default {
@@ -176,6 +191,7 @@ export default {
     return {
       companies: [],
       company: {
+        id: '',
         name: '',
         address: '',
         zip_code: '',
@@ -202,26 +218,10 @@ export default {
         thanks: '',
       },
       selectedCompany: '',
-      clients: [
-        {
-          id: 1,
-          name: 'Twist Lab',
-        },
-        {
-          id: 2,
-          name: 'Montreux',
-        },
-        {
-          id: 3,
-          name: 'Nyon',
-        },
-          {
-          id: 4,
-          name: 'Twisted inc',
-        },
-      ],
-      selectedClient: 'Twist',
+      clients: [],
+      selectedClient: '',
       client: {
+        id: null,
         name: '',
         address: '',
         zip_code: '',
@@ -254,24 +254,27 @@ export default {
       vatRatePercent: 7.7,
       urls: {
         companiesUrl: "",
+        clientsUrl: "",
+        invoiceUrl: "",
+        linesUrl: "",
       },
     }
   },
-
   methods: {
     addLine() {
       this.invoice.lines.push({
-          uuid: uuidv4(),
-        description:"", quantity:0, unit:"hour", price:0, id: null, total: 0
+        uuid: uuidv4(), description: "", quantity: 0.0, unit: "h",
+        price_per_unit: this.client.default_hourly_rate, id: null, total: 0
       });
-
+      this.$nextTick(() => {
+        this.$refs.invoiceLines[this.$refs.invoiceLines.length - 1].focus();
+      });
     },
     removeLine(index) {
       this.invoice.lines.splice(index, 1);
+      this.updateTotal();
     },
-    saveLine(line) {
-      console.log(line)
-    },
+
     formatDate(date) {
       const day = date.getDate();
       const month = date.getMonth() + 1;
@@ -283,16 +286,86 @@ export default {
       this.invoice.lines[index] = line;
       this.updateTotal()
     },
-    onClientSelect(client) {
+    handleClientSelect(client) {
       // Handle client selection here
-      console.log(client)
+      this.fetchClient(client.id).then(() => {
+        this.$refs.invoiceLines.forEach((line) => {
+          if (line.localQuantity === 0) {
+            line.localPrice = this.client.default_hourly_rate;
+          }
+        });
+        this.invoice.vat_rate = this.client.vat_rate;
+        this.vatRatePercent = this.invoice.vat_rate * 100;
+        this.updateTotal();
+      });
+
     },
     onCompanySelect(company) {
-      // Handle company selection here
-      console.log(company)
+      this.fetchCompany(company.id).then(() => {
+        this.updateClientsList();
+      });
     },
     round(value) {
       return parseFloat(value).toFixed(2);
+    },
+    async fetchCompany(companyId) {
+      const response = await this.$http.get(`${this.urls.companiesUrl}${companyId}/`);
+      this.company = response.data;
+    },
+    async fetchClient(clientId) {
+      const response = await this.$http.get(`${this.urls.clientsUrl}${clientId}/`);
+      this.client = response.data;
+      this.selectedClient = this.client.name;
+    },
+    async fetchInvoice() {
+      await this.$http.get(this.urls.invoiceUrl).then(response => {
+        console.log(response.data);
+        this.invoice.id = response.data.id;
+        this.invoice.code = response.data.code;
+        if (response.data.due_date) {
+          this.invoice.due_date = new Date(response.data.due_date);
+        }
+        if (response.data.displayed_date) {
+          this.invoice.displayed_date = new Date(response.data.displayed_date);
+        }
+        this.invoice.vat_rate = response.data.vat_rate;
+        this.invoice.title = response.data.title;
+        this.invoice.description = response.data.description;
+        if (response.data.period_start) {
+          this.invoice.period_start = response.data.period_start;
+        }
+        if (response.data.period_end) {
+          this.invoice.period_end = response.data.period_end;
+        }
+        this.invoice.lines = response.data.lines;
+        this.invoice.lines.forEach((line) => {
+          line.uuid = uuidv4();
+        });
+        if (this.invoice.lines.length === 0) {
+          this.addLine();
+        }
+        this.updateTotal()
+        if (response.data.client){
+          this.fetchClient(response.data.client)
+        }
+      }).catch(error => {
+        console.error(error)
+      });
+    },
+    updateClientsList() {
+      let url = this.urls.clientsUrl;
+      if (this.company.id !== "") {
+        url += `?company_uuid=${this.company.id}`;
+      }
+      this.$http.get(url).then(response => {
+        this.clients = response.data.results;
+        if (this.clients.length === 1) {
+          this.client = this.clients[0].id
+        }
+      }).catch(error => {
+        console.error(error)
+      });
+
     },
     updateDueDate() {
       if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
@@ -308,9 +381,9 @@ export default {
 
         if (this.invoice.period_start.getDate() === 1) {
           const lastDayOfMonth = new Date(
-              this.invoice.period_start.getFullYear(),
-              this.invoice.period_start.getMonth() + 1,
-              0
+            this.invoice.period_start.getFullYear(),
+            this.invoice.period_start.getMonth() + 1,
+            0
           );
           this.invoice.period_end = lastDayOfMonth
         } else {
@@ -327,7 +400,7 @@ export default {
       }
     },
     updateTotal() {
-      this.invoice.subtotal =  this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
+      this.invoice.subtotal = this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
       this.invoice.vat = this.invoice.subtotal * this.invoice.vat_rate;
       this.invoice.total = this.invoice.subtotal + this.invoice.vat;
     },
@@ -348,6 +421,10 @@ export default {
 
   mounted() {
     this.urls.companiesUrl = this.$el.parentNode.dataset.companiesUrl;
+    this.urls.clientsUrl = this.$el.parentNode.dataset.clientsUrl;
+    this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
+    this.urls.linesUrl = this.$el.parentNode.dataset.linesUrl;
+    this.fetchInvoice();
     this.$http.get(this.urls.companiesUrl).then(response => {
       this.companies = response.data.results;
       if (this.companies.length === 1) {
@@ -356,9 +433,9 @@ export default {
     }).catch(error => {
       console.error(error)
     });
+    this.updateClientsList();
     this.updateDueDate();
     this.vatRatePercent = 7.7
-    this.addLine();
     this.updateTotal();
 
   },

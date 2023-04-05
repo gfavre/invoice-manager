@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import gettext_lazy as _
@@ -28,7 +28,9 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return (
-            Invoice.objects.filter(company__users=self.request.user)
+            Invoice.objects.filter(
+                Q(company__users=self.request.user) | Q(created_by=self.request.user)  # type: ignore
+            )
             .exclude(status=Invoice.STATUS.canceled)
             .select_related("client", "company")
         )

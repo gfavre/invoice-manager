@@ -34,4 +34,4 @@ class User(AbstractUser):
 
     def __str__(self):
         """Return username."""
-        return self.get_full_name()
+        return self.get_full_name() or self.email

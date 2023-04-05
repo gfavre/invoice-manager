@@ -34,7 +34,7 @@ class Invoice(UUIDModel, StatusModel):
         on_delete=models.PROTECT,
         related_name="invoices",
         null=True,
-        blank=False,
+        blank=True,
         verbose_name=_("Company"),
     )
     client = models.ForeignKey(
@@ -42,10 +42,11 @@ class Invoice(UUIDModel, StatusModel):
         on_delete=models.PROTECT,
         related_name="invoices",
         null=True,
+        blank=True,
         verbose_name=_("Client"),
     )
     code = models.CharField(_("Code"), max_length=30, blank=True)
-    due_date = models.DateField(_("Due date"), null=True, blank=False)
+    due_date = models.DateField(_("Due date"), null=True, blank=True)
     displayed_date = models.DateField(_("Displayed date"), blank=True, null=True)
     vat_rate = models.DecimalField(
         _("VAT rate"),
@@ -172,6 +173,9 @@ class Invoice(UUIDModel, StatusModel):
 
     def get_api_url(self):
         return reverse("api:invoice-detail", kwargs={"pk": self.pk})
+
+    def get_api_lines_url(self):
+        return reverse("api:invoices-lines-list", kwargs={"invoice_pk": self.pk})
 
     def get_cancel_url(self):
         return reverse("invoices:cancel", kwargs={"pk": self.pk})

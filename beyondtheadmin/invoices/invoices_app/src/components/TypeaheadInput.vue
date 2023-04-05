@@ -139,4 +139,7 @@ export default {
   vertical-align: middle;
   user-select: none;
 }
+.dropdown-item {
+  cursor: pointer;
+}
 </style>

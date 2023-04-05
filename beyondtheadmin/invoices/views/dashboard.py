@@ -54,7 +54,7 @@ class InvoiceCancelView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
         return self.get_object().company.detail_url
 
 
-class CreateOrUpdateDraftInvoiceView(View):
+class CreateOrUpdateDraftInvoiceView(LoginRequiredMixin, View):
     # noinspection PyMethodMayBeStatic
     def get(self, request, *args, **kwargs):
         # Check if there's an existing draft invoice for the current user
