@@ -26,7 +26,7 @@
       <select class="form-control"
               v-model="localUnit" :id="'unit-' + uuid" required
               @change="updateLine"
->
+      >
         <option value="h">Hour</option>
         <option value="nb">Number</option>
       </select>
@@ -38,8 +38,8 @@
       <div class="input-group">
         <input type="number" class="form-control" step="0.01"
                v-model.number="localPrice" :id="'price-' + uuid" required
-                @input="updateLine"
-/>
+               @input="updateLine"
+        />
       </div>
     </div>
     <div class="col-md">
@@ -125,30 +125,22 @@ export default {
       this.$refs.firstLineField.focus();
     },
     markRequiredFields() {
-      // Get all required input fields in the component
-      const requiredInputs = this.$el.querySelectorAll('.form-control[required]');
+      this.$el.querySelectorAll('.is-invalid').forEach((el) => {
+        el.classList.remove('is-invalid');
+      });
+      this.$el.querySelectorAll('.invalid-feedback').forEach((el) => {
+        el.remove();
+      });
 
-      // Loop through each required input field
-      requiredInputs.forEach((input) => {
-        // Check if the input is empty
-        if (!input.value) {
-          // Add the is-invalid class to the input
-          input.classList.add('is-invalid');
-
-          // Create a new error message element
-          const errorMessage = document.createElement('div');
-          errorMessage.classList.add('invalid-feedback');
-          errorMessage.innerHTML = 'This field is required.';
-
-          // Insert the error message after the input
-          input.parentNode.insertBefore(errorMessage, input.nextSibling);
-        } else {
-          // Remove the is-invalid class and error message if they exist
-          input.classList.remove('is-invalid');
-          const errorMessage = input.nextElementSibling;
-          if (errorMessage && errorMessage.classList.contains('invalid-feedback')) {
-            errorMessage.parentNode.removeChild(errorMessage);
-          }
+      // Add error messages for missing required fields
+      const requiredFields = this.$el.querySelectorAll('.form-control[required]');
+      requiredFields.forEach((field) => {
+        if (!field.value) {
+          field.classList.add('is-invalid');
+          const errorEl = document.createElement('div');
+          errorEl.classList.add('invalid-feedback');
+          errorEl.innerText = 'This field is required';
+          field.parentNode.insertBefore(errorEl, field.nextSibling);
         }
       });
     },

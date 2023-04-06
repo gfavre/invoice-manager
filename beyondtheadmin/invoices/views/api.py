@@ -26,12 +26,16 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
 
+    def get_object(self):
+        return super().get_object()
+
     def get_queryset(self):
         return (
             Invoice.objects.filter(
                 Q(company__users=self.request.user) | Q(created_by=self.request.user)  # type: ignore
             )
             .exclude(status=Invoice.STATUS.canceled)
+            .distinct()
             .select_related("client", "company")
         )
 

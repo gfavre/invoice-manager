@@ -249,6 +249,11 @@ class Invoice(UUIDModel, StatusModel):
     def get_vat(self):
         return (self.subtotal * self.vat_rate).quantize(Decimal(".01"), rounding=ROUND_UP)
 
+    def check_rights(self, user):
+        if not self.company:
+            return self.created_by == user
+        return self.company in user.companies.all()
+
     def save(self, update_version=True, generate_code=False, *args, **kwargs):
         if not self.code and generate_code:
             self.code = self.get_code()

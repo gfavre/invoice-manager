@@ -22,7 +22,7 @@
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_company" class="form-group">
                 <label for="id_company" class=" requiredField">Entreprise<span class="asteriskField">*</span></label>
-                <typeahead-input :items="companies" @select="onCompanySelect"
+                <typeahead-input :items="companies" @select="handleCompanySelect"
                                  :value="selectedCompany"></typeahead-input>
               </div>
             </div>
@@ -117,6 +117,11 @@
           <div class="card border-left-info shadow mb-3">
             <div class="card-body">
               <h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
+              <p>
+                <small id="price_help" class="form-text text-muted" v-if="client.id">
+                  Usual hourly rate for {{ client.name }} is {{ client.default_hourly_rate }}
+                </small>
+              </p>
 
               <div class="lines">
                 <invoice-line
@@ -137,9 +142,7 @@
                 <button type="button" @click="addLine" class="btn btn btn-info">Add Line</button>
 
               </div>
-                           <small id="price_help" class="form-text text-muted" v-if="client.id">
-                Usual hourly rate for {{ client.name }} is {{ client.default_hourly_rate }}
-              </small>
+
             </div>
           </div>
 
@@ -153,16 +156,17 @@
               </div>
             </div>
           </div>
-          <dl>
-            <dt>Total HT</dt>
-            <dd>{{ $formatAmount(invoice.subtotal) }}</dd>
-            <dt>VAT</dt>
-            <dd>{{ $formatAmount(invoice.vat) }}</dd>
-            <dt>Total TTC</dt>
-            <dd>{{ $formatAmount(invoice.total) }}</dd>
+          <hr>
+          <dl class="row">
+            <dt class="col-2 text-right">Total HT</dt>
+            <dd class="col-10 text-left">{{ currency }} {{ $formatAmount(invoice.subtotal) }}</dd>
+            <dt class="col-2 text-right">VAT ({{ vatRatePercent }}%)</dt>
+            <dd class="col-10 text-left">{{ currency }} {{ $formatAmount(invoice.vat) }}</dd>
+            <dt class="col-2 text-right">Total TTC</dt>
+            <dd class="col-10 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
 
           </dl>
-          <input type="submit" name="save" value="Enregistrer" class="btn btn-primary" id="submit-id-save">
+          <input type="submit" name="save" value="Preview" class="btn btn-primary" id="submit-id-save">
         </div>
       </div>
     </section>
@@ -177,6 +181,7 @@ import TypeaheadInput from '@/components/TypeaheadInput.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {v4 as uuidv4} from 'uuid';
+import moment from 'moment';
 
 
 export default {
@@ -186,6 +191,17 @@ export default {
     VueDatePicker,
     QuillEditor,
     TypeaheadInput,
+  },
+  computed: {
+    currency() {
+      if (this.client && this.client.currency) {
+        return this.client.currency;
+      } else if (this.company.currency) {
+        return this.company.currency;
+      } else {
+        return 'CHF';
+      }
+    }
   },
   data() {
     return {
@@ -287,6 +303,11 @@ export default {
       this.updateTotal()
     },
     handleClientSelect(client) {
+      if (!client){
+        this.client = {};
+        this.saveInvoice();
+        return;
+      }
       // Handle client selection here
       this.fetchClient(client.id).then(() => {
         this.$refs.invoiceLines.forEach((line) => {
@@ -297,12 +318,19 @@ export default {
         this.invoice.vat_rate = this.client.vat_rate;
         this.vatRatePercent = this.invoice.vat_rate * 100;
         this.updateTotal();
+        this.saveInvoice();
       });
 
     },
-    onCompanySelect(company) {
+    handleCompanySelect(company) {
+      if (!company){
+        this.company = {};
+        this.saveInvoice();
+        return;
+      }
       this.fetchCompany(company.id).then(() => {
         this.updateClientsList();
+        this.saveInvoice();
       });
     },
     round(value) {
@@ -311,6 +339,7 @@ export default {
     async fetchCompany(companyId) {
       const response = await this.$http.get(`${this.urls.companiesUrl}${companyId}/`);
       this.company = response.data;
+      this.selectedCompany = this.company.name;
     },
     async fetchClient(clientId) {
       const response = await this.$http.get(`${this.urls.clientsUrl}${clientId}/`);
@@ -319,7 +348,6 @@ export default {
     },
     async fetchInvoice() {
       await this.$http.get(this.urls.invoiceUrl).then(response => {
-        console.log(response.data);
         this.invoice.id = response.data.id;
         this.invoice.code = response.data.code;
         if (response.data.due_date) {
@@ -348,7 +376,26 @@ export default {
         if (response.data.client){
           this.fetchClient(response.data.client)
         }
+        if (response.data.company) {
+          this.fetchCompany(response.data.company)
+        }
       }).catch(error => {
+        console.error(error)
+      });
+    },
+    async saveInvoice(){
+      const data = {
+        company: this.company ? this.company.id: null,
+        client: this.client ? this.client.id: null,
+        due_date: this.invoice.due_date ? moment(this.invoice.due_date).format('YYYY-MM-DD') : null,
+        displayed_date: this.invoice.displayed_date ? moment(this.invoice.displayed_date).format('YYYY-MM-DD') : null,
+        vat_rate: this.invoice.vat_rate,
+        title: this.invoice.title,
+        description: this.invoice.description,
+        period_start: this.invoice.period_start ? moment(this.invoice.period_start).format('YYYY-MM-DD') : null,
+        period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
+      }
+      await this.$http.put(this.urls.invoiceUrl, data).catch(error => {
         console.error(error)
       });
     },
@@ -365,7 +412,6 @@ export default {
       }).catch(error => {
         console.error(error)
       });
-
     },
     updateDueDate() {
       if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
@@ -449,12 +495,10 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+:root {
+  --dp-text-color: #6e707e;
+}
+.dp__theme_light {
+  --dp-text-color: #6e707e;
 }
 </style>

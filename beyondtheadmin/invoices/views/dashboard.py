@@ -65,9 +65,18 @@ class CreateOrUpdateDraftInvoiceView(LoginRequiredMixin, View):
         return redirect("invoices:update", pk=draft_invoice.pk, permanent=False)
 
 
-class InvoiceAppView(LoginRequiredMixin, UserInvoiceMixin, DetailView):
+class InvoiceAppView(LoginRequiredMixin, DetailView):
     model = Invoice
     template_name = "invoices_app/index.html"
+
+    def get(self, request, *args, **kwargs):
+        # noinspection PyTypeChecker
+        invoice: Invoice = self.get_object()
+        if not invoice.check_rights(request.user):
+            # If the object owner is not the current user, redirect to a custom URL or render a custom template
+            return self.handle_no_permission()
+
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
