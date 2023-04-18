@@ -2,7 +2,7 @@
   <div class="row mb-2">
     <div class="col-md-4">
       <label :for="'description-' + uuid" class="form-label">
-        Description *
+        {{$t("Description")}}<span class="asteriskField">*</span>
       </label>
       <textarea class="form-control" rows="2"
                 :id="'description-' + uuid"
@@ -12,7 +12,7 @@
     </div>
     <div class="col-md">
       <label :for="'quantity-' + uuid" class="form-label">
-        Quantité *
+        {{$t("Quantity")}}<span class="asteriskField">*</span>
       </label>
       <input type="number" class="form-control"
              :id="'quantity-' + uuid" v-model.number="localQuantity" required
@@ -21,19 +21,19 @@
     </div>
     <div class="col-md">
       <label :for="'unit-' + uuid" class="form-label">
-        Unité *
+        {{$t("Unit")}}<span class="asteriskField">*</span>
       </label>
       <select class="form-control"
               v-model="localUnit" :id="'unit-' + uuid" required
               @change="updateLine"
       >
-        <option value="h">Hour</option>
-        <option value="nb">Number</option>
+        <option value="h">{{ $t('Hour') }}</option>
+        <option value="nb">{{$t("Number")}}</option>
       </select>
     </div>
     <div class="col-md">
       <label :for="'price-' + uuid" class="form-label">
-        Prix unitaire *
+        {{$t("Unit price")}}<span class="asteriskField">*</span>
       </label>
       <div class="input-group">
         <input type="number" class="form-control" step="0.01"
@@ -44,18 +44,20 @@
     </div>
     <div class="col-md">
       <label class="form-label" :for="'total-' + uuid">
-        Total
+        {{$t("Total")}}
       </label>
       <span class="form-text total" :id="'total-' + uuid">{{ $formatAmount(total) }}</span>
     </div>
     <div class="col-md">
       <label>&nbsp;</label><br>
-      <a href="#" class="btn btn-link remove-line " @click.prevent="removeLine()">Supprimer</a>
+      <a href="#" class="btn btn-link remove-line " @click.prevent="removeLine()">{{ $t("Remove") }}</a>
     </div>
   </div>
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
+
 export default {
   props: {
     description: String,
@@ -169,6 +171,10 @@ export default {
       this.markRequiredFields();
     }
   },
+  setup(){
+    const { t } = useI18n();
+    return { t }
+  }
 
 };
 

@@ -216,6 +216,7 @@ export default {
   },
   mounted() {
     this.$i18n.locale = this.$el.parentNode.dataset.languageCode;
+
     this.urls.clientCreateUrl = this.$el.parentNode.dataset.clientCreateUrl;
     this.urls.clientUpdateUrl = this.$el.parentNode.dataset.clientUpdateUrl;
     this.urls.clientRedirectUrl = this.$el.parentNode.dataset.clientRedirectUrl;

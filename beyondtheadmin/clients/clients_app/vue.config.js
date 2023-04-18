@@ -11,7 +11,6 @@ module.exports = defineConfig({
       }
     },
   },
-  filenameHashing: false,
 
   chainWebpack: config => {
     config.plugins.delete('html')

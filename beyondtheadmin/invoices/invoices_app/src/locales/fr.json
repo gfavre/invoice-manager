@@ -4,20 +4,17 @@
   "Company": "Entreprise",
   "Person": "Personne",
   "Invoices": "Factures",
-
   "First name": "Prénom",
   "Last name": "Nom",
   "Address": "Adresse",
   "Country": "Pays",
   "City": "Localité",
   "Postal code": "Code postal",
-
   "Search on company register": "Rechercher dans le registre du commerce",
   "Company name": "Nom de l'entreprise",
   "Contact's first name": "Prénom du contact",
   "Contact's last name": "Nom du contact",
   "Contact's email": "Email du contact",
-
   "Currency": "Devise",
   "VAT rate": "Taux de TVA",
   "Default hourly rate": "Tarif horaire par défaut",
@@ -27,5 +24,18 @@
   "Next invoice code": "Code de la prochaine facture",
   "Slug": "Code client",
   "Used to generate invoice code": "Utilisé pour générer le code de la facture",
-  "Current count of invoices": "Décompte actuel de factures"
+  "Current count of invoices": "Décompte actuel de factures",
+  "Invoice": "Facture",
+  "Hour": "Heure",
+  "Description": "Description",
+  "Quantity": "Quantité",
+  "Unit": "Unité",
+  "Number": "Nombre",
+  "Unit price": "Prix par unité",
+  "Remove": "Supprimer",
+  "Client": "Client",
+  "Displayed date": "Date affichée",
+  "Due date": "Date d'échéance",
+  "Total": "Total",
+  "Select date": "Choisir une date"
 }

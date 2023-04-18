@@ -1,5 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = defineConfig({
   filenameHashing: false,
@@ -10,7 +11,16 @@ module.exports = defineConfig({
       }
     },
   },
+  chainWebpack: config => {
+    config.plugins.delete('html')
+  },
+
+  indexPath: path.resolve(__dirname, '../templates/', 'invoices_app', 'index.html'),
+  outputDir: path.resolve(__dirname, '../static/', 'invoices_app'),
+  publicPath: process.env.VUE_APP_STATIC_URL,
+
   transpileDependencies: true,
+
   pluginOptions: {
     i18n: {
       locale: 'fr',
@@ -21,10 +31,5 @@ module.exports = defineConfig({
       compositionOnly: false,
       fullInstall: true
     }
-  },
-  chainWebpack: config => {
-    config.plugins.delete('html')
-  },
-  indexPath: path.resolve(__dirname, '../templates/', 'invoices_app', 'index.html'),
-  outputDir: path.resolve(__dirname, '../static/', 'invoices_app'),
+  }
 })

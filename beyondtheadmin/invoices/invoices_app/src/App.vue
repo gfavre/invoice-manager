@@ -6,10 +6,9 @@
           <div class="row align-items-center justify-content-between">
             <div class="col-auto mt-4">
               <h1 class="page-header-title">
-                Facture {{ invoice.code }}
+                {{ $t('Invoice') }}
               </h1>
-              <div class="page-header-subtitle">
-              </div>
+              <div class="page-header-subtitle">{{ invoice.code }}</div>
             </div>
           </div>
         </div>
@@ -21,14 +20,18 @@
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_company" class="form-group">
-                <label for="id_company" class=" requiredField">Entreprise<span class="asteriskField">*</span></label>
+                <label for="id_company" class=" requiredField">
+                  {{ $t("Company") }}<span class="asteriskField">*</span>
+                </label>
                 <typeahead-input :items="companies" @select="handleCompanySelect"
                                  :value="selectedCompany"></typeahead-input>
               </div>
             </div>
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_client" class="form-group">
-                <label for="id_client" class=" requiredField">Client<span class="asteriskField">*</span> </label>
+                <label for="id_client" class=" requiredField">
+                  {{ $t("Client") }}<span class="asteriskField">*</span>
+                </label>
                 <typeahead-input :items="clients" @select="handleClientSelect" :value="selectedClient"></typeahead-input>
               </div>
             </div>
@@ -36,12 +39,12 @@
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_displayed_date" class="form-group">
-                <label for="id_displayed_date" class="">Date affichée</label>
+                <label for="id_displayed_date" class="">{{ $t("Displayed date") }}</label>
                 <VueDatePicker v-model="invoice.displayed_date"
                                :enable-time-picker="false"
                                :format="formatDate"
-                               locale="ch-fr"
-                               placeholder="Select Date"
+                               :locale="datePickerLang"
+                               :placeholder="$t('Select date')"
                                @update:model-value="updateDueDate"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
@@ -49,14 +52,15 @@
             </div>
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_due_date" class="form-group">
-                <label for="id_due_date" class=" requiredField">Date d'échéance<span class="asteriskField">*</span>
+                <label for="id_due_date" class="requiredField">
+                  {{ $t("Due date") }}<span class="asteriskField">*</span>
                 </label>
                 <VueDatePicker v-model="invoice.due_date"
                                :enable-time-picker="false"
                                :format="formatDate"
                                :min-date="invoice.displayed_date"
-                               locale="ch-fr"
-                               placeholder="Select Date"
+                               :locale="datePickerLang"
+                               :placeholder="$t('Select date')"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
                 <small id="due_date_help" class="form-text text-muted" v-if="client.id">
@@ -93,8 +97,8 @@
                 <VueDatePicker v-model="invoice.period_start"
                                :enable-time-picker="false"
                                :format="formatDate"
-                               locale="ch-fr"
-                               placeholder="Select Date"
+                               :locale="datePickerLang"
+                               :placeholder="$t('Select date')"
                                @update:model-value="updatePeriodEnd"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
@@ -107,8 +111,8 @@
                                :enable-time-picker="false"
                                :format="formatDate"
                                :min-date="invoice.period_start"
-                               locale="ch-fr"
-                               placeholder="Select Date"
+                               :locale="datePickerLang"
+                               :placeholder="$t('Select date')"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
               </div>
@@ -174,6 +178,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import InvoiceLine from './components/InvoiceLine.vue'
 import {QuillEditor} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
@@ -181,7 +186,7 @@ import TypeaheadInput from '@/components/TypeaheadInput.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {v4 as uuidv4} from 'uuid';
-import moment from 'moment';
+import {useI18n} from 'vue-i18n'
 
 
 export default {
@@ -201,7 +206,11 @@ export default {
       } else {
         return 'CHF';
       }
-    }
+    },
+    datePickerLang() {
+      const {locale} = useI18n();
+      return locale.value + '-CH';
+    },
   },
   data() {
     return {
@@ -466,6 +475,7 @@ export default {
   },
 
   mounted() {
+    this.$i18n.locale = this.$el.parentNode.dataset.languageCode;
     this.urls.companiesUrl = this.$el.parentNode.dataset.companiesUrl;
     this.urls.clientsUrl = this.$el.parentNode.dataset.clientsUrl;
     this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
@@ -491,6 +501,14 @@ export default {
       this.updateTotal();
     },
   },
+  setup() {
+    const {t} = useI18n({
+      inheritLocale: true,
+      useScope: 'local'
+    })
+    return {t}
+  }
+
 }
 </script>
 
