@@ -1,6 +1,5 @@
 const { defineConfig } = require('@vue/cli-service')
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = defineConfig({
   filenameHashing: false,

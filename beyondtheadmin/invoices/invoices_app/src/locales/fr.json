@@ -37,5 +37,16 @@
   "Displayed date": "Date affichée",
   "Due date": "Date d'échéance",
   "Total": "Total",
-  "Select date": "Choisir une date"
+  "Select date": "Choisir une date",
+  "Usual payment delay for {client} is {nb_days} days": "Le délai de paiement habituel pour {client} est de {nb_days} jours",
+  "Title": "Titre",
+  "Start of invoice period": "Début de période de facturation",
+  "End of invoice period": "Fin de période de facturation",
+  "Lines": "Lignes",
+  "Usual hourly rate for {client} is {amount} ": "Le taux horaire habituel pour {client} est de {amount}",
+  "Add line": "Ajouter une ligne",
+  "Total before tax": "Total hors taxe",
+  "VAT": "TVA",
+  "Total including tax": "Total toutes taxes comprises",
+  "Preview": "Aperçu"
 }

@@ -2,36 +2,27 @@
 {% load i18n static %}
 
 {% block content %}
-<section class="card card-header-actions mb-4">
-  <header class="card-header ">
-    {% trans "Edit invoice" %}
-  </header>
-  <article class="card-body">
-    <noscript>
-      <strong>We're sorry but this app doesn't work properly without JavaScript enabled.
-        Please enable it to continue.</strong>
-    </noscript>
+  <noscript>
+    <strong>{% blocktrans %}We're sorry but this app doesn't work properly without JavaScript enabled.
+      Please enable it to continue.{% endblocktrans %}</strong>
+  </noscript>
 
-    <div id="app"
-         data-language-code="{{ LANGUAGE_CODE }}"
-         data-clients-url="{% url 'api:client-list' %}"
-         data-companies-url="{% url 'api:company-list' %}"
-         data-invoice-url="{{ invoice.get_api_url }}"
-         data-lines-url="{{ invoice.get_api_lines_url }}"
-    ></div>
-  </article>
-</section>
+  <div id="app"
+       data-language-code="{{ LANGUAGE_CODE }}"
+       data-clients-url="{% url 'api:client-list' %}"
+       data-companies-url="{% url 'api:company-list' %}"
+       data-invoice-url="{{ invoice.get_api_url }}"
+       data-lines-url="{{ invoice.get_api_lines_url }}"
+  ></div>
 {% endblock %}
 
-
 {% block javascript %}
-{{ block.super }}
-<script src="{% static "invoices_app/js/chunk-vendors.js" %}" type="text/javascript"></script>
-<script src="{% static "invoices_app/js/app.js" %}" type="text/javascript"></script>
+  {{ block.super }}
+  <script src="{% static "invoices_app/js/chunk-vendors.js" %}" type="text/javascript"></script>
+  <script src="{% static "invoices_app/js/app.js" %}" type="text/javascript"></script>
 {% endblock javascript %}
 
-
 {% block css %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static "invoices_app/css/app.css" %}">
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "invoices_app/css/app.css" %}">
 {% endblock css %}

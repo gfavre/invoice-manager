@@ -32,7 +32,8 @@
                 <label for="id_client" class=" requiredField">
                   {{ $t("Client") }}<span class="asteriskField">*</span>
                 </label>
-                <typeahead-input :items="clients" @select="handleClientSelect" :value="selectedClient"></typeahead-input>
+                <typeahead-input :items="clients" @select="handleClientSelect"
+                                 :value="selectedClient"></typeahead-input>
               </div>
             </div>
           </div>
@@ -61,10 +62,16 @@
                                :min-date="invoice.displayed_date"
                                :locale="datePickerLang"
                                :placeholder="$t('Select date')"
+                               @update:model-value="saveInvoice"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
                 <small id="due_date_help" class="form-text text-muted" v-if="client.id">
-                  Usual payment delay for {{ client.name }} is {{ client.payment_delay_days }} days
+                  {{
+                    $t("Usual payment delay for {client} is {nb_days} days", {
+                      "client": client.name,
+                      "nb_days": client.payment_delay_days
+                    })
+                  }}
                 </small>
 
               </div>
@@ -72,28 +79,35 @@
           </div>
           <div id="div_id_title" class="form-group">
             <label for="id_title" class="">
-              Titre
+              {{ $t("Title") }}
             </label>
             <div>
               <input type="text" name="title" maxlength="100"
                      class="textinput textInput form-control" id="id_title"
-                     v-model="invoice.title" />
+                     v-model="invoice.title" @blur="saveInvoice"/>
             </div>
           </div>
           <div id="div_id_description" class="form-group">
-            <label for="id_description" class="">Description</label>
-            <QuillEditor theme="snow"
-                         :toolbar="[['bold', 'italic', 'underline', 'strike'],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }], [{ 'script': 'sub'}, { 'script': 'super' }],
-                            [{ 'color': [] }], ['link'] ]"
-                         :style="{ minHeight: '8em' }"
-                         v-model="invoice.description" />
-
+            <label for="id_description" class="">{{ $t("Description") }}</label>
+            <Editor v-model="invoice.description"
+                    api-key="nf16mminr724hh5tj7jgizwldbt3wy1rhmriy9trfwefr4wq"
+                    :init="{
+      language: tinyMCELang,
+      height: '16em',
+      menubar: false,
+      plugins: [
+        'lists', 'link', 'searchreplace'
+      ],
+      toolbar:
+        'undo redo | bold italic underline strikethrough | forecolor |\
+        bullist numlist outdent indent | removeformat'
+    }"
+                    @blur="saveInvoice"/>
           </div>
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_period_start" class="form-group">
-                <label for="id_period_start" class="">Début de la période de facturation</label>
+                <label for="id_period_start" class="">{{ $t("Start of invoice period") }}</label>
                 <VueDatePicker v-model="invoice.period_start"
                                :enable-time-picker="false"
                                :format="formatDate"
@@ -106,13 +120,14 @@
             </div>
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_period_end" class="form-group">
-                <label for="id_period_end" class="">Fin de la période de facturation</label>
+                <label for="id_period_end" class="">{{ $t("End of invoice period") }}</label>
                 <VueDatePicker v-model="invoice.period_end"
                                :enable-time-picker="false"
                                :format="formatDate"
                                :min-date="invoice.period_start"
                                :locale="datePickerLang"
                                :placeholder="$t('Select date')"
+                               @update:model-value="saveInvoice"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
               </div>
@@ -120,10 +135,15 @@
           </div>
           <div class="card border-left-info shadow mb-3">
             <div class="card-body">
-              <h5 class="text-xs font-weight-bold text-info text-uppercase mb-4">Lignes</h5>
+              <h5 class="font-weight-bold text-info text-uppercase mb-4">{{ $t("Lines") }}</h5>
               <p>
                 <small id="price_help" class="form-text text-muted" v-if="client.id">
-                  Usual hourly rate for {{ client.name }} is {{ client.default_hourly_rate }}
+                  {{
+                    $t("Usual hourly rate for {client} is {amount} ", {
+                      "client": client.name,
+                      "amount": client.default_hourly_rate
+                    })
+                  }}
                 </small>
               </p>
 
@@ -143,18 +163,17 @@
                     @remove="removeLine"
                     ref="invoiceLines"
                 />
-                <button type="button" @click="addLine" class="btn btn btn-info">Add Line</button>
-
+                <button type="button" @click="addLine" class="btn btn btn-info">{{ $t("Add line") }}</button>
               </div>
 
             </div>
           </div>
 
           <div id="div_id_vat_rate" class="form-group col-3">
-            <label for="id_vat_rate" class="">Taux de TVA</label>
+            <label for="id_vat_rate">{{ $t("VAT rate") }}</label>
             <div class="input-group">
-              <input type="text" v-model="vatRatePercent" @input="validateFloatValue"
-                     id="id_vat_rate" class="form-control">
+              <input type="text" id="id_vat_rate" class="form-control"
+                     v-model="vatRatePercent" @input="validateFloatValue" @blur="saveInvoice">
               <div class="input-group-append">
                 <span class="input-group-text">%</span>
               </div>
@@ -162,15 +181,14 @@
           </div>
           <hr>
           <dl class="row">
-            <dt class="col-2 text-right">Total HT</dt>
-            <dd class="col-10 text-left">{{ currency }} {{ $formatAmount(invoice.subtotal) }}</dd>
-            <dt class="col-2 text-right">VAT ({{ vatRatePercent }}%)</dt>
-            <dd class="col-10 text-left">{{ currency }} {{ $formatAmount(invoice.vat) }}</dd>
-            <dt class="col-2 text-right">Total TTC</dt>
-            <dd class="col-10 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
-
+            <dt class="col-3 text-right">{{ $t("Total before tax") }}</dt>
+            <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.subtotal) }}</dd>
+            <dt class="col-3 text-right">{{ $t("VAT") }} ({{ vatRatePercent }}%)</dt>
+            <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.vat) }}</dd>
+            <dt class="col-3 text-right">{{ $t("Total including tax") }}</dt>
+            <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
           </dl>
-          <input type="submit" name="save" value="Preview" class="btn btn-primary" id="submit-id-save">
+          <input type="submit" name="save" :value="$t('Preview')" class="btn btn-primary" id="submit-id-save">
         </div>
       </div>
     </section>
@@ -179,22 +197,21 @@
 
 <script>
 import moment from 'moment';
-import InvoiceLine from './components/InvoiceLine.vue'
-import {QuillEditor} from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import TypeaheadInput from '@/components/TypeaheadInput.vue';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
 import {v4 as uuidv4} from 'uuid';
 import {useI18n} from 'vue-i18n'
+import Editor from '@tinymce/tinymce-vue'
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
+import InvoiceLine from '@/components/InvoiceLine.vue'
+import TypeaheadInput from '@/components/TypeaheadInput.vue';
 
 export default {
   name: 'App',
   components: {
     InvoiceLine,
     VueDatePicker,
-    QuillEditor,
+    Editor,
     TypeaheadInput,
   },
   computed: {
@@ -210,6 +227,19 @@ export default {
     datePickerLang() {
       const {locale} = useI18n();
       return locale.value + '-CH';
+    },
+    tinyMCELang() {
+      const {locale} = useI18n();
+      switch (locale.value) {
+        case 'de':
+          return 'de';
+        case 'fr':
+          return 'fr_FR';
+        case 'it':
+          return 'it';
+        default:
+          return 'en_US';
+      }
     },
   },
   data() {
@@ -299,7 +329,6 @@ export default {
       this.invoice.lines.splice(index, 1);
       this.updateTotal();
     },
-
     formatDate(date) {
       const day = date.getDate();
       const month = date.getMonth() + 1;
@@ -312,7 +341,7 @@ export default {
       this.updateTotal()
     },
     handleClientSelect(client) {
-      if (!client){
+      if (!client) {
         this.client = {};
         this.saveInvoice();
         return;
@@ -329,10 +358,9 @@ export default {
         this.updateTotal();
         this.saveInvoice();
       });
-
     },
     handleCompanySelect(company) {
-      if (!company){
+      if (!company) {
         this.company = {};
         this.saveInvoice();
         return;
@@ -341,9 +369,6 @@ export default {
         this.updateClientsList();
         this.saveInvoice();
       });
-    },
-    round(value) {
-      return parseFloat(value).toFixed(2);
     },
     async fetchCompany(companyId) {
       const response = await this.$http.get(`${this.urls.companiesUrl}${companyId}/`);
@@ -365,6 +390,7 @@ export default {
         if (response.data.displayed_date) {
           this.invoice.displayed_date = new Date(response.data.displayed_date);
         }
+        this.vatRatePercent = response.data.vat_rate * 100;
         this.invoice.vat_rate = response.data.vat_rate;
         this.invoice.title = response.data.title;
         this.invoice.description = response.data.description;
@@ -382,7 +408,7 @@ export default {
           this.addLine();
         }
         this.updateTotal()
-        if (response.data.client){
+        if (response.data.client) {
           this.fetchClient(response.data.client)
         }
         if (response.data.company) {
@@ -392,10 +418,10 @@ export default {
         console.error(error)
       });
     },
-    async saveInvoice(){
+    async saveInvoice() {
       const data = {
-        company: this.company ? this.company.id: null,
-        client: this.client ? this.client.id: null,
+        company: this.company ? this.company.id : null,
+        client: this.client ? this.client.id : null,
         due_date: this.invoice.due_date ? moment(this.invoice.due_date).format('YYYY-MM-DD') : null,
         displayed_date: this.invoice.displayed_date ? moment(this.invoice.displayed_date).format('YYYY-MM-DD') : null,
         vat_rate: this.invoice.vat_rate,
@@ -404,7 +430,18 @@ export default {
         period_start: this.invoice.period_start ? moment(this.invoice.period_start).format('YYYY-MM-DD') : null,
         period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
       }
-      await this.$http.put(this.urls.invoiceUrl, data).catch(error => {
+      await this.$http.patch(this.urls.invoiceUrl, data).catch(error => {
+        console.error(error)
+      });
+    },
+    updateCompaniesList() {
+      let url = this.urls.companiesUrl;
+      this.$http.get(url).then(response => {
+        this.companies = response.data.results;
+        if (this.companies.length === 1) {
+          this.company = this.companies[0].id
+        }
+      }).catch(error => {
         console.error(error)
       });
     },
@@ -428,6 +465,7 @@ export default {
         const new_due_date = new Date(this.invoice.displayed_date.getTime() + (this.client.payment_delay_days * 24 * 60 * 60 * 1000));
         this.invoice.due_date = new_due_date;
       }
+      this.saveInvoice();
     },
     updatePeriodEnd() {
       if (!this.invoice.period_end || this.invoice.period_end < this.invoice.period_start) {
@@ -453,6 +491,7 @@ export default {
           this.invoice.period_end = new Date(endYear, endMonth, this.invoice.period_start.getDate() - 1);
         }
       }
+      this.saveInvoice()
     },
     updateTotal() {
       this.invoice.subtotal = this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
@@ -481,25 +520,16 @@ export default {
     this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
     this.urls.linesUrl = this.$el.parentNode.dataset.linesUrl;
     this.fetchInvoice();
-    this.$http.get(this.urls.companiesUrl).then(response => {
-      this.companies = response.data.results;
-      if (this.companies.length === 1) {
-        this.company = this.companies[0].id
-      }
-    }).catch(error => {
-      console.error(error)
-    });
+    this.updateCompaniesList();
     this.updateClientsList();
     this.updateDueDate();
-    this.vatRatePercent = 7.7
     this.updateTotal();
-
   },
   watch: {
     vatRatePercent: function (value) {
       this.invoice.vat_rate = value / 100;
       this.updateTotal();
-    },
+    }
   },
   setup() {
     const {t} = useI18n({
@@ -516,7 +546,22 @@ export default {
 :root {
   --dp-text-color: #6e707e;
 }
+
 .dp__theme_light {
   --dp-text-color: #6e707e;
+}
+
+.tox.tox-tinymce {
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+}
+
+.tox.tox-tinymce .tox-editor-header {
+  box-shadow: none !important;
+  border-bottom: 1px solid #d1d3e2 !important;
+}
+
+.tox-tinymce .tox-statusbar__branding {
+  display: none;
 }
 </style>

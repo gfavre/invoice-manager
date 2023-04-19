@@ -37,5 +37,16 @@
   "Displayed date": "Anzeigedatum",
   "Due date": "Fälligkeitsdatum",
   "Total": "Gesamt",
-  "Select date": "Datum auswählen"
+  "Select date": "Datum auswählen",
+  "Usual payment delay for {client} is {nb_days} days": "Die übliche Zahlungsfrist für {client} beträgt {nb_days} Tage.",
+  "Title": "Titel",
+  "Start of invoice period": "Beginn des Abrechnungszeitraums",
+  "End of invoice period": "Ende des Abrechnungszeitraums",
+  "Lines": "Zeilen",
+  "Usual hourly rate for {client} is {amount} ": "Üblicher Stundenlohn für {client} beträgt {amount}",
+  "Add line": "Zeile hinzufügen",
+  "Total before tax": "Gesamtsumme ohne Steuern",
+  "VAT": "MwSt.",
+  "Total including tax": "Gesamtsumme inklusive Steuern",
+  "Preview": "Vorschau"
 }
