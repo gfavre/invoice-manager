@@ -4,7 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>{% block title %}{{ invoice.code }} - {{ invoice.company.name }}{% endblock title %}</title>
+  <title>{% block title %}
+    {% if not invoice.is_draft %}{{ invoice.code }} - {{ invoice.company.name }}{% else %}{% trans "Preview" %}
+    {% endif %}{% endblock title %}
+  </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
@@ -194,38 +197,48 @@
 {% block navigation %}
   <nav class="navbar navbar-expand-lg navbar-light bg-dark d-print-none">
     <div class="container-fluid">
-      <button class="btn btn-lg btn-primary " id="download-button">
-        <span class="label"><i class="bi bi-file-earmark-text"></i>&nbsp; {% trans "Download" %}</span>
-        <span class="loading d-none">
+      {% if invoice.is_ready %}
+        <button class="btn btn-lg btn-primary " id="download-button">
+          <span class="label"><i class="bi bi-file-earmark-text"></i>&nbsp; {% trans "Download" %}</span>
+          <span class="loading d-none">
           <div class="spinner-border spinner-border-sm" role="status"></div>
           {% trans "Generating PDF..." %}
         </span>
-        <span class="error d-none">
+          <span class="error d-none">
           <i class="bi bi-exclamation-triangle"></i>&nbsp; {% trans "Error" %}
         </span>
-      </button>
-
-    {% if user.is_authenticated %}
-      {% if invoice.is_draft %}
-        <span>
-      <a class="btn btn-lg btn-success" href="{{ invoice.get_send_url }}">
-      <i class="bi bi-box-arrow-right"></i>&nbsp; {% trans "Send" %}</a>
-      <a class="btn btn-lg btn-success" href="{{ invoice.get_snail_mail_url }}">
-      <i class="bi bi-mailbox"></i>&nbsp; {% trans "Mark as sent" %}</a>
-      </span>
-        <a class="btn btn-lg btn-secondary" href="{{ invoice.get_edit_url }}">
-          <i class="bi bi-pencil"></i>&nbsp; {% trans "Edit" %}</a>
+        </button>
       {% endif %}
 
-    {% endif %}
+      {% if user.is_authenticated %}
+        {% if invoice.is_draft and invoice.is_ready %}
+          <span>
+            <a class="btn btn-lg btn-success" href="{{ invoice.get_send_url }}">
+              <i class="bi bi-box-arrow-right"></i>&nbsp; {% trans "Send" %}
+            </a>
+            <a class="btn btn-lg btn-success" href="{{ invoice.get_snail_mail_url }}">
+              <i class="bi bi-mailbox"></i>&nbsp; {% trans "Mark as sent" %}
+            </a>
+          </span>
+        {% endif %}
 
+        <a class="btn btn-lg btn-secondary" href="{{ invoice.get_edit_url }}">
+          <i class="bi bi-pencil"></i>&nbsp; {% trans "Edit" %}
+        </a>
+      {% endif %}
     </div>
-
 
   </nav>
 
 {% endblock %}
-
+{% if messages %}
+          {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} d-print-none">{{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="{% trans "Close" %}"><span
+                  aria-hidden="true">&times;</span></button>
+            </div>
+          {% endfor %}
+        {% endif %}
 <div class="container invoice">
   <div class="row">
     <div class="col-3" id="side">
@@ -245,7 +258,7 @@
           <a href="{{ invoice.company.phone|phone:'RFC3966' }}"
              itemprop="telephone">{{ invoice.company.phone|phone }}</a>
           <br>{% endif %}
-      {% if invoice.company.additional_phone %}
+        {% if invoice.company.additional_phone %}
           <a href="{{ invoice.company.additional_phone|phone:'RFC3966' }}"
              itemprop="telephone">{{ invoice.company.additional_phone|phone }}</a>
           <br>{% endif %}
@@ -284,7 +297,8 @@
         {% endif %}
         <dl class="row">
           <dt class="col-3">{% trans "Invoice ID" %}</dt>
-          <dd class="col-9">{{ invoice.code }}</dd>
+          <dd class="col-9">
+            {% if invoice.code %}{{ invoice.code }}{% else %}{{ invoice.client.slug }}-xxx{% endif %}</dd>
           <dt class="col-3">{% trans "Due date" %}</dt>
           <dd class="col-9">{{ invoice.due_date | swiss_date }}</dd>
 
@@ -303,7 +317,8 @@
           {% for line in invoice.lines.all %}
             <tr>
               <td>{{ line.description }}</td>
-              <td class="text-nowrap">{% if line.is_hours %}{{ line.quantity|timedelta }}{% else %}{{ line.quantity }}{% endif %}</td>
+              <td class="text-nowrap">
+                {% if line.is_hours %}{{ line.quantity|timedelta }}{% else %}{{ line.quantity }}{% endif %}</td>
               <td class="text-nowrap">{{ line.get_unit_display }}</td>
               <td class="text-nowrap">{{ line.price_per_unit|money_html }}</td>
               <td class="text-nowrap">{{ line.total|money_html }}</td>
@@ -343,12 +358,12 @@
       {% if invoice.company.invoice_note %}
         <section class="mb-4">{{ invoice.company.invoice_note|safe }}</section>
       {% endif %}
-        <section class="row">
-          <div class="{% if invoice.company.has_signature %}col-6{% else %}col{% endif %}">
-            {% if invoice.company.thanks %}{{ invoice.company.thanks }}{% else %}
-              {% trans "Thank you for your continued confidence." %}{% endif %}
-          </div>
-          {% if invoice.company.has_signature %}
+      <section class="row">
+        <div class="{% if invoice.company.has_signature %}col-6{% else %}col{% endif %}">
+          {% if invoice.company.thanks %}{{ invoice.company.thanks }}{% else %}
+            {% trans "Thank you for your continued confidence." %}{% endif %}
+        </div>
+        {% if invoice.company.has_signature %}
           <div class="col-6" id="signature">
             {% if invoice.company.signature_image %}
               <img src="{% buildfullurl invoice.company.signature_image.url %}" id="signature-image">
@@ -357,8 +372,8 @@
               <p>{{ invoice.company.signature_text }}</p>
             {% endif %}
           </div>
-          {% endif %}
-        </section>
+        {% endif %}
+      </section>
     </div>
   </div>
 </div>
@@ -381,13 +396,11 @@
 
 
       $('body').on('click', '#download-button:not(.btn-danger)', function (event) {
-
         event.preventDefault();
-
         function doPoll() {
           const url = "{{ invoice.get_pdf_generation_url }}";
-          $('#download-button .label').toggleClass('d-none');
-          $('#download-button .loading').toggleClass('d-none');
+          $('#download-button .label').addClass('d-none');
+          $('#download-button .loading').removeClass('d-none');
           $.get(url).done(function (data) {
             if (data.status === 'ready') {
               const a = document.createElement('a');
@@ -396,15 +409,15 @@
               a.href = data.pdf;
               a.download = ''
               a.click();
-              $('#download-button .label').toggleClass('d-none');
-              $('#download-button .loading').toggleClass('d-none');
+              $('#download-button .label').removeClass('d-none');
+              $('#download-button .loading').addClass('d-none');
             } else if (data.status === 'error') {
-              $('#download-button .loading').toggleClass('d-none');
-              $('#download-button .error').toggleClass('d-none');
+              $('#download-button .loading').addClass('d-none');
+              $('#download-button .error').removeClass('d-none');
               $('#download-button').toggleClass(['btn-primary', 'btn-danger']);
 
             } else {
-              setTimeout(doPoll, 1000);
+              setTimeout(doPoll, 500);
             }
           });
         }
@@ -412,7 +425,7 @@
         doPoll()
       });
 
-      $(this).attr('href', '{% buildfullurl invoice.get_pdf_url %}');
+      //$(this).attr('href', '{% buildfullurl invoice.get_pdf_generation_url %}');
     });
   </script>
 {% endblock %}

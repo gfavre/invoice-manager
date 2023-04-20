@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def generate_pdf(self, invoice_id, version, content):
     """Generate latest PDF for invoice."""
     try:
-        invoice = Invoice.objects.get(id=invoice_id)
+        invoice: Invoice = Invoice.objects.get(id=invoice_id)
         generated_pdf = generate_pdf_invoice(content)
         if generated_pdf is None:
             self.retry(countdown=2**self.request.retries)

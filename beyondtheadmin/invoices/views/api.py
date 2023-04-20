@@ -142,7 +142,9 @@ class InvoicePDFViewSet(viewsets.ReadOnlyModelViewSet):
             return self.get_queryset().get(version=version)
         except InvoicePDF.DoesNotExist:
             invoice = get_object_or_404(Invoice, pk=self.kwargs["invoice_pk"])
-            if invoice.version != version:
+            if not invoice.code:
+                invoice.save(generate_code=True)
+            elif invoice.version != version:
                 raise Http404()
             invoice_pdf = InvoicePDF.objects.create(invoice=invoice, version=version)
             content = build_content_for_pdf(invoice)

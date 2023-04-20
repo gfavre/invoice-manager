@@ -35,9 +35,9 @@ class InvoiceSingletonMixin(SingleObjectMixin):
 
 class UserInvoiceMixin(InvoiceSingletonMixin):
     def get_queryset(self):
-        return Invoice.objects.filter(
-            Q(company__users=self.request.user) | Q(created_by=self.request.user)  # type: ignore
-        )
+        # noinspection PyUnresolvedReferences
+        user: User = self.request.user
+        return Invoice.objects.filter(Q(company__users=user) | Q(created_by=user)).distinct()
 
 
 class InvoiceCancelView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
@@ -158,6 +158,11 @@ class InvoiceSendMailView(LoginRequiredMixin, UserInvoiceMixin, FormView):
         """Handle GET requests: instantiate a blank version of the form."""
         # noinspection PyAttributeOutsideInit
         self.object = self.get_object()
+        if not self.object.is_ready:
+            messages.error(self.request, self.get_failure_message())
+            return HttpResponseRedirect(self.object.get_absolute_url())
+        if not self.object.code:
+            self.object.save(generate_code=True)
         return super().get(request, *args, **kwargs)
 
     def get_failure_message(self):

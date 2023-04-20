@@ -74,8 +74,8 @@
 
         function doPoll() {
           const url = "{{ invoice.get_pdf_generation_url }}";
-          $('#download-button .label').toggleClass('d-none');
-          $('#download-button .loading').toggleClass('d-none');
+          $('#download-button .label').addClass('d-none');
+          $('#download-button .loading').removeClass('d-none');
           $.get(url).done(function (data) {
             if (data.status === 'ready') {
               const a = document.createElement('a');
@@ -84,15 +84,15 @@
               a.href = data.pdf;
               a.download = ''
               a.click();
-              $('#download-button .label').toggleClass('d-none');
-              $('#download-button .loading').toggleClass('d-none');
+              $('#download-button .label').removeClass('d-none');
+              $('#download-button .loading').addClass('d-none');
             } else if (data.status === 'error') {
-              $('#download-button .loading').toggleClass('d-none');
-              $('#download-button .error').toggleClass('d-none');
+              $('#download-button .loading').addClass('d-none');
+              $('#download-button .error').removeClass('d-none');
               $('#download-button').toggleClass(['btn-primary', 'btn-danger']);
 
             } else {
-              setTimeout(doPoll, 1000);
+              setTimeout(doPoll, 500);
             }
           });
         }

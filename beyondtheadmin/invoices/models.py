@@ -122,6 +122,19 @@ class Invoice(UUIDModel, StatusModel):
         return self.status == self.STATUS.paid
 
     @property
+    def is_ready(self):
+        conditions = [
+            self.displayed_date is not None,
+            self.due_date is not None,
+            self.company is not None,
+            self.client is not None,
+            self.title != "",
+            self.period_start is None or self.period_end is not None,
+            self.period_end is None or self.period_start is not None,
+        ]
+        return all(conditions) and self.lines.exists()
+
+    @property
     def is_overdue(self):
         return self.status == self.STATUS.sent and self.due_date < now().date()
 

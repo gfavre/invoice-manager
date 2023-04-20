@@ -13,6 +13,7 @@
        data-companies-url="{% url 'api:company-list' %}"
        data-invoice-url="{{ invoice.get_api_url }}"
        data-lines-url="{{ invoice.get_api_lines_url }}"
+       data-preview-url="{{ invoice.get_absolute_url }}"
   ></div>
 {% endblock %}
 

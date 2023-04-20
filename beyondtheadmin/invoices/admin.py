@@ -29,6 +29,7 @@ class InvoiceAdmin(admin.ModelAdmin):
         "vat_rate",
         "total",
         "qr_bill",
+        "version",
     )
     inlines = [InvoiceLineInline, InvoicePDFInline]
     list_display = (
@@ -43,7 +44,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     )
     list_filter = ("status", "company", "client")
     raw_id_fields = ("company", "client")
-    readonly_fields = ["status_changed", "total"]
+    readonly_fields = ["status_changed", "total", "version"]
     search_fields = (
         "code",
         "company__name",

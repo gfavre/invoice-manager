@@ -135,7 +135,7 @@
           </div>
           <div class="card border-left-info shadow mb-3">
             <div class="card-body">
-              <h5 class="font-weight-bold text-info text-uppercase mb-4">{{ $t("Lines") }}</h5>
+              <h5 class="text-info text-uppercase mb-4">{{ $t("Lines") }}</h5>
               <p>
                 <small id="price_help" class="form-text text-muted" v-if="client.id">
                   {{
@@ -165,7 +165,6 @@
                 />
                 <button type="button" @click="addLine" class="btn btn btn-info">{{ $t("Add line") }}</button>
               </div>
-
             </div>
           </div>
 
@@ -188,7 +187,7 @@
             <dt class="col-3 text-right">{{ $t("Total including tax") }}</dt>
             <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
           </dl>
-          <input type="submit" name="save" :value="$t('Preview')" class="btn btn-primary" id="submit-id-save">
+          <a href="#" @click.prevent="preview" class="btn btn-primary">{{ $t('Preview') }}</a>
         </div>
       </div>
     </section>
@@ -282,17 +281,15 @@ export default {
         zip_code: '',
         city: '',
         country: '',
-
         language: '',
         currency: '',
         payment_delay_days: 30,
         vat_rate: 0.077,
         default_hourly_rate: 0.0,
-
         slug: '',
       },
       invoice: {
-        id: 1, // FIXME!!
+        id: null,
         code: "",
         due_date: "",
         displayed_date: new Date(),
@@ -312,7 +309,11 @@ export default {
         clientsUrl: "",
         invoiceUrl: "",
         linesUrl: "",
+        previewUrl: "",
       },
+      saving: false,
+      waitResolve: null
+
     }
   },
   methods: {
@@ -418,7 +419,19 @@ export default {
         console.error(error)
       });
     },
+    async preview(){
+      if (this.saving) {
+        // create a Promise that resolves when isHandlingClick becomes false
+        const waitPromise = new Promise(resolve => {
+          this.waitResolve = resolve;
+        });
+        await waitPromise;
+      }
+      window.location.href = this.urls.previewUrl;
+    },
+
     async saveInvoice() {
+      this.saving = true;
       const data = {
         company: this.company ? this.company.id : null,
         client: this.client ? this.client.id : null,
@@ -430,8 +443,17 @@ export default {
         period_start: this.invoice.period_start ? moment(this.invoice.period_start).format('YYYY-MM-DD') : null,
         period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
       }
-      await this.$http.patch(this.urls.invoiceUrl, data).catch(error => {
+      await this.$http.patch(this.urls.invoiceUrl, data).then(response => {
+        this.invoice.id = response.data.id;
+        this.invoice.code = response.data.code;
+      }).catch(error => {
         console.error(error)
+      }).finally(() => {
+        this.saving = false;
+        // resolve the waitPromise if it exists
+        if (this.waitResolve) {
+          this.waitResolve();
+        }
       });
     },
     updateCompaniesList() {
@@ -462,10 +484,9 @@ export default {
     updateDueDate() {
       if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
         // Calculate the new due date based on the payment_delay_days
-        const new_due_date = new Date(this.invoice.displayed_date.getTime() + (this.client.payment_delay_days * 24 * 60 * 60 * 1000));
-        this.invoice.due_date = new_due_date;
+        this.invoice.due_date = new Date(this.invoice.displayed_date.getTime() + (this.client.payment_delay_days * 24 * 60 * 60 * 1000));
       }
-      this.saveInvoice();
+      this.saveInvoice()
     },
     updatePeriodEnd() {
       if (!this.invoice.period_end || this.invoice.period_end < this.invoice.period_start) {
@@ -473,12 +494,11 @@ export default {
         const month = this.invoice.period_start.getMonth();
 
         if (this.invoice.period_start.getDate() === 1) {
-          const lastDayOfMonth = new Date(
+          this.invoice.period_end = new Date(
             this.invoice.period_start.getFullYear(),
             this.invoice.period_start.getMonth() + 1,
             0
           );
-          this.invoice.period_end = lastDayOfMonth
         } else {
           let endYear, endMonth;
           if (month === 11) {
@@ -519,10 +539,10 @@ export default {
     this.urls.clientsUrl = this.$el.parentNode.dataset.clientsUrl;
     this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
     this.urls.linesUrl = this.$el.parentNode.dataset.linesUrl;
+    this.urls.previewUrl = this.$el.parentNode.dataset.previewUrl;
     this.fetchInvoice();
     this.updateCompaniesList();
     this.updateClientsList();
-    this.updateDueDate();
     this.updateTotal();
   },
   watch: {
