@@ -69,6 +69,9 @@ class InvoiceAppView(LoginRequiredMixin, DetailView):
     model = Invoice
     template_name = "invoices_app/index.html"
 
+    def get_queryset(self):
+        return Invoice.objects.filter(status=Invoice.STATUS.draft)
+
     def get(self, request, *args, **kwargs):
         # noinspection PyTypeChecker
         invoice: Invoice = self.get_object()
