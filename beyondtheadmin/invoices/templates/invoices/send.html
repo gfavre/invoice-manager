@@ -94,6 +94,10 @@
             } else {
               setTimeout(doPoll, 500);
             }
+          }).fail(function () {
+            $('#download-button .loading').addClass('d-none');
+            $('#download-button .error').removeClass('d-none');
+            $('#download-button').toggleClass(['btn-primary', 'btn-danger']);
           });
         }
         doPoll()
