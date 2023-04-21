@@ -134,8 +134,8 @@ export default {
       this.vatRate = client.vat_rate;
       this.defaultHourlyRate = client.default_hourly_rate;
     },
-    save() {
-      this.$http.patch(this.clientUpdateUrl, {
+    save(clientUpdateUrl) {
+      this.$http.patch(clientUpdateUrl, {
         currency: this.currency,
         invoice_current_count: this.invoiceCurrentCount,
         language: this.language,
@@ -176,7 +176,6 @@ export default {
       type: String,
       default: '',
     },
-    clientUpdateUrl: String,
   },
   setup(){
     const { t } = useI18n();

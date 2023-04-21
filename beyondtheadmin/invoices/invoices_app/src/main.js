@@ -4,7 +4,7 @@ import i18n from './i18n'
 import axios from 'axios';
 import VueCookies from "vue-cookies";
 
-axios.get('http://127.0.0.1:8000/api/csrf-token/').then(response => {
+axios.get('/api/csrf-token/').then(response => {
   const csrfToken = response.data.csrf_token;
   axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
 })

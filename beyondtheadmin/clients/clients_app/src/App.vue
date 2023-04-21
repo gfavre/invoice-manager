@@ -48,8 +48,7 @@
       <legend class=" mb-1">{{ $t("Person") }}</legend>
       <person-form ref="personForm"
                    @saved="handleComponentSaved"
-                   @update:lastName="slugUpdate"
-                   :client-update-url="urls.clientUpdateUrl"></person-form>
+                   @update:lastName="slugUpdate"></person-form>
     </fieldset>
   </section>
 
@@ -58,8 +57,7 @@
       <legend class=" mb-1">{{ $t("Company") }}</legend>
       <company-form ref="companyForm"
                     @saved="handleComponentSaved"
-                    @update:name="slugUpdate"
-                    :client-update-url="urls.clientUpdateUrl"></company-form>
+                    @update:name="slugUpdate"></company-form>
     </fieldset>
   </section>
 
@@ -68,8 +66,7 @@
       <legend class=" mb-1">{{ $t("Invoices") }}</legend>
       <InvoiceForm ref="invoiceForm"
                    @saved="handleComponentSaved"
-                   :updated-slug="slug"
-                   :client-update-url="urls.clientUpdateUrl"></InvoiceForm>
+                   :updated-slug="slug"></InvoiceForm>
     </fieldset>
   </section>
 
@@ -172,7 +169,7 @@ export default {
     async saveClient() {
       this.savedComponentCount = 0;
 
-      if (this.clientId === null) {
+      if (!this.clientId) {
         try {
           const data = {
             client_type: this.clientType,
@@ -190,11 +187,11 @@ export default {
       }
       if (this.clientId !== null) {
         this.save();
-        this.$refs.invoiceForm.save();
+        this.$refs.invoiceForm.save(this.urls.clientUpdateUrl);
         if (this.isCompany) {
-          this.$refs.companyForm.save();
+          this.$refs.companyForm.save(this.urls.clientUpdateUrl);
         } else {
-          this.$refs.personForm.save();
+          this.$refs.personForm.save(this.urls.clientUpdateUrl);
         }
       }
     },

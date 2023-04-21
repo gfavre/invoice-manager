@@ -88,9 +88,6 @@ export default {
       return this.errors.contact_email ? this.errors.contact_email[0] : '';
     },
   },
-  props: {
-    clientUpdateUrl: String,
-  },
   methods: {
     isFormComplete(){
       return this.firstName.length > 0 && this.lastName.length > 0;
@@ -108,9 +105,9 @@ export default {
       this.zipCode = client.zip_code;
       this.email = client.contact_email;
     },
-    save() {
+    save(clientUpdateUrl) {
       this.errors = {};
-      this.$http.patch(this.clientUpdateUrl, {
+      this.$http.patch(clientUpdateUrl, {
         contact_first_name: this.firstName,
         contact_last_name: this.lastName,
         contact_email: this.email,

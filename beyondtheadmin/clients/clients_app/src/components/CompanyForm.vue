@@ -101,9 +101,6 @@ export default {
       contactEmail: "",
     };
   },
-  props: {
-    clientUpdateUrl: String,
-  },
   methods: {
     companyDetailLookupResult(company) {
       this.name = company.name;
@@ -118,8 +115,8 @@ export default {
     isFormComplete(){
       return this.name.length > 0;
     },
-    save(){
-      this.$http.patch(this.clientUpdateUrl, {
+    save(clientUpdateUrl){
+      this.$http.patch(clientUpdateUrl, {
         company_name: this.name,
         address: this.address,
         country: this.country,
