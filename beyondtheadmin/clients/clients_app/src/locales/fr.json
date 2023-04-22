@@ -29,5 +29,10 @@
   "Next invoice code": "Code de la prochaine facture",
   "Slug": "Code client",
   "Used to generate invoice code": "Utilisé pour générer le code de la facture",
-  "Current count of invoices": "Décompte actuel de factures"
+  "Current count of invoices": "Décompte actuel de factures",
+
+  "English": "Anglais",
+  "French": "Français",
+  "German": "Allemand",
+  "Italian": "Italien"
 }

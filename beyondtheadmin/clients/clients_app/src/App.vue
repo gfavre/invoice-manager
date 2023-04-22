@@ -66,6 +66,7 @@
       <legend class=" mb-1">{{ $t("Invoices") }}</legend>
       <InvoiceForm ref="invoiceForm"
                    @saved="handleComponentSaved"
+                   :default-language="defaultLanguage"
                    :updated-slug="slug"></InvoiceForm>
     </fieldset>
   </section>
@@ -123,6 +124,7 @@ export default {
       company: "",
       savedComponentCount: 0,
       expectedComponentCount: 2,
+      defaultLanguage: '',
       urls: {
         clientCreateUrl: '',
         clientUpdateUrl: '',
@@ -213,7 +215,7 @@ export default {
   },
   mounted() {
     this.$i18n.locale = this.$el.parentNode.dataset.languageCode;
-
+    this.defaultLanguage = this.$el.parentNode.dataset.languageCode;
     this.urls.clientCreateUrl = this.$el.parentNode.dataset.clientCreateUrl;
     this.urls.clientUpdateUrl = this.$el.parentNode.dataset.clientUpdateUrl;
     this.urls.clientRedirectUrl = this.$el.parentNode.dataset.clientRedirectUrl;
@@ -249,7 +251,6 @@ export default {
       inheritLocale: true,
       useScope: 'local'
     })
-
     return {t}
   }
 }

@@ -27,5 +27,11 @@
   "Next invoice code": "Nächster Rechnungscode",
   "Slug": "Kunden-Code",
   "Used to generate invoice code": "Zur Generierung des Rechnungscodes verwendet",
-  "Current count of invoices": "Aktuelle Anzahl von Rechnungen"
+  "Current count of invoices": "Aktuelle Anzahl von Rechnungen",
+
+  "English": "Englisch",
+  "French": "Französisch",
+  "German": "Deutsch",
+  "Italian": "Italienisch"
+
 }

@@ -13,10 +13,13 @@
     <div class="col-md ">
       <div id="div_id_vat_rate" class="form-group">
         <label for="id_vat_rate" class="">{{ $t('VAT rate') }}</label>
-        <input type="number" name="vat_rate" step="0.0001"
-               class="numberinput form-control" id="id_vat_rate"
-               v-model.number="vatRate"
-        >
+        <div class="input-group">
+          <input type="text" id="id_vat_rate" class="form-control"
+                 v-model="vatRatePercent" @input="validateFloatValue">
+          <div class="input-group-append">
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-md ">
@@ -24,10 +27,15 @@
         <label for="id_default_hourly_rate" class=" requiredField">
           {{ $t('Default hourly rate') }}<span class="asteriskField">*</span>
         </label>
-        <input type="number" name="default_hourly_rate" step="0.01"
-               class="numberinput form-control" required="" id="id_default_hourly_rate"
-               v-model.number="defaultHourlyRate"
-        >
+        <div class="input-group">
+          <input type="number" name="default_hourly_rate" step="0.01"
+                 class="numberinput form-control" required="" id="id_default_hourly_rate"
+                 v-model.number="defaultHourlyRate"
+          >
+          <div class="input-group-append">
+            <span class="input-group-text">{{ currency }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -35,7 +43,10 @@
     <label for="id_language" class=" requiredField">{{ $t('Language') }}<span class="asteriskField">*</span></label>
     <select name="language" class="select custom-select" id="id_language"
             v-model="language">
-      <option v-for="lang in languages" :key="lang.value" :value="lang.value">{{ lang.text }}</option>
+      <option value="en">{{ $t('English') }}</option>
+      <option value="de">{{ $t('German') }}</option>
+      <option value="fr">{{ $t('French') }}</option>
+      <option value="it">{{ $t('Italian') }}</option>
     </select>
   </div>
   <div id="div_id_payment_delay_days" class="form-group">
@@ -55,7 +66,7 @@
   <div class="form-row ">
     <div class="col-md ">
       <label for="exampleInvoiceCode">{{ $t('Next invoice code') }}</label>
-      <p class="form-control-static" id="exampleInvoiceCode" v-if="slug">
+      <p class="form-control-static text-monospace" id="exampleInvoiceCode" v-if="slug">
         {{ slug }}-{{ invoiceCurrentCount + 1 }}
       </p>
       <p v-else>n/a</p>
@@ -93,7 +104,6 @@
 'use strict';
 
 import slugify from "slugify";
-import { useI18n } from 'vue-i18n';
 
 
 export default {
@@ -103,35 +113,50 @@ export default {
       currency: 'CHF',
       defaultHourlyRate: 0.0,
       invoiceCurrentCount: 0,
-      language: 'fr',
+      language: "",
       paymentDelayDays: 30,
       slug: '',
       vatRate: 0.077,
+      vatRatePercent: 7.7,
       currencies: [
         {value: 'CHF', text: 'CHF'},
         {value: 'EUR', text: 'Euro'},
       ],
-      languages: [
-        {value: 'en', text: 'English'},
-        {value: 'de', text: 'Deutsch'},
-        {value: 'fr', text: 'Français'},
-        {value: 'it', text: 'Italiano'},
-      ],
+
     }
   },
   methods: {
-    isFormComplete(){
+    isFormComplete() {
       return this.currency && this.validateNumberInput(this.defaultHourlyRate) &&
-          this.language && this.paymentDelayDays !== "" && this.slug &&
-          this.validateNumberInput(this.vatRate);
+        this.language && this.paymentDelayDays !== "" && this.slug &&
+        this.validateNumberInput(this.vatRate);
     },
-    setClient(client){
+    limitSlugify(text) {
+      const slug = slugify(text, {lower: true, remove: /[*+~.()'"!:@]/g});
+      // Check if the slug is longer than 15 characters
+      if (slug.length > 15) {
+        // Find the first dash (-) in the slug
+        const dashIndex = slug.indexOf('-');
+        if (dashIndex > 0 && dashIndex <= 15) {
+          // If there is a dash before the 15th character, cut the slug there
+          return slug.slice(0, dashIndex);
+        } else {
+          // Otherwise, cut the slug at the 15th character
+          return slug.slice(0, 15);
+        }
+      } else {
+        // If the slug is 15 characters or fewer, return it as is
+        return slug;
+      }
+    },
+    setClient(client) {
       this.currency = client.currency;
       this.invoiceCurrentCount = client.invoice_current_count;
       this.language = client.language;
       this.paymentDelayDays = client.payment_delay_days;
       this.slug = client.slug;
       this.vatRate = client.vat_rate;
+      this.vatRatePercent = this.vatRate * 100;
       this.defaultHourlyRate = client.default_hourly_rate;
     },
     save(clientUpdateUrl) {
@@ -150,25 +175,20 @@ export default {
       });
     },
     validateNumberInput(value) {
-       return !isNaN(value) && value !== null && value !== '';
+      return !isNaN(value) && value !== null && value !== '';
     },
-    limitSlugify(text){
-      const slug = slugify(text, { lower: true, remove: /[*+~.()'"!:@]/g });
-      // Check if the slug is longer than 15 characters
-      if (slug.length > 15) {
-        // Find the first dash (-) in the slug
-        const dashIndex = slug.indexOf('-');
-        if (dashIndex > 0 && dashIndex <= 15) {
-          // If there is a dash before the 15th character, cut the slug there
-          return slug.slice(0, dashIndex);
-        } else {
-          // Otherwise, cut the slug at the 15th character
-          return slug.slice(0, 15);
-        }
-      } else {
-        // If the slug is 15 characters or fewer, return it as is
-        return slug;
+    validateFloatValue() {
+      // Remove any non-digit or non-decimal characters
+      let value = this.vatRatePercent.replace(/[^0-9.]/g, '');
+
+      // Only allow one decimal point
+      const decimalIndex = value.indexOf('.');
+      if (decimalIndex !== -1) {
+        value = value.slice(0, decimalIndex + 1) + value.slice(decimalIndex + 1).replace(/\./g, '');
       }
+
+      // Set the validated value back to the component
+      this.vatRatePercent = value;
     }
   },
   props: {
@@ -176,16 +196,24 @@ export default {
       type: String,
       default: '',
     },
-  },
-  setup(){
-    const { t } = useI18n();
-    return { t }
+    defaultLanguage: {
+      type: String,
+    },
   },
   watch: {
+    defaultLanguage: function (value) {
+      if (!this.language){
+        this.language = value
+      }
+    },
     updatedSlug: function (newSlug) {
       this.slug = this.limitSlugify(newSlug);
+    },
+    vatRatePercent: function (value) {
+      this.vatRate = value / 100;
     }
   }
+
 
 }
 </script>
