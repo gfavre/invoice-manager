@@ -79,11 +79,11 @@ export default {
     },
   },
   watch: {
-    localCity(val) {
-      this.$emit('update:city', val);
+    localCity() {
+      this.$emit('update:city', this.city);
     },
-    localZipcode(val) {
-      this.$emit('update:zipcode', val);
+    localZipcode() {
+      this.$emit('update:zipcode', this.zipcode);
     },
     city(newParentCity){
       this.localCity = newParentCity;
