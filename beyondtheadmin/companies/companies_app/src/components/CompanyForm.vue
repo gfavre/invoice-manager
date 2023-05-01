@@ -139,6 +139,17 @@ export default {
         invalidFields[0].focus();
       }
     },
+    updateCompany(){
+      this.name = this.company.name;
+      this.address = this.company.address;
+      this.city = this.company.city;
+      this.zipcode = this.company.zipcode;
+      this.country = this.company.country;
+      this.phone = this.company.phone;
+      this.additionalPhone = this.company.additionalPhone;
+      this.email = this.company.email;
+      this.website = this.company.website;
+    },
     handleSubmit() {
       this.submitAttempted = true;
       console.log('handleSubmit');
@@ -151,6 +162,7 @@ export default {
             }
           });
     },
+
     updateField(field, value) {
       this.$emit('update:company', {field: field, value: value});
     },

@@ -8,7 +8,6 @@
           companyDetailUrl="/api/company-detail/"
           :placeholder="$t('Search on company register')"
           @callback="companyDetailLookupResult"></company-search>
-  {{ company.name }}
 
   <CompanyForm ref="companyForm"
                :company="company"
@@ -39,13 +38,15 @@ export default {
       company: {
         name: 'test',
         address: 'rue ',
-        country: 'CH',
-        city: 'Genolier',
         zipcode: '1272',
+        city: 'Genolier',
+        country: 'CH',
         phone: '0795990906',
         additionalPhone: '',
         email: '',
         website: '',
+
+        vatId: '',
       },
       urls: {
         companiesUrl: '',
@@ -59,7 +60,8 @@ export default {
       this.company.country = company.country;
       this.company.city = company.city;
       this.company.zipcode = company.zip_code;
-      // this.$refs.companyForm.$refs.contactFirstName.focus();
+      this.company.vatId = company.vat_id;
+      this.$refs.companyForm.updateCompany();
     },
     updateCompany({field, value}) {
       this.company[field] = value
