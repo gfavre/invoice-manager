@@ -45,6 +45,16 @@ export default {
       selectedCompany: null
     }
   },
+  props: {
+    appendText: String,
+    autocompleteUrl: String,
+    companyDetailUrl: String,
+    onCallback: {
+      type: Function,
+      required: true
+    },
+    placeholder: String,
+  },
   methods: {
     companyLookup() {
       if (this.searchTerm.length < 3) {
@@ -83,16 +93,7 @@ export default {
       }
     },
   },
-  props: {
-    appendText: String,
-    autocompleteUrl: URL,
-    companyDetailUrl: URL,
-    onCallback: {
-      type: Function,
-      required: true
-    },
-    placeholder: String,
-  },
+
   mounted() {
     window.addEventListener('click', this.onWindowClick);
   },

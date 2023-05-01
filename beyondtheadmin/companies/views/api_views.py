@@ -14,7 +14,7 @@ QUERY_MIN_LENGTH = 3
 
 
 class CompanySearchView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []  # IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("q")
@@ -31,7 +31,7 @@ class CompanySearchView(APIView):
 
 
 class IBANSearchView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []  # IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("q")
@@ -42,7 +42,7 @@ class IBANSearchView(APIView):
 
 
 class CompanyDetailView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []  # IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("uid")

@@ -1,16 +1,71 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <CompanyForm />
+  <fieldset class="border-left-info shadow">
+  <legend>Étape 1</legend>
+  <p class="lead">Configurer les informations de contact de votre entreprise</p>
+
+  <company-search
+          autocompleteUrl="/api/companies-search/"
+          companyDetailUrl="/api/company-detail/"
+          :placeholder="$t('Search on company register')"
+          @callback="companyDetailLookupResult"></company-search>
+  {{ company.name }}
+
+  <CompanyForm ref="companyForm"
+               :company="company"
+               @update:company="updateCompany"
+  />
+  </fieldset>
+
+  <pre>
+  {{ company }}
+  </pre>
 </template>
 
 <script>
 import CompanyForm from './components/CompanyForm.vue'
+import {useI18n} from 'vue-i18n'
+//import CompanySearch from "@/../../../clients/clients_app/src/components/CompanySearch.vue";
+import CompanySearch from "@/components/CompanySearch.vue";
 
 export default {
   name: 'App',
   components: {
-    CompanyForm
+    CompanySearch,
+    CompanyForm,
   },
+  data() {
+    return {
+      searchTerm: '',
+      company: {
+        name: 'test',
+        address: 'rue ',
+        country: 'CH',
+        city: 'Genolier',
+        zipcode: '1272',
+        phone: '0795990906',
+        additionalPhone: '',
+        email: '',
+        website: '',
+      },
+      urls: {
+        companiesUrl: '',
+      }
+    }
+  },
+  methods: {
+    companyDetailLookupResult(company) {
+      this.company.name = company.name;
+      this.company.address = company.address;
+      this.company.country = company.country;
+      this.company.city = company.city;
+      this.company.zipcode = company.zip_code;
+      // this.$refs.companyForm.$refs.contactFirstName.focus();
+    },
+    updateCompany({field, value}) {
+      this.company[field] = value
+    }
+  },
+
   setup() {
     const {t} = useI18n({
       inheritLocale: true,
@@ -22,12 +77,5 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

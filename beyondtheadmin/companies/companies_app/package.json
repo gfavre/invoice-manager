@@ -5,12 +5,17 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "vue-i18n-extract": "vue-i18n-extract report --vueFiles 'src/**/*.vue' --languageFiles 'src/locales/*.json' --add"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.2",
+    "@vuelidate/validators": "^2.0.2",
     "core-js": "^3.8.3",
+    "swiss-zipcodes": "^1.0.9",
     "vue": "^3.2.13",
-    "vue-i18n": "^9.1.2"
+    "vue-i18n": "^9.1.2",
+    "vue3-country-region-select": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -18,9 +23,12 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "axios": "^0.18.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "vue-cli-plugin-vue-i18n": "~1.0.1"
+    "vue-cli-plugin-axios": "~0.0.4",
+    "vue-cli-plugin-vue-i18n": "~1.0.1",
+    "vue-i18n-extract": "^2.0.7"
   },
   "eslintConfig": {
     "root": true,
