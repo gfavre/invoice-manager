@@ -1,18 +1,26 @@
 <template>
   <fieldset class="border-left-info shadow">
-  <legend>Étape 1</legend>
-  <p class="lead">Configurer les informations de contact de votre entreprise</p>
+    <legend>Étape 1</legend>
+    <p class="lead">Configurer les informations de contact de votre entreprise</p>
+    <company-search
+            autocompleteUrl="/api/companies-search/"
+            companyDetailUrl="/api/company-detail/"
+            :placeholder="$t('Search on company register')"
+            @callback="companyDetailLookupResult"></company-search>
 
-  <company-search
-          autocompleteUrl="/api/companies-search/"
-          companyDetailUrl="/api/company-detail/"
-          :placeholder="$t('Search on company register')"
-          @callback="companyDetailLookupResult"></company-search>
+    <CompanyForm ref="companyForm"
+                 :company="company"
+                 @update:company="updateCompany"
+    />
+  </fieldset>
+  <fieldset class="border-left-warning shadow">
+    <legend>Étape 2</legend>
+    <p class="lead">Configurez vos informations bancaires pour recevoir les paiements</p>
+    <BankingForm ref="bankingForm"
+                 :company="company"
+                 @update:company="updateCompany"
+    />
 
-  <CompanyForm ref="companyForm"
-               :company="company"
-               @update:company="updateCompany"
-  />
   </fieldset>
 
   <pre>
@@ -25,12 +33,14 @@ import CompanyForm from './components/CompanyForm.vue'
 import {useI18n} from 'vue-i18n'
 //import CompanySearch from "@/../../../clients/clients_app/src/components/CompanySearch.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
+import BankingForm from "@/components/BankingForm.vue";
 
 export default {
   name: 'App',
   components: {
     CompanySearch,
     CompanyForm,
+    BankingForm,
   },
   data() {
     return {
