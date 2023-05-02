@@ -33,7 +33,7 @@
         <input type="text" name="nameForBank" maxlength="255" id="id_name_for_bank"
                class="textinput textInput form-control"
                required="required"
-               v-model="nameForBank" ref="nameForBank"
+               v-model="nameForBank" ref="nameForBankField"
                :class="{ 'is-invalid': v$.nameForBank.$error }"
         >
         <span class="invalid-feedback" v-if="v$.nameForBank.$error">{{ $t("This field is required")}}</span>
@@ -46,13 +46,17 @@
     <div class="col-9">
       <div id="div_id_bank" class="form-group">
         <label for="id_bank">Banque</label>
-        <textarea name="bank" cols="40" rows="3" id="id_bank" class="textarea form-control"></textarea>
+        <textarea name="bank" cols="40" rows="3" id="id_bank" class="textarea form-control"
+                  v-model="bank"
+        ></textarea>
       </div>
     </div>
     <div class="col">
       <div id="div_id_bic" class="form-group">
         <label for="id_bic">BIC</label>
-        <input type="text" name="bic" maxlength="11" id="id_bic" class="textinput textInput form-control">
+        <input type="text" name="swift" maxlength="11" id="id_bic" class="textinput textInput form-control"
+               v-model="swift"
+        >
       </div>
     </div>
   </div>
@@ -138,7 +142,8 @@ export default {
         this.bank = `${finalRes.bank.name}
 ${finalRes.bank.address}
 ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
-      this.swift = finalRes.bank.swift;
+        this.swift = finalRes.bank.swift;
+        this.$refs.nameForBankField.focus();
       } else {
         this.bank = '';
         this.swift = '';

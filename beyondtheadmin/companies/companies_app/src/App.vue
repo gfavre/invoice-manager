@@ -69,7 +69,7 @@ export default {
         website: '',
 
         vatId: '',
-        iban: '',
+        iban: 'CH37 0900 0000 1481 6523 4',
         nameForBank: '',
         bank: '',
         swift: '',
