@@ -22,6 +22,15 @@
                  @update:company="updateCompany"
     />
   </fieldset>
+  <fieldset>
+    <legend>Étape 3</legend>
+    <p class="lead">Configurer l'aspect des factures</p>
+    <InvoiceSettingsForm ref="invoiceSettingsForm"
+                         company="company"
+                         @update:company="updateCompany"
+
+    />
+  </fieldset>
 
   <pre>
   {{ company }}
@@ -35,10 +44,12 @@ import {useI18n} from 'vue-i18n'
 //import CompanySearch from "@/../../../clients/clients_app/src/components/CompanySearch.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
 import BankingForm from "@/components/BankingForm.vue";
+import InvoiceSettingsForm from "@/components/InvoiceSettingsForm.vue";
 
 export default {
   name: 'App',
   components: {
+    InvoiceSettingsForm,
     CompanySearch,
     CompanyForm,
     BankingForm,
