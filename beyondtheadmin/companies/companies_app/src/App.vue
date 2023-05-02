@@ -18,13 +18,14 @@
     <p class="lead">Configurez vos informations bancaires pour recevoir les paiements</p>
     <BankingForm ref="bankingForm"
                  :company="company"
+                 :ibanUrl="urls.ibanUrl"
                  @update:company="updateCompany"
     />
-
   </fieldset>
 
   <pre>
   {{ company }}
+    {{ urls }}
   </pre>
 </template>
 
@@ -57,9 +58,14 @@ export default {
         website: '',
 
         vatId: '',
+        iban: '',
+        nameForBank: '',
+        bank: '',
+        swift: '',
       },
       urls: {
         companiesUrl: '',
+        ibanUrl: '',
       }
     }
   },
@@ -72,10 +78,17 @@ export default {
       this.company.zipcode = company.zip_code;
       this.company.vatId = company.vat_id;
       this.$refs.companyForm.updateCompany();
+      this.$refs.bankingForm.updateCompany();
+
     },
     updateCompany({field, value}) {
       this.company[field] = value
     }
+  },
+  mounted() {
+    const mainAppNode = this.$root.$el.parentElement;
+    this.urls.companiesUrl = mainAppNode.getAttribute('data-companies-url');
+    this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
   },
 
   setup() {
@@ -89,5 +102,7 @@ export default {
 </script>
 
 <style>
-
+input::placeholder {
+  color: #aaaaaa !important;
+}
 </style>

@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import axios from 'axios';
 import vueCountryRegionSelect from 'vue3-country-region-select'
-import { VeeValidatePlugin } from 'vee-validate';
 
 import i18n from './i18n'
 //mport VueCookies from "vue-cookies";
@@ -21,5 +20,4 @@ app.config.globalProperties.$formatAmount = function(float) {
   return formatted;
 }
 app.use(vueCountryRegionSelect);
-app.use(VeeValidatePlugin);
 app.use(i18n).mount('#app')

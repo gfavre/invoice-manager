@@ -1,7 +1,8 @@
 <template>
   <div id="div_id_name" class="form-group">
     <label for="id_name" class="requiredField">
-      Nom de l'entreprise<span class="asteriskField">*</span></label>
+      Nom de l'entreprise<span class="asteriskField">*</span>
+    </label>
     <div>
       <input type="text" maxlength="255" required="required" id="id_name" name="name"
              class="textinput textInput form-control"
@@ -152,7 +153,6 @@ export default {
     },
     handleSubmit() {
       this.submitAttempted = true;
-      console.log('handleSubmit');
       this.v$.$validate()
           .then((success) => {
             if (success) {
