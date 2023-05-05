@@ -992,6 +992,89 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@formkit/core@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/core/-/core-0.16.5.tgz#789676555553ab5b514df996907568416d76c99d"
+  integrity sha512-cr2HT3JtTaEWnrjiXkxrsbdMjLLJc73sgkX9HhgNsWMBjVdRxFlk1NHJzACsX4F/tMujCMJC6FiayIEfVC93xA==
+  dependencies:
+    "@formkit/utils" "0.16.5"
+
+"@formkit/dev@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/dev/-/dev-0.16.5.tgz#5dc69777247fdfa1922855698ba11230c462f3f6"
+  integrity sha512-7Vn688UAGt4BHD8s1o+5OVXNlrRGvGV8KUjgXtskWXkVi8XBon9ZimPOn0dLVD3dJdD9+Td03C+08huue66eTQ==
+  dependencies:
+    "@formkit/core" "0.16.5"
+    "@formkit/utils" "0.16.5"
+
+"@formkit/i18n@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/i18n/-/i18n-0.16.5.tgz#6113aca0f03e50dbbcbb99018f7183d9c0d7d936"
+  integrity sha512-Ui0pnwH9EitGUWqyW6ZNu+8IRm+WG2kyetTmGuUqtETqK60FYFKB1MII5vGcS6acEgtYWPo6lvgPcunB1WOvdA==
+  dependencies:
+    "@formkit/core" "0.16.5"
+    "@formkit/utils" "0.16.5"
+    "@formkit/validation" "0.16.5"
+
+"@formkit/inputs@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/inputs/-/inputs-0.16.5.tgz#4cc2d07dc2d4c09fe3e2f1ebbb264bd1991e2587"
+  integrity sha512-YVye40cunF7jMNwqT5Y0kaZQhIlLHmeFuOD3sUMv7jbgRpLSMiUnur1ry4oc5j2qRSb2Bs+qiBXAAEFQmPoCFQ==
+  dependencies:
+    "@formkit/core" "0.16.5"
+
+"@formkit/observer@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/observer/-/observer-0.16.5.tgz#2e1229c508ef4f1f5a22a01b8e748a6be8fb8898"
+  integrity sha512-IzyW3YCu7feolTfeIoMmcqV/8CJVX9IORuNzvJQzxjCOG0gZf7EsAMBLGcBC8mb7Mf//Tdzp2jrRB0ciC/JHsw==
+  dependencies:
+    "@formkit/core" "0.16.5"
+    "@formkit/utils" "0.16.5"
+
+"@formkit/rules@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/rules/-/rules-0.16.5.tgz#c14c05d7ce3aee07dd930b4f58a26361efb5d8ca"
+  integrity sha512-xQ1eY7QfhoURJYN0k95C1gij11XOvjnH1ikgm/J8VQb8n+PeAit4lUsFqp4JX5ORNvPcNz1SqLK8VboI0Kgruw==
+  dependencies:
+    "@formkit/core" "0.16.5"
+    "@formkit/utils" "0.16.5"
+    "@formkit/validation" "0.16.5"
+
+"@formkit/themes@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/themes/-/themes-0.16.5.tgz#ce19b51602c22b44b8a8a9d1bce85bb3d49f8bb1"
+  integrity sha512-ZnslUYLKIMthndH4p6L8Le3MCZRvXAvFnkNZwRJvT5MoPWkTmtNe6oBcPnjFhlwEeMQDaIc9gyO3ZJLkv60hug==
+  dependencies:
+    "@formkit/core" "0.16.5"
+
+"@formkit/utils@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/utils/-/utils-0.16.5.tgz#2ae68f9adc02a37292e00c3732ec08531914fdee"
+  integrity sha512-wQ+Nx+kALW6SGc3E5dVgp7gxzN8mGVywOMslBeg7J5D6jx0KOqaS/aIFXK4agbqpkwX4HGIskc8scGsOKD0pVg==
+
+"@formkit/validation@0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/validation/-/validation-0.16.5.tgz#272347f62ecd7560702f9833f4ea743ffe7afb0e"
+  integrity sha512-xd9UUT7Kydi4WCXk+cR7Z+8vKTwRvDxKoKw6YMRYsuUZL1CUlkqKXUZAy1RTE9hgqXgngbZJZPnaf8EH/lkepg==
+  dependencies:
+    "@formkit/core" "0.16.5"
+    "@formkit/observer" "0.16.5"
+
+"@formkit/vue@^0.16.5":
+  version "0.16.5"
+  resolved "https://registry.yarnpkg.com/@formkit/vue/-/vue-0.16.5.tgz#5934c69bdb16d43eb0fb7e339d2b79b099a89d7c"
+  integrity sha512-zg1BB9niG411yc9dFyT2ovovfPmcbZOx8EtG7MYegIqmxl+iZKwdyCWRFEQGEVfEtFopDfTMJGHyZxcg5BXQKA==
+  dependencies:
+    "@formkit/core" "0.16.5"
+    "@formkit/dev" "0.16.5"
+    "@formkit/i18n" "0.16.5"
+    "@formkit/inputs" "0.16.5"
+    "@formkit/observer" "0.16.5"
+    "@formkit/rules" "0.16.5"
+    "@formkit/themes" "0.16.5"
+    "@formkit/utils" "0.16.5"
+    "@formkit/validation" "0.16.5"
+
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.3.0.tgz"
@@ -1177,6 +1260,13 @@
   version "1.0.2"
   resolved "https://registry.npmjs.org/@soda/get-current-script/-/get-current-script-1.0.2.tgz"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
+
+"@tinymce/tinymce-vue@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@tinymce/tinymce-vue/-/tinymce-vue-5.1.0.tgz#e74adef6fc10702167588cb53e74be359e5005ea"
+  integrity sha512-Z4R8zaOKrAXBhHWsq+qUlwHY+rvze2RgxHDrZ5+qTYkGvRofW5880HLG9gvv6TRPVsNSQBNMdsaOjJ/eueccgA==
+  dependencies:
+    tinymce "^6.0.0 || ^5.5.1"
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -1638,7 +1728,7 @@
   optionalDependencies:
     prettier "^1.18.2 || ^2.0.0"
 
-"@vue/devtools-api@^6.2.1", "@vue/devtools-api@^6.5.0":
+"@vue/devtools-api@^6.2.1":
   version "6.5.0"
   resolved "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.5.0.tgz"
   integrity sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==
@@ -5779,6 +5869,11 @@ thunky@^1.0.2:
   resolved "https://registry.npmjs.org/thunky/-/thunky-1.1.0.tgz"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
+"tinymce@^6.0.0 || ^5.5.1":
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-6.4.2.tgz#dd0a6d1d229ba6d1bf11cc88e418eb29315f6080"
+  integrity sha512-te+4c8PoAwTKPMBQtMQehnSZlOO9Ay5tDgaRFJKBehYb6SlX2PYZ0v3oe/cmiv5EfqdwZLkEMXk2MNOeApZZLg==
+
 to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/to-fast-properties/-/to-fast-properties-2.0.0.tgz"
@@ -5926,13 +6021,6 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
-
-vee-validate@^4.8.6:
-  version "4.8.6"
-  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.8.6.tgz#918a89a7d0e39d0efc44ce5ea7cd3c427f467373"
-  integrity sha512-d8SS1mfFn3qv/QRwy9BQ/0ZmoxQT37zG7zERUSK5NvmI7gx7IbQxOIXtyYVEPaDJNI4QWopBe48q91pAQqwetA==
-  dependencies:
-    "@vue/devtools-api" "^6.5.0"
 
 vue-cli-plugin-axios@~0.0.4:
   version "0.0.4"

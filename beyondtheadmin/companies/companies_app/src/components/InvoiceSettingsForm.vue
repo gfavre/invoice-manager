@@ -1,4 +1,7 @@
 <template>
+  <div class="row">
+  <div class="col-md-3">
+
   <div id="div_id_logo" class="form-group">
     <label for="id_logo">Logo</label>
     <div class="mb-2">
@@ -13,27 +16,43 @@
     <label for="id_contrast_color" class="requiredField">
       Couleur de contraste<span class="asteriskField">*</span>
     </label>
-    <input type="text" id="id_contrast_color" name="contrast_color" value="#3B4451" placeholder="#3B4451"
+    <input type="text" id="id_contrast_color" name="contrast_color" placeholder="#3B4451"
                 data-jscolor="{hash:true,width:225,height:150,format:'hex',required:true,paletteCols:4,paletteHeight:28,palette:[]}"
-                required="required" class="form-control colorfield_field jscolor">
+                required="required" class="form-control colorfield_field jscolor"
+           v-model="contrastColor"
+
+    >
   </div>
 
   <div id="div_id_invoice_note" class="form-group">
     <label for="id_invoice_note">Remarques</label>
-    <div>
-      <div data-field-id="id_invoice_note" class="django-ckeditor-widget" style="display: inline-block;"><textarea
-          cols="40" id="id_invoice_note" name="invoice_note" rows="10" data-processed="0"
-          data-config="{&quot;skin&quot;: &quot;moono-lisa&quot;, &quot;toolbar_Basic&quot;: [[&quot;Source&quot;, &quot;-&quot;, &quot;Bold&quot;, &quot;Italic&quot;]], &quot;toolbar_Full&quot;: [[&quot;Styles&quot;, &quot;Format&quot;, &quot;Bold&quot;, &quot;Italic&quot;, &quot;Underline&quot;, &quot;Strike&quot;, &quot;SpellChecker&quot;, &quot;Undo&quot;, &quot;Redo&quot;], [&quot;Link&quot;, &quot;Unlink&quot;, &quot;Anchor&quot;], [&quot;Image&quot;, &quot;Flash&quot;, &quot;Table&quot;, &quot;HorizontalRule&quot;], [&quot;TextColor&quot;, &quot;BGColor&quot;], [&quot;Smiley&quot;, &quot;SpecialChar&quot;], [&quot;Source&quot;]], &quot;toolbar&quot;: &quot;Full&quot;, &quot;height&quot;: 291, &quot;width&quot;: 835, &quot;filebrowserWindowWidth&quot;: 940, &quot;filebrowserWindowHeight&quot;: 725, &quot;language&quot;: &quot;fr&quot;}"
-          data-external-plugin-resources="[]" data-id="id_invoice_note" data-type="ckeditortype"
-          class="ckeditorwidget form-control"></textarea></div>
-      <small id="hint_id_invoice_note" class="form-text text-muted">Affiché entre les coordonnées bancaires et la
-        signature</small></div>
+    <Editor v-model="invoiceNote"
+                    api-key="nf16mminr724hh5tj7jgizwldbt3wy1rhmriy9trfwefr4wq"
+                    :init="tinyMCEConfig"/>
+    <small id="hint_id_invoice_note" class="form-text text-muted">Affiché entre les coordonnées bancaires et la
+      signature</small>
   </div>
+
+  <div id="div_id_thanks" class="form-group">
+    <label for="id_thanks">Merci</label>
+    <Editor v-model="thanksMessage"
+            api-key="nf16mminr724hh5tj7jgizwldbt3wy1rhmriy9trfwefr4wq"
+            :init="tinyMCEConfig"/>
+
+    <small id="hint_id_thanks" class="form-text text-muted">
+      Remerciements au bas de la facture. Si cette option est activée, elle figurera sur toutes les factures,
+      quelle que soit la langue
+    </small>
+  </div>
+
 
   <div id="div_id_signature_text" class="form-group">
     <label for="id_signature_text">Signature sous forme de texte</label>
     <input type="text" name="signature_text" maxlength="100" id="id_signature_text"
-                class="textinput textInput form-control">
+           class="textinput textInput form-control"
+           v-model="signatureText"
+    >
+
   </div>
 
   <div id="div_id_signature_image" class="form-group">
@@ -68,29 +87,114 @@
     </small>
   </div>
 
-  <div id="div_id_thanks" class="form-group">
-    <label for="id_thanks">Merci</label>
-    <textarea name="thanks" cols="40" rows="10" id="id_thanks" class="textarea form-control"></textarea>
-    <small id="hint_id_thanks" class="form-text text-muted">
-      Remerciements au bas de la facture. Si cette option est activée, elle figurera sur toutes les factures,
-      quelle que soit la langue
-    </small>
-  </div>
 
   <div class="buttonHolder">
-    <input type="button" name="prev-3" value="Précédent" class="btn btn btn-secondary white">
-    <input type="submit" value="Enregistrer" disabled="disabled" class="btn btn btn-primary white">
+    <input type="button" name="prev-3" value="Précédent" class="btn btn btn-secondary white"
+           @click="handleSubmit(-1)"
+     />
+    <input type="submit" value="Enregistrer" disabled="disabled" class="btn btn btn-primary white"
+          @click="handleSubmit()"
+    />
+  </div>
+    </div>
+
+    <div class="col-md-9">
+      <InvoicePreview :company="company"
+                      :contrast-color="contrastColor" :invoice-note="invoiceNote"
+                      :thanks-message="thanksMessage" :logo="logo"
+                      :signature-text="signatureText" :signature-image="signatureImage"
+      />
+    </div>
   </div>
 
 </template>
 
 <script>
+import Editor from '@tinymce/tinymce-vue'
+import InvoicePreview from "@/components/InvoicePreview.vue";
+import {useI18n} from 'vue-i18n'
+
 export default {
   name: "InvoiceSettingsForm",
-  props: ['company'],
+  components: {InvoicePreview, Editor},
+  props: {
+    company: {
+      type: Object,
+      required: true,
+    },
+    onUpdate: {
+      type: Function,
+      required: true
+    },
+  },
+  emits: ["prev", "submit"],
+
+  data: function() {
+    return {
+      logo: this.company.logo,
+      contrastColor: this.company.contrastColor,
+      invoiceNote: this.company.invoiceNote,
+      thanksMessage: this.company.thanksMessage,
+      signatureText: this.company.signatureText,
+      signatureImage: this.company.signatureImage,
+    }
+  },
+  computed: {
+    tinyMCELang() {
+      const {locale} = useI18n();
+      switch (locale.value) {
+        case 'de':
+          return 'de';
+        case 'fr':
+          return 'fr_FR';
+        case 'it':
+          return 'it';
+        default:
+          return 'en_US';
+      }
+    },
+    tinyMCEConfig(){
+      return {
+      language: this.tinyMCELang,
+      height: '16em',
+      menubar: false,
+      plugins: [
+        'lists', 'link', 'searchreplace'
+      ],
+      toolbar:
+        'undo redo | bold italic underline strikethrough | forecolor |\
+        bullist numlist outdent indent | removeformat'
+      }
+    }
+  },
+  methods: {
+    handleSubmit(step) {
+
+      this.onUpdate({
+        logo: this.logo,
+      });
+      if (step === -1) {
+        this.$emit("prev");
+      } else {
+        this.$emit("submit");
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
+.tox.tox-tinymce {
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+}
 
+.tox.tox-tinymce .tox-editor-header {
+  box-shadow: none !important;
+  border-bottom: 1px solid #d1d3e2 !important;
+}
+
+.tox-tinymce .tox-statusbar__branding {
+  display: none;
+}
 </style>

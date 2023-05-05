@@ -6,8 +6,8 @@
     <div>
       <input type="text" maxlength="255" required="required" id="id_name" name="name"
              class="textinput textInput form-control"
-             v-model="name" @input="updateField('name', $event.target.value)"
-                          :class="{ 'is-invalid': v$.name.$error && submitAttempted }"
+             v-model="name"
+             :class="{ 'is-invalid': v$.name.$error && submitAttempted }"
       />
       <span class="invalid-feedback" v-if="v$.name.$error">{{ $t("This field is required")}}</span>
     </div>
@@ -17,7 +17,7 @@
     <label for="id_address">Adresse</label>
     <div>
       <textarea name="address" cols="40" rows="2" id="id_address" class="textarea form-control"
-                v-model="address" @input="updateField('address', $event.target.value)"
+                v-model="address"
       ></textarea>
     </div>
   </div>
@@ -34,7 +34,6 @@
               :removePlaceholder="true"
               topCountry="CH"
               className="lazyselect custom-select"
-              @change="updateField('country', $event.target.value)"
           />
         </div>
       </div>
@@ -44,7 +43,6 @@
       <city-auto-complete
           v-model:city="city"
           v-model:zipcode="zipcode"
-          @update:zipcode="updateZipcode"
           :city-label="$t('City')"
           :zipcode-label="$t('Postal code')"
       ></city-auto-complete>
@@ -56,7 +54,7 @@
     <label for="id_phone">Numéro de téléphone</label>
     <div>
       <input type="tel" maxlength="128" id="id_phone" class="textinput textInput form-control"
-             v-model="phone" @input="updateField('phone', $event.target.value)"
+             v-model="phone"
       >
     </div>
   </div>
@@ -65,7 +63,7 @@
     <label for="id_additional_phone">Numéro de téléphone supplémentaire</label>
     <div>
       <input type="tel" maxlength="128" id="id_additional_phone" class="textinput textInput form-control"
-             v-model="additionalPhone" @input="updateField('additionalPhone', $event.target.value)"
+             v-model="additionalPhone"
       >
     </div>
   </div>
@@ -74,7 +72,7 @@
     <label for="id_email">Email</label>
     <div>
       <input type="email" name="email" maxlength="254" id="id_email" class="emailinput form-control"
-             v-model="email" @input="updateField('email', $event.target.value)"
+             v-model="email"
              :class="{ 'is-invalid': v$.email.$error && submitAttempted }"
       />
       <span class="invalid-feedback" v-if="v$.email.$error">{{ $t("Email address is invalid") }}</span>
@@ -86,7 +84,7 @@
     <div>
       <input type="url" name="website" maxlength="200" id="id_website" class="urlinput form-control"
              placeholder="https://example.com"
-             v-model="website" @input="updateField('website', $event.target.value)"
+             v-model="website"
              :class="{ 'is-invalid': v$.website.$error && submitAttempted }"
       />
       <span class="invalid-feedback" v-if="v$.website.$error">{{ $t("Website address is invalid, it should begin with http[s]://") }}</span>
@@ -100,19 +98,31 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 import useValidate from '@vuelidate/core'
 import { required, email, url } from '@vuelidate/validators'
 
-export default {
+export default defineComponent({
   name: "CompanyForm",
   components: {
     CityAutoComplete,
   },
+  emits: {
+
+    next: null,
+  },
   props:
-    [
-      'company'
-    ],
+    {
+      company: {
+        type: Object,
+        required: true,
+      },
+      onUpdate: {
+        type: Function,
+        required: true
+      },
+    },
 
 
   data() {
@@ -156,19 +166,22 @@ export default {
       this.v$.$validate()
           .then((success) => {
             if (success) {
-              this.$emit('submit');
+              this.onUpdate({
+                name: this.name,
+                address: this.address,
+                city: this.city,
+                zipCode: this.zipCode,
+                country: this.country,
+                phone: this.phone,
+                additionalPhone: this.additionalPhone,
+                email: this.email,
+                website: this.website,
+              });
+              this.$emit('next');
             } else {
               this.focusFirstInvalidField();
             }
           });
-    },
-
-    updateField(field, value) {
-      this.$emit('update:company', {field: field, value: value});
-    },
-    updateZipcode(value) {
-      console.log('updateZipcode', value);
-      this.$emit('update:company', {field: 'zipcode', value: value});
     },
   },
   validations() {
@@ -178,7 +191,7 @@ export default {
       website: { url },
     }
   }
-};
+});
 </script>
 
 <style scoped>

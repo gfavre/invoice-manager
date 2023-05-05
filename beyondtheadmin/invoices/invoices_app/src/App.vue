@@ -582,6 +582,6 @@ export default {
 }
 
 .tox-tinymce .tox-statusbar__branding {
-  display: none;
+  display: none!important;
 }
 </style>

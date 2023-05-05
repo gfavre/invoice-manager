@@ -9,6 +9,8 @@
     "vue-i18n-extract": "vue-i18n-extract report --vueFiles 'src/**/*.vue' --languageFiles 'src/locales/*.json' --add"
   },
   "dependencies": {
+    "@formkit/vue": "^0.16.5",
+    "@tinymce/tinymce-vue": "^5.1.0",
     "@vuelidate/core": "^2.0.2",
     "@vuelidate/validators": "^2.0.2",
     "core-js": "^3.8.3",

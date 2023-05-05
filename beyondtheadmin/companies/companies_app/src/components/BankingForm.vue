@@ -78,12 +78,26 @@ import useValidate from "@vuelidate/core";
 
 export default {
   name: "BankingForm",
-  props: ['company', 'ibanUrl'],
+  props: {
+    company: {
+      type: Object,
+      required: true,
+    },
+    ibanUrl: {
+      type: String,
+      required: true,
+    },
+    onUpdate: {
+      type: Function,
+      required: true
+    },
+  },
+  emits: ["prev", "next"],
   data() {
     return {
       vatId: this.company.vatId,
       iban: this.company.iban,
-      nameForBank: this.company.nameForBank,
+      nameForBank: this.company.nameForBank? this.company.nameForBank : this.company.name ,
       bank: this.company.bank,
       swift: this.company.swift,
 
@@ -152,23 +166,37 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
     handleSubmit(direction) {
       this.submitAttempted = true;
       this.v$.$validate().then((success) => {
-            if (success) {
-              this.$emit('submit');
-            } else {
-              this.focusFirstInvalidField();
-              return;
-            }
+        if (success) {
+          console.log("bankingform is emitting update:company")
+          this.onUpdate({
+            vatId: this.vatId,
+            iban: this.iban,
+            nameForBank: this.nameForBank,
+            bank: this.bank,
+            swift: this.swift,
+          });
+          if (direction === -1) {
+            this.$emit('prev');
+          } else if (direction === +1) {
+            this.$emit('next');
+          }
+        } else {
+          this.focusFirstInvalidField();
+        }
       });
-      if (direction === -1) {
-        this.$emit('prev');
-      } else if (direction === +1) {
-        this.$emit('next');
-      }
     },
     updateCompany() {
-      this.vatId = this.company.vatId;
-      this.nameForBank = this.company.nameForBank? this.company.nameForBank: this.company.name;
+      this.vatId = this.vatId? this.vatId: this.company.vatId;
+      this.bank = this.bank? this.bank: this.company.bank;
+      this.swift = this.swift? this.swift: this.company.swift;
+      this.iban = this.iban? this.iban: this.company.iban;
+      if (!this.nameForBank) {
+        this.nameForBank = this.company.nameForBank? this.company.nameForBank: this.company.name;
+      }
     },
+  },
+  mounted() {
+    this.updateCompany();
   },
   validations() {
     return {
