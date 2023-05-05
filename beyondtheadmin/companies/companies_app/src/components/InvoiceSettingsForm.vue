@@ -11,17 +11,17 @@
       </div>
     </div>
   </div>
+  <FormKit type="file" :label="$t('Logo')"
+           accept="image/jpeg,image/png,image/gif,image/svg+xml"
+           multiple="false"
+           v-model="logo"></FormKit>
+
 
   <div id="div_id_contrast_color" class="form-group">
-    <label for="id_contrast_color" class="requiredField">
-      Couleur de contraste<span class="asteriskField">*</span>
-    </label>
-    <input type="text" id="id_contrast_color" name="contrast_color" placeholder="#3B4451"
-                data-jscolor="{hash:true,width:225,height:150,format:'hex',required:true,paletteCols:4,paletteHeight:28,palette:[]}"
-                required="required" class="form-control colorfield_field jscolor"
-           v-model="contrastColor"
-
-    >
+    <FormKit type="color"
+             :label="$t('Contrast color')"
+             validation="required"
+             v-model="contrastColor"></FormKit>
   </div>
 
   <div id="div_id_invoice_note" class="form-group">

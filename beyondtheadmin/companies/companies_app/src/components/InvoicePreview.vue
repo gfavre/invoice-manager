@@ -41,11 +41,9 @@
     </div>
     <div class="col" id="content">
       <div class="row justify-content-end">
-        <!--
-        {% if invoice.company.logo %}
-          <section class="col-12 text-right" id="logo"><img src="{% buildfullurl invoice.company.logo.url %}"></section>
-        {% endif %}
-        -->
+        <section class="col-12 text-right" id="logo" v-if="logo">
+          <img :src="logoUrl">
+        </section>
         <section class="col-6" id="customer-address">
           <address>
             {{ client.name }}<br>
@@ -161,6 +159,7 @@ export default {
     "company",
     "contrastColor",
     "invoiceNote",
+    "logo",
     "thanksMessage",
     "signatureText",
     "signatureImage",
@@ -180,6 +179,13 @@ export default {
     },
     hasSignature() {
       return Boolean(this.signatureText || this.signatureImage)
+    },
+    logoUrl() {
+      if (!this.logo) {
+        return null;
+      }
+      return URL.createObjectURL(this.logo[0].file);
+      //return URL.createObjectURL(this.logo)
     }
   },
   data() {
@@ -241,7 +247,8 @@ export default {
       formatted = formatted.replace(/\.00$/, '.-');
       return formatted;
     }
-  }
+  },
+
 }
 </script>
 
