@@ -185,7 +185,6 @@ export default {
         return this.company.logo;
       }
       return URL.createObjectURL(this.logo[0].file);
-      //return URL.createObjectURL(this.logo)
     }
   },
   data() {

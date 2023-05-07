@@ -4,6 +4,7 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+from corsheaders.defaults import default_headers as cors_default_headers
 
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -49,9 +50,12 @@ SHORT_DATE_FORMAT = "dS.m.Y"
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {"default": env.db(
-    "DATABASE_URL",
-    default="postgres:///beyondtheadmin",)}
+DATABASES = {
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgres:///beyondtheadmin",
+    )
+}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -355,7 +359,9 @@ REST_FRAMEWORK = {
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
-# Your stuff...
+CORS_ALLOW_HEADERS = list(cors_default_headers) + ["x-file-name"]
+
+
 # ------------------------------------------------------------------------------
 PHONENUMBER_DEFAULT_REGION = "CH"
 

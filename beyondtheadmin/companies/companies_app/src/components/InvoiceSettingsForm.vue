@@ -2,15 +2,6 @@
   <div class="row">
   <div class="col-md-3">
 
-  <div id="div_id_logo" class="form-group">
-    <label for="id_logo">Logo</label>
-    <div class="mb-2">
-      <div class="form-control custom-file" style="border: 0px;">
-        <input type="file" name="logo" accept="image/*" id="id_logo" class="custom-file-input">
-        <label for="id_logo" class="custom-file-label text-truncate">---</label>
-      </div>
-    </div>
-  </div>
   <FormKit type="file" :label="$t('Logo')"
            accept=".jpg,.png,.gif,.svg"
            multiple="false"
@@ -94,7 +85,7 @@
     <input type="button" name="prev-3" value="Précédent" class="btn btn btn-secondary white"
            @click="handleSubmit(-1)"
      />
-    <input type="submit" value="Enregistrer" disabled="disabled" class="btn btn btn-primary white"
+    <input type="submit" value="Enregistrer" class="btn btn btn-primary white"
           @click="handleSubmit()"
     />
   </div>
@@ -124,17 +115,26 @@ export default {
       type: Object,
       required: true,
     },
+    updateLogoUrl: {
+      type: String,
+      required: true
+    },
+    updateSignatureImageUrl: {
+      type: String,
+      required: true
+    },
     onUpdate: {
       type: Function,
       required: true
     },
   },
+
   emits: ["prev", "submit"],
 
   data: function() {
     return {
       logo: this.company.logo,
-      contrastColor: this.company.contrastColor,
+      contrastColor: this.company.contrastColor || '#000000',
       invoiceNote: this.company.invoiceNote,
       thanksMessage: this.company.thanksMessage,
       signatureText: this.company.signatureText,
@@ -152,29 +152,52 @@ export default {
         case 'it':
           return 'it';
         default:
-          return 'en_US';
+          return '';
       }
     },
     tinyMCEConfig(){
-      return {
-      language: this.tinyMCELang,
-      height: '16em',
-      menubar: false,
-      plugins: [
-        'lists', 'link', 'searchreplace'
-      ],
-      toolbar:
-        'undo redo | bold italic underline strikethrough | forecolor |\
-        bullist numlist outdent indent | removeformat'
+      let config = {
+        height: '16em',
+        menubar: false,
+        plugins: [
+          'lists', 'link', 'searchreplace'
+        ],
+        toolbar:
+          'undo redo | bold italic underline strikethrough | forecolor |\
+          bullist numlist outdent indent | removeformat'
       }
+      let language = this.tinyMCELang
+      if (language){
+        config.language = language
+      }
+      return config
     }
   },
   methods: {
+    async uploadLogo() {
+      const logo = this.logo[0];
+      if (!logo) {
+        console.log('No file selected.');
+        return;
+      }
+      try{
+        await this.$http.put(this.updateLogoUrl, logo.file, {
+          headers: {
+            'Content-Type': logo.file.type,
+            'X-File-Name': logo.file.name,
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
     handleSubmit(step) {
-
-      this.onUpdate({
+      if (this.logo) {
+        this.uploadLogo();
+      }
+      /*this.onUpdate({
         logo: this.logo,
-      });
+      });*/
       if (step === -1) {
         this.$emit("prev");
       } else {

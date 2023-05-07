@@ -30,6 +30,8 @@
     <p class="lead">Configurer l'aspect des factures</p>
     <InvoiceSettingsForm ref="invoiceSettingsForm"
                          :company="company"
+                         :update-logo-url="urls.updateLogoUrl"
+                         :update-signature-image-url="urls.updateSignatureImageUrl"
                          @next="nextStep"
                          @prev="previousStep"
                          @update:company="onCompanyUpdate"
@@ -97,6 +99,8 @@ export default {
         companiesUrl: '',
         ibanUrl: '',
         companyUpdateUrl: '',
+        updateLogoUrl: '',
+        updateSignatureImageUrl: '',
       }
     }
   },
@@ -139,10 +143,10 @@ export default {
     this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
     this.urls.companyUpdateUrl = mainAppNode.getAttribute('data-company-update-url');
     if (this.urls.companyUpdateUrl) {
+      this.urls.updateLogoUrl = this.urls.companyUpdateUrl + 'update_logo/';
+      this.urls.updateSignatureImageUrl = this.urls.companyUpdateUrl + 'update_signature_image/';
       this.$http.get(this.urls.companyUpdateUrl).then(response => {
         this.company = response.data;
-        console.log("company loaded");
-        console.log(this.company);
         this.$refs.companyForm.setCompany(this.company);
       }).catch(error => {
         console.log(error)
