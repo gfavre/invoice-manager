@@ -12,9 +12,11 @@
     </div>
   </div>
   <FormKit type="file" :label="$t('Logo')"
-           accept="image/jpeg,image/png,image/gif,image/svg+xml"
+           accept=".jpg,.png,.gif,.svg"
            multiple="false"
-           v-model="logo"></FormKit>
+           v-model="logo"
+
+  ></FormKit>
 
 
   <div id="div_id_contrast_color" class="form-group">

@@ -65,18 +65,19 @@ export default {
       stepIndex: 1,
 
       company: {
-        name: 'test',
-        address: 'rue ',
-        zipcode: '1272',
-        city: 'Genolier',
-        country: 'CH',
-        phone: '0795990906',
+        id: '',
+        name: '',
+        address: '',
+        zipcode: '',
+        city: '',
+        country: '',
+        phone: '',
         additionalPhone: '',
         email: '',
-        website: 'https://example.com',
+        website: '',
 
         vatId: '',
-        iban: 'CH37 0900 0000 1481 6523 4',
+        iban: '',
         nameForBank: '',
         bank: '',
         swift: '',
@@ -91,12 +92,11 @@ export default {
         emailSignature: '',
         fromEmail: '',
         bccEmail: '',
-
-
       },
       urls: {
         companiesUrl: '',
         ibanUrl: '',
+        companyUpdateUrl: '',
       }
     }
   },
@@ -108,8 +108,8 @@ export default {
       this.company.city = company.city;
       this.company.zipcode = company.zip_code;
       this.company.vatId = company.vat_id;
-      this.$refs.companyForm.updateCompany();
-      this.$refs.bankingForm.updateCompany();
+      this.$refs.companyForm.setCompany(this.company);
+      this.$refs.bankingForm.setCompany(this.company);
     },
     nextStep() {
       this.stepIndex += 1;
@@ -123,16 +123,34 @@ export default {
       for (const [field, value] of Object.entries(fields)) {
         this.company[field] = value
       }
+
+    },
+    loadCompany(){
+
+    },
+    saveCompany() {
+      console.log("saving company")
+      console.log(this.company)
     }
   },
-
   mounted() {
     const mainAppNode = this.$root.$el.parentElement;
     this.urls.companiesUrl = mainAppNode.getAttribute('data-companies-url');
     this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
+    this.urls.companyUpdateUrl = mainAppNode.getAttribute('data-company-update-url');
+    if (this.urls.companyUpdateUrl) {
+      this.$http.get(this.urls.companyUpdateUrl).then(response => {
+        this.company = response.data;
+        console.log("company loaded");
+        console.log(this.company);
+        this.$refs.companyForm.setCompany(this.company);
+      }).catch(error => {
+        console.log(error)
+      });
+    }
   },
-
   setup() {
+
     const {t} = useI18n({
       inheritLocale: true,
       useScope: 'local'

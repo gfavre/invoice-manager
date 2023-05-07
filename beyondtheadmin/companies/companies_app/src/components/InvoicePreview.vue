@@ -181,8 +181,8 @@ export default {
       return Boolean(this.signatureText || this.signatureImage)
     },
     logoUrl() {
-      if (!this.logo) {
-        return null;
+      if (!this.logo || !this.logo[0] || !this.logo[0].file) {
+        return this.company.logo;
       }
       return URL.createObjectURL(this.logo[0].file);
       //return URL.createObjectURL(this.logo)

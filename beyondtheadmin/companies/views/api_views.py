@@ -1,5 +1,8 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from django.core.files.base import ContentFile
+
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny  # , IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -7,6 +10,9 @@ from ..models import Company
 from ..serializers import CompanyListSerializer, CompanySerializer, IDECompanySerializer
 from ..utils.iban import OpenIban
 from ..utils.zefix import get_detail, search_zefix
+
+
+# from beyondtheadmin.users.models import User
 
 
 MAX_NB_SEARCH_RESULTS = 15
@@ -56,7 +62,7 @@ class CompanyDetailView(APIView):
 
 
 class CompaniesViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]  # [IsAuthenticated]
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
 
@@ -65,5 +71,25 @@ class CompaniesViewSet(viewsets.ModelViewSet):
             return CompanyListSerializer
         return self.serializer_class
 
-    def get_queryset(self):
-        return self.request.user.companies.all()
+    # def get_queryset(self):
+    #    user:User = self.request.user
+    #    return user.companies.all()
+
+    def _update_file_for_field(self, request, field_name):
+        company = self.get_object()
+        file_name = request.META.get("HTTP_X_FILE_NAME")
+        file_data = ContentFile(request.body)
+        if getattr(company, field_name):
+            response_status = status.HTTP_200_OK
+        else:
+            response_status = status.HTTP_201_CREATED
+        getattr(company, field_name).save(file_name, file_data, save=True)
+        return Response({}, status=response_status)
+
+    @action(detail=True, methods=["put"])
+    def update_logo(self, request, pk=None):
+        return self._update_file_for_field(request, "logo")
+
+    @action(detail=True, methods=["put"])
+    def update_signature_image(self, request, pk=None):
+        return self._update_file_for_field(request, "signature_image")

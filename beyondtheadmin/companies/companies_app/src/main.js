@@ -53,6 +53,6 @@ app.config.globalProperties.$formatAmount = function(float) {
 app.use(vueCountryRegionSelect);
 app.use(plugin, defaultConfig({
   config: customConfig.config,
-  plugins: [addAsteriskPlugin]})
-);
+  plugins: [addAsteriskPlugin]
+}));
 app.use(i18n).mount('#app')

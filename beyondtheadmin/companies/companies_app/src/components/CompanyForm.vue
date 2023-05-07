@@ -150,16 +150,16 @@ export default defineComponent({
         invalidFields[0].focus();
       }
     },
-    updateCompany(){
-      this.name = this.company.name;
-      this.address = this.company.address;
-      this.city = this.company.city;
-      this.zipcode = this.company.zipcode;
-      this.country = this.company.country;
-      this.phone = this.company.phone;
-      this.additionalPhone = this.company.additionalPhone;
-      this.email = this.company.email;
-      this.website = this.company.website;
+    setCompany(company){
+      this.name = company.name;
+      this.address = company.address;
+      this.city = company.city;
+      this.zipcode = company.zipcode;
+      this.country = company.country;
+      this.phone = company.phone;
+      this.additionalPhone = company.additionalPhone;
+      this.email = company.email;
+      this.website = company.website;
     },
     handleSubmit() {
       this.submitAttempted = true;

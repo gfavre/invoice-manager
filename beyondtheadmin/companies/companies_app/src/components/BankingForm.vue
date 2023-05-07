@@ -185,19 +185,17 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
         }
       });
     },
-    updateCompany() {
-      this.vatId = this.vatId? this.vatId: this.company.vatId;
-      this.bank = this.bank? this.bank: this.company.bank;
-      this.swift = this.swift? this.swift: this.company.swift;
-      this.iban = this.iban? this.iban: this.company.iban;
+    setCompany(company) {
+      this.vatId = this.vatId? this.vatId: company.vatId;
+      this.bank = this.bank? this.bank: company.bank;
+      this.swift = this.swift? this.swift: company.swift;
+      this.iban = this.iban? this.iban: company.iban;
       if (!this.nameForBank) {
-        this.nameForBank = this.company.nameForBank? this.company.nameForBank: this.company.name;
+        this.nameForBank = company.nameForBank? company.nameForBank: company.name;
       }
     },
   },
-  mounted() {
-    this.updateCompany();
-  },
+
   validations() {
     return {
       iban: { required },
