@@ -1,6 +1,49 @@
 <template>
-  <div class="form-container" ref="container">
-    <div class="invoice-form" ref="form">
+  <nav class="toolbar">
+    <div class="btn-group" role="group">
+      <button
+        type="button"
+        class="btn"
+        :class="{ active: activeSection === 'form' }"
+        @click="setActiveSection('form')"
+      >
+        <i class="bi bi-pencil-fill"></i>
+      </button>
+      <button
+        type="button"
+        class="btn"
+        :class="{ active: activeSection === 'both' }"
+        @click="setActiveSection('both')"
+      >
+        <i class="bi bi-layout-split"></i>
+      </button>
+      <button
+        type="button"
+        class="btn"
+        :class="{ active: activeSection === 'preview' }"
+        @click="setActiveSection('preview')"
+      >
+        <i class="bi bi-eye-fill"></i>
+      </button>
+    </div>
+  </nav>
+    <!--
+    <div class="btn-group" role="group">
+      <label class="btn btn-default ui-edit" style="padding: 6px 9px;" title="$t('Edit')" aria-label="$t('Edit')">
+        <input type="radio" name="mode" autocomplete="off"><i class="bi bi-pencil"></i>
+      </label>
+      <label class="btn btn-default ui-both active" style="padding: 6px 9px;" title="$t('both')"
+             aria-label="$t('Display both')">
+        <input type="radio" name="mode" autocomplete="off"><i class="bi bi-layout-split"></i>
+      </label>
+      <label class="btn btn-default ui-view" style="padding: 6px 9px;"
+             :title="$t('Preview')" aria-label="$t('Preview')">
+        <input type="radio" name="mode" autocomplete="off"><i class="bi bi-eye"></i>
+      </label>
+    </div>
+  -->
+  <div class="form-container" ref="container" :class="containerClasses">
+    <div v-if="activeSection === 'form' || activeSection === 'both'" class="invoice-form" ref="form">
       <FormKit type="file" :label="$t('Logo')"
                accept=".jpg,.png,.gif,.svg"
                multiple="false"
@@ -85,10 +128,10 @@
         />
       </div>
     </div>
-    <div class="handle" ref="handle" v-on:mousedown="startResizing"><i class="bi bi-arrow-left-right"></i>
-</div>
-
-    <div class="invoice-preview" ref="preview">
+    <div v-if="activeSection === 'both'" class="handle" ref="handle" v-on:mousedown="startResizing">
+      <i class="bi bi-arrow-left-right"></i>
+    </div>
+    <div v-if="activeSection === 'preview' || activeSection === 'both'" class="invoice-preview" ref="preview">
       <InvoicePreview :company="company"
                       :contrast-color="contrastColor" :invoice-note="invoiceNote"
                       :thanks-message="thanksMessage" :logo="logo"
@@ -137,6 +180,7 @@ export default {
       signatureText: this.company.signatureText,
       signatureImage: this.company.signatureImage,
 
+      activeSection: "both",
       isResizing: false,
       startX: 0,
       containerWidth: 0,
@@ -145,6 +189,11 @@ export default {
     }
   },
   computed: {
+    containerClasses() {
+      return {
+        "w-100": this.activeSection === "form" || this.activeSection === "preview",
+      };
+    },
     tinyMCELang() {
       const {locale} = useI18n();
       switch (locale.value) {
@@ -208,6 +257,9 @@ export default {
       }
     },
 
+    setActiveSection(section) {
+      this.activeSection = section;
+    },
     startResizing(e) {
       this.isResizing = true;
       this.startX = e.clientX;
@@ -218,15 +270,17 @@ export default {
       document.addEventListener("mousemove", this.resize);
       document.addEventListener("mouseup", this.stopResizing);
     },
-  resize(e) {
-    if (!this.isResizing) {
+    resize(e) {
+      if (!this.isResizing) {
         return;
       }
 
       const delta = e.clientX - this.startX;
       const newFormWidth = this.formWidth + delta;
       const newPreviewWidth = this.previewWidth - delta;
-
+      if (newFormWidth < 200 || newPreviewWidth < 200) {
+        return;
+      }
       this.$refs.form.style.width = `${newFormWidth}px`;
       this.$refs.preview.style.width = `${newPreviewWidth}px`;
     },
@@ -260,8 +314,47 @@ export default {
 .tox-tinymce .tox-statusbar__branding {
   display: none;
 }
-.highlight {
-  background-color: #f0f0f0;
+
+.toolbar {
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+.toolbar .btn {
+  background-color: transparent;
+  border: 1px solid #0077cc;
+    align-items: center;
+  display: inline-flex;
+
+}
+
+.toolbar .btn.active {
+  background-color: #0077cc;
+  color: #fff;
+}
+
+.btn-group .bi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.btn-group .btn:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group .btn:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn.active {
+  background-color: #007bff;
+  color: #fff;
 }
 
 .form-container {
@@ -271,6 +364,10 @@ export default {
   cursor: col-resize;
   position: relative;
 }
+.form-container.w-100 {
+  width: 100%;
+  display: flex;
+}
 .invoice-form {
   grid-area: form;
   overflow: hidden;
@@ -279,6 +376,7 @@ export default {
   background-color: #fff;
   cursor: auto;
 }
+
 .handle {
   grid-area: handle;
   height: 100%;
@@ -289,13 +387,14 @@ export default {
   display: flex;
   padding-top: 10em;
   font-size: 0.8em;
-  //align-items: center;
+  align-items: start;
   justify-content: center;
-  //background-color: #f5f5f5;
-    color: #0077cc;
+//background-color: #f5f5f5;
+  color: #0077cc;
 
   box-shadow: 4px 4px 6px #e0e0e0;
 }
+
 .invoice-preview {
   grid-area: preview;
   overflow: hidden;
@@ -307,6 +406,7 @@ export default {
   border-left: none;
 
 }
+
 @media (max-width: 768px) {
   .form-container {
     grid-template-columns: 1fr;
