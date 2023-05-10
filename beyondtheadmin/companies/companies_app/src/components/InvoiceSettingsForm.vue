@@ -85,6 +85,8 @@
         />
       </div>
     </div>
+    <div class="handle" ref="handle" v-on:mousedown="startResizing"><i class="bi bi-arrow-left-right"></i>
+</div>
 
     <div class="invoice-preview" ref="preview">
       <InvoicePreview :company="company"
@@ -134,6 +136,12 @@ export default {
       thanksMessage: this.company.thanksMessage,
       signatureText: this.company.signatureText,
       signatureImage: this.company.signatureImage,
+
+      isResizing: false,
+      startX: 0,
+      containerWidth: 0,
+      formWidth: 0,
+      previewWidth: 0,
     }
   },
   computed: {
@@ -198,47 +206,43 @@ export default {
       } else {
         this.$emit("submit");
       }
-    }
+    },
+
+    startResizing(e) {
+      this.isResizing = true;
+      this.startX = e.clientX;
+      this.containerWidth = this.$refs.container.offsetWidth;
+      this.formWidth = this.$refs.form.offsetWidth;
+      this.previewWidth = this.$refs.preview.offsetWidth;
+
+      document.addEventListener("mousemove", this.resize);
+      document.addEventListener("mouseup", this.stopResizing);
+    },
+  resize(e) {
+    if (!this.isResizing) {
+        return;
+      }
+
+      const delta = e.clientX - this.startX;
+      const newFormWidth = this.formWidth + delta;
+      const newPreviewWidth = this.previewWidth - delta;
+
+      this.$refs.form.style.width = `${newFormWidth}px`;
+      this.$refs.preview.style.width = `${newPreviewWidth}px`;
+    },
+    stopResizing() {
+      this.isResizing = false;
+      document.removeEventListener("mousemove", this.resize);
+      document.removeEventListener("mouseup", this.stopResizing);
+    },
+
   },
   mounted() {
-    const container = this.$refs.container;
-    const form = this.$refs.form;
-    const preview = this.$refs.preview;
-    //let isResizing = false;
-    let lastX = 0;
-    //let containerWidth = container.offsetWidth;
-    let formWidth = form.offsetWidth;
-    let previewWidth = preview.offsetWidth;
+    const handle = this.$refs.handle;
+    handle.style.width = "24px";
+    handle.style.cursor = "col-resize";
+  },
 
-    const onMouseMove = (e) => {
-      const delta = e.clientX - lastX;
-      const newFormWidth = formWidth + delta;
-      const newPreviewWidth = previewWidth - delta;
-
-      form.style.width = `${newFormWidth}px`;
-      preview.style.width = `${newPreviewWidth}px`;
-    };
-
-    const onMouseUp = () => {
-      //isResizing = false;
-      container.style.cursor = null;
-      container.style.boxShadow = null;
-
-      container.removeEventListener("mousemove", onMouseMove);
-      container.removeEventListener("mouseup", onMouseUp);
-    };
-
-    container.addEventListener("mousedown", (e) => {
-      //isResizing = true;
-      lastX = e.clientX;
-      container.style.cursor = "col-resize";
-            container.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-
-      container.addEventListener("mousemove", onMouseMove);
-      container.addEventListener("mouseup", onMouseUp);
-    });
-
-  }
 }
 </script>
 
@@ -262,31 +266,45 @@ export default {
 
 .form-container {
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-template-areas: "form preview";
-  grid-gap: 10px;
-  background-color: #f5f5f5;
+  grid-template-columns: 1fr 24px 2fr;
+  grid-template-areas: "form handle preview";
   cursor: col-resize;
-
-
+  position: relative;
 }
 .invoice-form {
-  background-color: #fff;
   grid-area: form;
   overflow: hidden;
   resize: horizontal;
   min-width: 0;
-    cursor: auto;
+  background-color: #fff;
+  cursor: auto;
+}
+.handle {
+  grid-area: handle;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  padding-top: 10em;
+  font-size: 0.8em;
+  //align-items: center;
+  justify-content: center;
+  //background-color: #f5f5f5;
+    color: #0077cc;
 
+  box-shadow: 4px 4px 6px #e0e0e0;
 }
 .invoice-preview {
-    background-color: #fff;
-
   grid-area: preview;
   overflow: hidden;
   resize: horizontal;
   min-width: 0;
-    cursor: auto;
+  background-color: #fff;
+  cursor: auto;
+  border: 1px solid lightslategray;
+  border-left: none;
 
 }
 @media (max-width: 768px) {

@@ -260,9 +260,7 @@ export default {
 
       }
 
-      .invoice {
-        border: 1px solid lightslategray;
-      }
+
 
       .invoice a:link, .invoice a:visited, .invoice a:hover, .invoice a:active {
         color: var(--background-color);
