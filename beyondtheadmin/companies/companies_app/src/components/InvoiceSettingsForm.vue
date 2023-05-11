@@ -27,29 +27,11 @@
       </button>
     </div>
   </nav>
-    <!--
-    <div class="btn-group" role="group">
-      <label class="btn btn-default ui-edit" style="padding: 6px 9px;" title="$t('Edit')" aria-label="$t('Edit')">
-        <input type="radio" name="mode" autocomplete="off"><i class="bi bi-pencil"></i>
-      </label>
-      <label class="btn btn-default ui-both active" style="padding: 6px 9px;" title="$t('both')"
-             aria-label="$t('Display both')">
-        <input type="radio" name="mode" autocomplete="off"><i class="bi bi-layout-split"></i>
-      </label>
-      <label class="btn btn-default ui-view" style="padding: 6px 9px;"
-             :title="$t('Preview')" aria-label="$t('Preview')">
-        <input type="radio" name="mode" autocomplete="off"><i class="bi bi-eye"></i>
-      </label>
-    </div>
-  -->
-  <div class="form-container" ref="container" :class="containerClasses">
-    <div v-if="activeSection === 'form' || activeSection === 'both'" class="invoice-form" ref="form">
-      <FormKit type="file" :label="$t('Logo')"
-               accept=".jpg,.png,.gif,.svg"
-               multiple="false"
-               v-model="logo"
 
-      ></FormKit>
+  <div class="form-container" ref="container" :class="activeSection" :style="gridStyle">
+    <div v-show="activeSection === 'form' || activeSection === 'both'" class="invoice-form" ref="form">
+      <FileInput v-model="logo" @input="handleLogoInput" label="Logo"></FileInput>
+      <p v-if="logoFileName"><i class="bi bi-file-earmark-image"></i> {{ logoFileName }}</p>
 
       <div id="div_id_contrast_color" class="form-group">
         <FormKit type="color"
@@ -87,13 +69,12 @@
       </div>
 
       <div id="div_id_signature_image" class="form-group">
-        <label for="id_signature_image">Signature sous forme d'image</label>
-        <div class="mb-2">
-          <div class="form-control custom-file" style="border: 0px;"><input type="file" name="signature_image"
-                                                                            accept="image/*" id="id_signature_image"
-                                                                            class="custom-file-input"> <label
-              for="id_signature_image" class="custom-file-label text-truncate">---</label></div>
-        </div>
+        <FileInput v-model="signatureImage"
+                   @input="handleSignatureImageInput"
+                   :label="$t('Signature image')"></FileInput>
+        <p v-if="signatureFileName"><i class="bi bi-file-earmark-image"></i> {{ signatureFileName }}</p>
+      {{signatureImageUrl}}
+        {{company.signatureImage}}
       </div>
 
       <div id="div_id_email_signature" class="form-group">
@@ -128,14 +109,14 @@
         />
       </div>
     </div>
-    <div v-if="activeSection === 'both'" class="handle" ref="handle" v-on:mousedown="startResizing">
+    <div class="handle" ref="handle" @mousedown="startResizing" @click="toggleSection" :style="{cursor: handleCursor}">
       <i class="bi bi-arrow-left-right"></i>
     </div>
-    <div v-if="activeSection === 'preview' || activeSection === 'both'" class="invoice-preview" ref="preview">
+    <div v-show="activeSection === 'preview' || activeSection === 'both'" class="invoice-preview" ref="preview">
       <InvoicePreview :company="company"
                       :contrast-color="contrastColor" :invoice-note="invoiceNote"
-                      :thanks-message="thanksMessage" :logo="logo"
-                      :signature-text="signatureText" :signature-image="signatureImage"
+                      :thanks-message="thanksMessage" :logo="logoUrl"
+                      :signature-text="signatureText" :signature-image="signatureImageUrl"
       />
     </div>
   </div>
@@ -146,10 +127,11 @@
 import Editor from '@tinymce/tinymce-vue'
 import InvoicePreview from "@/components/InvoicePreview.vue";
 import {useI18n} from 'vue-i18n'
+import FileInput from './FileInput.vue';
 
 export default {
   name: "InvoiceSettingsForm",
-  components: {InvoicePreview, Editor},
+  components: {InvoicePreview, Editor, FileInput},
   props: {
     company: {
       type: Object,
@@ -173,12 +155,12 @@ export default {
 
   data: function () {
     return {
-      logo: this.company.logo,
+      logo: '',
       contrastColor: this.company.contrastColor || '#000000',
       invoiceNote: this.company.invoiceNote,
       thanksMessage: this.company.thanksMessage,
       signatureText: this.company.signatureText,
-      signatureImage: this.company.signatureImage,
+      signatureImage: '',
 
       activeSection: "both",
       isResizing: false,
@@ -189,11 +171,31 @@ export default {
     }
   },
   computed: {
-    containerClasses() {
-      return {
-        "w-100": this.activeSection === "form" || this.activeSection === "preview",
-      };
+    logoUrl() {
+      if (!this.logo || !this.logo[0] || !this.logo[0].type) {
+        return this.company.logo;
+      }
+      return URL.createObjectURL(this.logo[0]);
     },
+    logoFileName(){
+      if (!this.logo || !this.logo[0] || !this.logo[0].type) {
+        return this.$filename(this.company.logo);
+      }
+      return this.logo[0].name;
+    },
+    signatureImageUrl() {
+      if (!this.signatureImage || !this.signatureImage[0] || !this.signatureImage[0].type) {
+        return this.company.signatureImage;
+      }
+      return URL.createObjectURL(this.signatureImage[0]);
+    },
+    signatureFileName(){
+      if (!this.signatureImage || !this.signatureImage[0] || !this.signatureImage[0].type) {
+        return this.$filename(this.company.signatureImage);
+      }
+      return this.signatureImage[0].name;
+    },
+
     tinyMCELang() {
       const {locale} = useI18n();
       switch (locale.value) {
@@ -223,33 +225,68 @@ export default {
         config.language = language
       }
       return config
-    }
+    },
+    gridStyle() {
+      switch (this.activeSection) {
+        case 'form':
+          return {
+            gridTemplateColumns: '1fr 24px 0',
+          }
+        case 'preview':
+          return {
+            gridTemplateColumns: '0 24px 1fr',
+          }
+        default:
+          return {
+            gridTemplateColumns: '1fr 24px 2fr',
+          }
+      }
+    },
+
+
+    handleCursor() {
+      return this.activeSection === 'both' ? 'col-resize' : 'pointer';
+    },
   },
   methods: {
-    async uploadLogo() {
-      const logo = this.logo[0];
-      if (!logo) {
-        console.log('No file selected.');
+    async uploadImage(url, file){
+      const fileObj = file[0];
+      if (!fileObj) {
         return;
       }
       try {
-        await this.$http.put(this.updateLogoUrl, logo.file, {
+        await this.$http.put(url, fileObj, {
           headers: {
-            'Content-Type': logo.file.type,
-            'X-File-Name': logo.file.name,
+            'Content-Type': fileObj.type,
+            'X-File-Name': fileObj.name,
           },
         });
       } catch (e) {
         console.log(e);
       }
     },
+    uploadLogo() {
+      console.log("uploadLogo")
+      this.uploadImage(this.updateLogoUrl, this.logo);
+    },
+    uploadSignatureImage(){
+      console.log("uploadSignatureImage")
+      this.uploadImage(this.updateSignatureImageUrl, this.signatureImage);
+    },
+    handleLogoInput(files) {
+      this.logo = files;
+    },
+    handleSignatureImageInput(files) {
+      this.signatureImage = files;
+    },
+
     handleSubmit(step) {
       if (this.logo) {
         this.uploadLogo();
       }
-      /*this.onUpdate({
-        logo: this.logo,
-      });*/
+      if (this.signatureImage) {
+        this.uploadSignatureImage();
+      }
       if (step === -1) {
         this.$emit("prev");
       } else {
@@ -258,9 +295,14 @@ export default {
     },
 
     setActiveSection(section) {
+      this.$refs.form.style = '';
+      this.$refs.preview.style = '';
       this.activeSection = section;
     },
     startResizing(e) {
+      if (!this.activeSection === 'both') {
+        return;
+      }
       this.isResizing = true;
       this.startX = e.clientX;
       this.containerWidth = this.$refs.container.offsetWidth;
@@ -286,21 +328,22 @@ export default {
     },
     stopResizing() {
       this.isResizing = false;
+      this.formWidth = this.$refs.form.offsetWidth;
+      this.previewWidth = this.$refs.preview.offsetWidth;
       document.removeEventListener("mousemove", this.resize);
       document.removeEventListener("mouseup", this.stopResizing);
     },
-
+    toggleSection() {
+      if (this.activeSection !== 'both') {
+        this.setActiveSection('both');
+      }
+    }
   },
-  mounted() {
-    const handle = this.$refs.handle;
-    handle.style.width = "24px";
-    handle.style.cursor = "col-resize";
-  },
-
 }
 </script>
 
-<style scoped>
+
+<style >
 .tox.tox-tinymce {
   border: 1px solid #d1d3e2;
   border-radius: 0.35rem;
@@ -314,6 +357,10 @@ export default {
 .tox-tinymce .tox-statusbar__branding {
   display: none;
 }
+
+
+</style>
+<style scoped>
 
 .toolbar {
   background-color: #f5f5f5;
@@ -359,15 +406,10 @@ export default {
 
 .form-container {
   display: grid;
-  grid-template-columns: 1fr 24px 2fr;
   grid-template-areas: "form handle preview";
-  cursor: col-resize;
   position: relative;
 }
-.form-container.w-100 {
-  width: 100%;
-  display: flex;
-}
+
 .invoice-form {
   grid-area: form;
   overflow: hidden;
@@ -375,10 +417,14 @@ export default {
   min-width: 0;
   background-color: #fff;
   cursor: auto;
+  padding: 0 1em;
+  border-right: 1px solid #e0e0e0;
 }
 
 .handle {
   grid-area: handle;
+  cursor: col-resize;
+  width: 24px;
   height: 100%;
   position: absolute;
   top: 0;
@@ -414,11 +460,9 @@ export default {
       "form"
       "preview";
   }
-
   .invoice-form,
   .invoice-preview {
     resize: none;
   }
 }
-
 </style>

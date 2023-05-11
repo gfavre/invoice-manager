@@ -19,8 +19,6 @@ axios.get(API_DOMAIN + '/api/csrf-token/').then(response => {
 const isCheckboxAndRadioMultiple = (node) => (node.props.type === 'checkbox' || node.props.type === 'radio') && node.props.options
 
 function addAsteriskPlugin (node) {
-  1/0;
-  console.log("phoqie")
   node.on('created', () => {
     const schemaFn = node.props.definition.schema;
     node.props.definition.schema = (sectionsSchema = {}) => {
@@ -50,6 +48,11 @@ app.config.globalProperties.$formatAmount = function(float) {
   formatted = formatted.replace(/\.00$/, '.-');
   return formatted;
 }
+app.config.globalProperties.$filename = function(url) {
+  if (!url) return '';
+  return url.split('/').pop().split('#')[0].split('?')[0];
+}
+
 app.use(vueCountryRegionSelect);
 app.use(plugin, defaultConfig({
   config: customConfig.config,

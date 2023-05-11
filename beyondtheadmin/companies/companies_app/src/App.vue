@@ -130,7 +130,36 @@ export default {
 
     },
     loadCompany(){
-
+      this.$http.get(this.urls.companyUpdateUrl).then(response => {
+        const company = response.data;
+        this.company.id = company.id;
+        this.company.name = company.name;
+        this.company.address = company.address;
+        this.company.zipcode = company.zip_code;
+        this.company.city = company.city;
+        this.company.country = company.country;
+        this.company.phone = company.phone;
+        this.company.additionalPhone = company.additional_phone;
+        this.company.email = company.email;
+        this.company.website = company.website;
+        this.company.vatId = company.vat_id;
+        this.company.iban = company.iban;
+        this.company.nameForBank = company.name_for_bank;
+        this.company.bank = company.bank;
+        this.company.swift = company.swift;
+        this.company.logo = company.logo;
+        this.company.contrastColor = company.contrast_color;
+        this.company.invoiceNote = company.invoice_note;
+        this.company.signatureText = company.signature_text;
+        this.company.signatureImage = company.signature_image;
+        this.company.thanksMessage = company.thanks_message;
+        this.company.emailSignature = company.email_signature;
+        this.company.fromEmail = company.from_email;
+        this.company.bccEmail = company.bcc_email;
+        this.$refs.companyForm.setCompany(this.company);
+      }).catch(error => {
+        console.log(error)
+      });
     },
     saveCompany() {
       console.log("saving company")
@@ -145,12 +174,7 @@ export default {
     if (this.urls.companyUpdateUrl) {
       this.urls.updateLogoUrl = this.urls.companyUpdateUrl + 'update_logo/';
       this.urls.updateSignatureImageUrl = this.urls.companyUpdateUrl + 'update_signature_image/';
-      this.$http.get(this.urls.companyUpdateUrl).then(response => {
-        this.company = response.data;
-        this.$refs.companyForm.setCompany(this.company);
-      }).catch(error => {
-        console.log(error)
-      });
+      this.loadCompany();
     }
   },
   setup() {
