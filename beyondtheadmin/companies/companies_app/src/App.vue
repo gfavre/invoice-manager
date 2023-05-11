@@ -146,13 +146,13 @@ export default {
         this.company.iban = company.iban;
         this.company.nameForBank = company.name_for_bank;
         this.company.bank = company.bank;
-        this.company.swift = company.swift;
+        this.company.swift = company.bic;
         this.company.logo = company.logo;
         this.company.contrastColor = company.contrast_color;
         this.company.invoiceNote = company.invoice_note;
         this.company.signatureText = company.signature_text;
         this.company.signatureImage = company.signature_image;
-        this.company.thanksMessage = company.thanks_message;
+        this.company.thanksMessage = company.thanks;
         this.company.emailSignature = company.email_signature;
         this.company.fromEmail = company.from_email;
         this.company.bccEmail = company.bcc_email;

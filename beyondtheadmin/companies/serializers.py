@@ -78,4 +78,9 @@ class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
             "contrast_color",
             "signature_text",
             "signature_image",
+            "bcc_email",
+            "from_email",
+            "thanks",
+            "email_signature",
+            "invoice_note",
         )

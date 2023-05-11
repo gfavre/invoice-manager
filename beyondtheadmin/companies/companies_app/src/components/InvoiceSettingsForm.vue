@@ -73,27 +73,31 @@
                    @input="handleSignatureImageInput"
                    :label="$t('Signature image')"></FileInput>
         <p v-if="signatureFileName"><i class="bi bi-file-earmark-image"></i> {{ signatureFileName }}</p>
-      {{signatureImageUrl}}
-        {{company.signatureImage}}
       </div>
 
       <div id="div_id_email_signature" class="form-group">
         <label for="id_email_signature">Signature e-mail</label>
         <textarea name="email_signature" cols="40" rows="10" id="id_email_signature"
-                  class="textarea form-control"></textarea>
+                  class="textarea form-control"
+                  v-model="emailSignature"
+        ></textarea>
       </div>
 
       <div id="div_id_from_email" class="form-group">
         <label for="id_from_email" class="requiredField">
           Email de l’expéditeur<span class="asteriskField">*</span>
         </label>
-        <input type="text" name="from_email" value=" <greg@beyondthewall.ch>" maxlength="255" required="required"
-               id="id_from_email" class="textinput textInput form-control">
+        <input type="text" name="from_email" maxlength="255" required="required"
+               id="id_from_email" class="textinput textInput form-control"
+               v-model="fromEmail">
+
       </div>
 
       <div id="div_id_bcc_email" class="form-group">
         <label for="id_bcc_email">Copie des factures</label>
-        <input type="email" name="bcc_email" maxlength="254" id="id_bcc_email" class="emailinput form-control">
+        <input type="email" name="bcc_email" maxlength="254" id="id_bcc_email" class="emailinput form-control"
+               v-model="bccEmail"
+        >
         <small id="hint_id_bcc_email" class="form-text text-muted">
           Adresse e-mail qui recevra chaque facture envoyée en bcc
         </small>
@@ -161,6 +165,9 @@ export default {
       thanksMessage: this.company.thanksMessage,
       signatureText: this.company.signatureText,
       signatureImage: '',
+      emailSignature: this.company.emailSignature,
+      fromEmail: this.company.fromEmail,
+      bccEmail: this.company.bccEmail,
 
       activeSection: "both",
       isResizing: false,
