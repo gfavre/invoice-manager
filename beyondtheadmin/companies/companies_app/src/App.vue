@@ -34,24 +34,39 @@
                          :update-signature-image-url="urls.updateSignatureImageUrl"
                          @next="nextStep"
                          @prev="previousStep"
+                         @submit="submit"
                          @update:company="onCompanyUpdate"
 
     />
   </fieldset>
-
-  <pre>
-  {{ company }}
-    {{ urls }}
-  </pre>
 </template>
 
 <script>
 import CompanyForm from './components/CompanyForm.vue'
 import {useI18n} from 'vue-i18n'
-//import CompanySearch from "@/../../../clients/clients_app/src/components/CompanySearch.vue";
 import CompanySearch from "@/components/CompanySearch.vue";
 import BankingForm from "@/components/BankingForm.vue";
 import InvoiceSettingsForm from "@/components/InvoiceSettingsForm.vue";
+
+const localToServerFieldMapping = {
+        "zipCode": "zip_code",
+        "additionalPhone": "additional_phone",
+        "vatId": "vat_id",
+        "nameForBank": "name_for_bank",
+        "swift": "bic",
+        "contrastColor": "contrast_color",
+        "invoiceNote": "invoice_note",
+        "signatureText": "signature_text",
+        "signatureImage": "signature_image",
+        "thanksMessage": "thanks",
+        "emailSignature": "email_signature",
+        "fromEmail": "from_email",
+        "bccEmail": "bcc_email",
+      };
+const ServerToLocalFieldMapping = {};
+for (const [key, value] of Object.entries(localToServerFieldMapping)) {
+  ServerToLocalFieldMapping[value] = key;
+}
 
 export default {
   name: 'App',
@@ -70,7 +85,7 @@ export default {
         id: '',
         name: '',
         address: '',
-        zipcode: '',
+        zipCode: '',
         city: '',
         country: '',
         phone: '',
@@ -97,8 +112,9 @@ export default {
       },
       urls: {
         companiesUrl: '',
-        ibanUrl: '',
         companyUpdateUrl: '',
+        ibanUrl: '',
+        successUrl: '',
         updateLogoUrl: '',
         updateSignatureImageUrl: '',
       }
@@ -110,7 +126,7 @@ export default {
       this.company.address = company.address;
       this.company.country = company.country;
       this.company.city = company.city;
-      this.company.zipcode = company.zip_code;
+      this.company.zipCode = company.zip_code;
       this.company.vatId = company.vat_id;
       this.$refs.companyForm.setCompany(this.company);
       this.$refs.bankingForm.setCompany(this.company);
@@ -121,41 +137,43 @@ export default {
     previousStep() {
       this.stepIndex -= 1;
     },
+    submit() {
+      window.location.href = this.urls.successUrl;
+    },
     onCompanyUpdate(fields) {
       console.log("app is receiving update")
       console.log(fields)
+      let serverFields = {};
       for (const [field, value] of Object.entries(fields)) {
-        this.company[field] = value
+        this.company[field] = value; // update locally (for instant feedback, will be overwritten by server response)
+        serverFields[localToServerFieldMapping[field] || field] = value // prepare server value
       }
+      const url = this.company.id ? this.urls.companyUpdateUrl : this.urls.companiesUrl;
 
+      const httpMethod = this.company.id ? 'patch' : 'post';
+      this.$http[httpMethod](url, serverFields)
+        .then(response => {
+          this.setCompany(response.data)
+        })
+      .catch(error => {
+        // Handle the error
+        console.error('Error:', error);
+        // ... handle the error in a consistent manner ...
+      });
+    },
+    cleanCompany(companyServerData) {
+      return Object.fromEntries(
+        Object.entries(companyServerData).map(([key, value]) => [ServerToLocalFieldMapping[key] || key, value])
+      )
+    },
+    setCompany(companyServerData) {
+      this.urls.companyUpdateUrl = this.urls.companiesUrl + companyServerData.id + '/';
+      this.company = this.cleanCompany(companyServerData);
     },
     loadCompany(){
       this.$http.get(this.urls.companyUpdateUrl).then(response => {
         const company = response.data;
-        this.company.id = company.id;
-        this.company.name = company.name;
-        this.company.address = company.address;
-        this.company.zipcode = company.zip_code;
-        this.company.city = company.city;
-        this.company.country = company.country;
-        this.company.phone = company.phone;
-        this.company.additionalPhone = company.additional_phone;
-        this.company.email = company.email;
-        this.company.website = company.website;
-        this.company.vatId = company.vat_id;
-        this.company.iban = company.iban;
-        this.company.nameForBank = company.name_for_bank;
-        this.company.bank = company.bank;
-        this.company.swift = company.bic;
-        this.company.logo = company.logo;
-        this.company.contrastColor = company.contrast_color;
-        this.company.invoiceNote = company.invoice_note;
-        this.company.signatureText = company.signature_text;
-        this.company.signatureImage = company.signature_image;
-        this.company.thanksMessage = company.thanks;
-        this.company.emailSignature = company.email_signature;
-        this.company.fromEmail = company.from_email;
-        this.company.bccEmail = company.bcc_email;
+        this.setCompany(company)
         this.$refs.companyForm.setCompany(this.company);
       }).catch(error => {
         console.log(error)
@@ -171,6 +189,7 @@ export default {
     this.urls.companiesUrl = mainAppNode.getAttribute('data-companies-url');
     this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
     this.urls.companyUpdateUrl = mainAppNode.getAttribute('data-company-update-url');
+    this.urls.successUrl = mainAppNode.getAttribute('data-success-url');
     if (this.urls.companyUpdateUrl) {
       this.urls.updateLogoUrl = this.urls.companyUpdateUrl + 'update_logo/';
       this.urls.updateSignatureImageUrl = this.urls.companyUpdateUrl + 'update_signature_image/';

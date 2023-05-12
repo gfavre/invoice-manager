@@ -250,7 +250,6 @@ export default {
       }
     },
 
-
     handleCursor() {
       return this.activeSection === 'both' ? 'col-resize' : 'pointer';
     },
@@ -272,13 +271,11 @@ export default {
         console.log(e);
       }
     },
-    uploadLogo() {
-      console.log("uploadLogo")
-      this.uploadImage(this.updateLogoUrl, this.logo);
+    async uploadLogo() {
+      await this.uploadImage(this.updateLogoUrl, this.logo);
     },
-    uploadSignatureImage(){
-      console.log("uploadSignatureImage")
-      this.uploadImage(this.updateSignatureImageUrl, this.signatureImage);
+    async uploadSignatureImage(){
+      await this.uploadImage(this.updateSignatureImageUrl, this.signatureImage);
     },
     handleLogoInput(files) {
       this.logo = files;
@@ -287,12 +284,12 @@ export default {
       this.signatureImage = files;
     },
 
-    handleSubmit(step) {
+    async handleSubmit(step) {
       if (this.logo) {
-        this.uploadLogo();
+        await this.uploadLogo();
       }
       if (this.signatureImage) {
-        this.uploadSignatureImage();
+        await this.uploadSignatureImage();
       }
       if (step === -1) {
         this.$emit("prev");

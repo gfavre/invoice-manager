@@ -1,11 +1,11 @@
 <template>
   <div class="col-md-3">
     <div id="div_id_zip_code" class="form-group">
-      <label for="id_zip_code">{{ zipcodeLabel }}</label>
+      <label for="id_zip_code">{{ zipCodeLabel }}</label>
       <div class="input-group">
         <input type="text" name="zip_code" maxlength="10"
                class="textinput textInput form-control" id="id_zip_code"
-               @input="onZipcodeInput" v-model="localZipcode">
+               @input="onZipCodeInput" v-model="localZipCode">
         <ul class="dropdown-menu  shadow" :class="{show: isCitiesDropdownVisible}" ref="dropdown">
           <li v-for="city in cities" :key="city">
             <a class="dropdown-item" @click="onCitySelected(city)">{{ city }}</a>
@@ -29,9 +29,9 @@ import {cityFromZip} from "swiss-zipcodes";
 export default {
   name: "CityAutoComplete.vue",
   props: {
-    zipcode: String,
+    zipCode: String,
     city: String,
-    zipcodeLabel: {
+    zipCodeLabel: {
       type: String,
       required: true,
     },
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       localCity: this.city,
-      localZipcode: this.zipcode,
+      localZipCode: this.zipCode,
       cities: [],
     };
   },
@@ -58,15 +58,15 @@ export default {
       this.localCity = city;
       this.cities = [];
     },
-    onZipcodeInput() {
+    onZipCodeInput() {
       if (this.localCity !== '') {
         return;
       }
 
-      if (this.localZipcode.length < 3) {
+      if (this.localZipCode.length < 3) {
         return;
       }
-      this.cities = cityFromZip(this.localZipcode);
+      this.cities = cityFromZip(this.localZipCode);
       if (this.cities.length === 1) {
         this.localCity = this.cities[0];
         this.cities = [];
@@ -82,14 +82,14 @@ export default {
     localCity(val) {
       this.$emit('update:city', val);
     },
-    localZipcode(val) {
-      this.$emit('update:zipcode', val);
+    localZipCode(val) {
+      this.$emit('update:zipCode', val);
     },
     city(newParentCity){
       this.localCity = newParentCity;
     },
-    zipcode(newParentZipcode){
-      this.localZipcode = newParentZipcode;
+    zipCode(newParentZipCode){
+      this.localZipCode = newParentZipCode;
     }
 
   },

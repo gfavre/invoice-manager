@@ -42,9 +42,9 @@
     <div class="col-md-8">
       <city-auto-complete
           v-model:city="city"
-          v-model:zipcode="zipcode"
+          v-model:zipCode="zipCode"
           :city-label="$t('City')"
-          :zipcode-label="$t('Postal code')"
+          :zipCode-label="$t('Postal code')"
       ></city-auto-complete>
     </div>
   </div>
@@ -52,20 +52,21 @@
 
   <div id="div_id_phone" class="form-group">
     <label for="id_phone">Numéro de téléphone</label>
-    <div>
-      <input type="tel" maxlength="128" id="id_phone" class="textinput textInput form-control"
-             v-model="phone"
-      >
-    </div>
+    <input type="tel" maxlength="128" id="id_phone" class="textinput textInput form-control"
+           v-model="phone" :class="{ 'is-invalid': v$.phone.$error && submitAttempted }"
+    >
+    <span class="invalid-feedback" v-if="v$.phone.$error">{{ $t("Phone number is invalid") }}</span>
+
   </div>
 
   <div id="div_id_additional_phone" class="form-group">
     <label for="id_additional_phone">Numéro de téléphone supplémentaire</label>
-    <div>
-      <input type="tel" maxlength="128" id="id_additional_phone" class="textinput textInput form-control"
-             v-model="additionalPhone"
-      >
-    </div>
+    <input type="tel" maxlength="128" id="id_additional_phone" class="textinput textInput form-control"
+           v-model="additionalPhone"
+           :class="{ 'is-invalid': v$.additionalPhone.$error && submitAttempted }"
+    >
+    <span class="invalid-feedback" v-if="v$.additionalPhone.$error">{{ $t("Phone number is invalid") }}</span>
+
   </div>
 
   <div id="div_id_email" class="form-group">
@@ -102,7 +103,15 @@ import { defineComponent } from 'vue'
 import CityAutoComplete from "@/components/CityAutoComplete.vue";
 import useValidate from '@vuelidate/core'
 import { required, email, url } from '@vuelidate/validators'
+import {isValidPhoneNumber} from 'libphonenumber-js';
 
+
+const validatePhoneNumber = (value) => {
+  if (!value) {
+    return true;
+  }
+  return isValidPhoneNumber(value, 'CH');
+}
 export default defineComponent({
   name: "CompanyForm",
   components: {
@@ -131,7 +140,7 @@ export default defineComponent({
       name: this.company.name,
       address: this.company.address,
       city: this.company.city,
-      zipcode: this.company.zipcode,
+      zipCode: this.company.zipCode,
       country: this.company.country,
       phone: this.company.phone,
       additionalPhone: this.company.additionalPhone,
@@ -154,7 +163,7 @@ export default defineComponent({
       this.name = company.name;
       this.address = company.address;
       this.city = company.city;
-      this.zipcode = company.zipcode;
+      this.zipCode = company.zipCode;
       this.country = company.country;
       this.phone = company.phone;
       this.additionalPhone = company.additionalPhone;
@@ -189,6 +198,8 @@ export default defineComponent({
       name: { required },
       email: { email },
       website: { url },
+      phone: { validatePhoneNumber },
+      additionalPhone: { validatePhoneNumber },
     }
   }
 });

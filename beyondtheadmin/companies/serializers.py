@@ -84,3 +84,7 @@ class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
             "email_signature",
             "invoice_note",
         )
+
+    def get_cc(self, obj):
+        breakpoint()
+        return obj.country.code
