@@ -1,7 +1,7 @@
 <template>
   <fieldset class="border-left-info shadow" v-if="stepIndex === 1">
-    <legend>Étape 1</legend>
-    <p class="lead">Configurer les informations de contact de votre entreprise</p>
+    <legend>{{ $t("Step 1")}}</legend>
+    <p class="lead">{{ $t("Setup your company's contact informations")}}</p>
     <company-search
             autocompleteUrl="/api/companies-search/"
             companyDetailUrl="/api/company-detail/"
@@ -15,8 +15,8 @@
     />
   </fieldset>
   <fieldset class="border-left-warning shadow" v-if="stepIndex === 2">
-    <legend>Étape 2</legend>
-    <p class="lead">Configurez vos informations bancaires pour recevoir les paiements</p>
+    <legend>{{ $t("Step 2")}}</legend>
+    <p class="lead">{{ $t("Setup your banking informations to receive the payments") }}</p>
     <BankingForm ref="bankingForm"
                  :company="company"
                  :ibanUrl="urls.ibanUrl"
@@ -26,8 +26,8 @@
     />
   </fieldset>
   <fieldset  class="border-left-primary shadow" v-if="stepIndex === 3">
-    <legend>Étape 3</legend>
-    <p class="lead">Configurer l'aspect des factures</p>
+    <legend>{{ $t("Step 3")}}</legend>
+    <p class="lead">{{ $t("Setup the invoices' look and feel") }}</p>
     <InvoiceSettingsForm ref="invoiceSettingsForm"
                          :company="company"
                          :update-logo-url="urls.updateLogoUrl"
@@ -36,7 +36,6 @@
                          @prev="previousStep"
                          @submit="submit"
                          @update:company="onCompanyUpdate"
-
     />
   </fieldset>
 </template>
@@ -186,6 +185,8 @@ export default {
   },
   mounted() {
     const mainAppNode = this.$root.$el.parentElement;
+    this.$i18n.locale = mainAppNode.getAttribute("data-language-code");
+
     this.urls.companiesUrl = mainAppNode.getAttribute('data-companies-url');
     this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
     this.urls.companyUpdateUrl = mainAppNode.getAttribute('data-company-update-url');
@@ -197,7 +198,6 @@ export default {
     }
   },
   setup() {
-
     const {t} = useI18n({
       inheritLocale: true,
       useScope: 'local'

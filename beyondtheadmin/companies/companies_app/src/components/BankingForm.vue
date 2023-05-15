@@ -1,12 +1,9 @@
 <template>
   <div id="div_id_vat_id" class="form-group">
-    <label for="id_vat_id">N° de TVA</label>
-    <div>
-      <input type="text" name="vatId" maxlength="20" id="id_vat_id" class="textinput textInput form-control"
-             placeholder="CHE-123.456.789"
-             v-model="vatId">
-
-    </div>
+    <label for="id_vat_id">{{ $t("VAT ID")}}</label>
+    <input type="text" name="vatId" maxlength="20" id="id_vat_id" class="textinput textInput form-control"
+           placeholder="CHE-123.456.789"
+           v-model="vatId" />
   </div>
 
   <div class="form-row">
@@ -19,16 +16,17 @@
                required="required"
                v-model="iban" :class="classIbanValid"
         >
-        <span class="invalid-feedback" v-if="ibanInvalid">The IBAN seems invalid</span>
+        <span class="invalid-feedback" v-if="ibanInvalid">{{ $t("The IBAN seems invalid") }}</span>
         <span class="invalid-feedback" v-if="v$.iban.$error">{{ $t("This field is required")}}</span>
-        <small id="emailHelp" class="form-text text-muted">Souvent affiché à l'arrière de votre carte bancaire, ou dans votre ebanking</small>
-
+        <small id="emailHelp" class="form-text text-muted">
+          {{ $t("Often displayed on the back of your bank card, or in your ebanking") }}
+        </small>
       </div>
     </div>
     <div class="col-md-6">
       <div id="div_id_name_for_bank" class="form-group">
         <label for="id_name_for_bank">
-          Nom du propriétaire du compte bancaire<span class="asteriskField">*</span>
+          {{ $t("Bank account's owner name")}}<span class="asteriskField">*</span>
         </label>
         <input type="text" name="nameForBank" maxlength="255" id="id_name_for_bank"
                class="textinput textInput form-control"
@@ -45,7 +43,7 @@
   <div class="form-row">
     <div class="col-9">
       <div id="div_id_bank" class="form-group">
-        <label for="id_bank">Banque</label>
+        <label for="id_bank">{{ $t("Bank")}}</label>
         <textarea name="bank" cols="40" rows="3" id="id_bank" class="textarea form-control"
                   v-model="bank"
         ></textarea>
@@ -62,10 +60,10 @@
   </div>
 
   <div class="buttonHolder">
-    <input type="button" name="prev-2" value="Précédent" class="btn btn btn-secondary white"
+    <input type="button" name="prev-2" :value="$t('Previous')" class="btn btn btn-secondary white"
            @click="handleSubmit(-1)"
     >
-    <input type="button" name="next-2" value="Suivant" class="btn btn btn-primary white"
+    <input type="button" name="next-2" :value="$t('Next')" class="btn btn btn-primary white"
            @click="handleSubmit(+1)"
 
     >
@@ -167,7 +165,6 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
       this.submitAttempted = true;
       this.v$.$validate().then((success) => {
         if (success) {
-          console.log("bankingform is emitting update:company")
           this.onUpdate({
             vatId: this.vatId,
             iban: this.iban,

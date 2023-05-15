@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block content %}
+  <noscript>
+    <strong>{% blocktrans %}We're sorry but this app doesn't work properly without JavaScript enabled.
+      Please enable it to continue.{% endblocktrans %}</strong>
+  </noscript>
+
+  <div id="app"
+       data-language-code="{{ LANGUAGE_CODE }}"
+       data-companies-url="{% url 'api:company-list' %}"
+       data-iban-url="{% url 'api:iban-lookup' %}"
+       {% if company %}data-company-update-url="{{ company.api_url }}"{% endif %}
+       data-success-url="{% url 'dashboard' %}"
+  ></div>
+
+{% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script src="{% static "companies_app/js/chunk-vendors.js" %}" type="text/javascript"></script>
+  <script src="{% static "companies_app/js/app.js" %}" type="text/javascript"></script>
+{% endblock javascript %}
+
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "companies_app/css/app.css" %}">
+{% endblock css %}

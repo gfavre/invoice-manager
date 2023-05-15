@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
 
 from ..forms import (
     CompanyCreateWizardBankDataForm,
@@ -52,6 +53,19 @@ class CompanyWizardView(LoginRequiredMixin, CreateView):
         self.object = form.save()
         self.object.users.add(self.request.user)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class CompanyAppView(LoginRequiredMixin, TemplateView):
+    template_name = "companies_app/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "pk" in self.kwargs:
+            context["company_id"] = self.kwargs["pk"]
+            context["company"] = get_object_or_404(
+                Company, pk=self.kwargs["pk"], users=self.request.user
+            )
+        return context
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):

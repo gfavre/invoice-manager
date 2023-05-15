@@ -1,7 +1,7 @@
 <template>
   <div id="div_id_name" class="form-group">
     <label for="id_name" class="requiredField">
-      Nom de l'entreprise<span class="asteriskField">*</span>
+      {{ $t("Company name")}}<span class="asteriskField">*</span>
     </label>
     <div>
       <input type="text" maxlength="255" required="required" id="id_name" name="name"
@@ -14,7 +14,7 @@
   </div>
 
   <div id="div_id_address" class="form-group">
-    <label for="id_address">Adresse</label>
+    <label for="id_address">{{ $t("Address")}}</label>
     <div>
       <textarea name="address" cols="40" rows="2" id="id_address" class="textarea form-control"
                 v-model="address"
@@ -25,17 +25,15 @@
   <div class="form-row">
     <div class="col-md-4">
       <div id="div_id_country" class="form-group">
-        <label for="id_country">Pays</label>
-        <div>
-          <country-select
-              v-model="country"
-              :country="country"
-              :autocomplete="true"
-              :removePlaceholder="true"
-              topCountry="CH"
-              className="lazyselect custom-select"
-          />
-        </div>
+        <label for="id_country">{{ $t("Country")}}</label>
+        <country-select
+            v-model="country"
+            :country="country"
+            :autocomplete="true"
+            :removePlaceholder="true"
+            topCountry="CH"
+            className="lazyselect custom-select"
+        />
       </div>
 
     </div>
@@ -44,14 +42,14 @@
           v-model:city="city"
           v-model:zipCode="zipCode"
           :city-label="$t('City')"
-          :zipCode-label="$t('Postal code')"
+          :zip-code-label="$t('Postal code')"
       ></city-auto-complete>
     </div>
   </div>
 
 
   <div id="div_id_phone" class="form-group">
-    <label for="id_phone">Numéro de téléphone</label>
+    <label for="id_phone">{{ $t("Phone number")}}</label>
     <input type="tel" maxlength="128" id="id_phone" class="textinput textInput form-control"
            v-model="phone" :class="{ 'is-invalid': v$.phone.$error && submitAttempted }"
     >
@@ -60,7 +58,7 @@
   </div>
 
   <div id="div_id_additional_phone" class="form-group">
-    <label for="id_additional_phone">Numéro de téléphone supplémentaire</label>
+    <label for="id_additional_phone">{{ $t("Additional phone number")}}</label>
     <input type="tel" maxlength="128" id="id_additional_phone" class="textinput textInput form-control"
            v-model="additionalPhone"
            :class="{ 'is-invalid': v$.additionalPhone.$error && submitAttempted }"
@@ -70,31 +68,27 @@
   </div>
 
   <div id="div_id_email" class="form-group">
-    <label for="id_email">Email</label>
-    <div>
-      <input type="email" name="email" maxlength="254" id="id_email" class="emailinput form-control"
-             v-model="email"
-             :class="{ 'is-invalid': v$.email.$error && submitAttempted }"
-      />
-      <span class="invalid-feedback" v-if="v$.email.$error">{{ $t("Email address is invalid") }}</span>
-    </div>
+    <label for="id_email">{{ $t("Email")}}</label>
+    <input type="email" name="email" maxlength="254" id="id_email" class="emailinput form-control"
+           v-model="email"
+           :class="{ 'is-invalid': v$.email.$error && submitAttempted }"
+    />
+    <span class="invalid-feedback" v-if="v$.email.$error">{{ $t("Email address is invalid") }}</span>
   </div>
 
   <div id="div_id_website" class="form-group">
-    <label for="id_website">Site Web</label>
-    <div>
-      <input type="url" name="website" maxlength="200" id="id_website" class="urlinput form-control"
-             placeholder="https://example.com"
-             v-model="website"
-             :class="{ 'is-invalid': v$.website.$error && submitAttempted }"
-      />
-      <span class="invalid-feedback" v-if="v$.website.$error">{{ $t("Website address is invalid, it should begin with http[s]://") }}</span>
+    <label for="id_website">{{ $t("Website")}}</label>
+    <input type="url" name="website" maxlength="200" id="id_website" class="urlinput form-control"
+           placeholder="https://example.com"
+           v-model="website"
+           :class="{ 'is-invalid': v$.website.$error && submitAttempted }"
+    />
+    <span class="invalid-feedback" v-if="v$.website.$error">{{ $t("websiteInvalid") }}</span>
 
-    </div>
   </div>
 
   <div class="buttonHolder">
-    <input type="submit" name="next-1" value="Suivant" class="btn btn btn-primary white" @click="handleSubmit()">
+    <input type="submit" name="next-1" :value="$t('Next')" class="btn btn btn-primary white" @click="handleSubmit()">
   </div>
 </template>
 

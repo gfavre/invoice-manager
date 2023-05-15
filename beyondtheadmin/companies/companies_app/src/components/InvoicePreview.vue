@@ -2,7 +2,7 @@
   <div class="container invoice" :style="`--background-color: ${contrastColor}`">
     <div class="row">
       <div class="col-3" id="side">
-        <h1>Invoice</h1>
+        <h1>{{ $t("Invoice") }}</h1>
         <div itemscope itemtype="http://schema.org/LocalBusiness" id="company-address">
           <span itemprop="name">{{ company.name }}</span> <br>
 
@@ -13,7 +13,7 @@
               itemprop="addressLocality">{{ company.city }}</span><br>
           </address>
           <div v-if="company.phone">
-            <span v-if="!company.additionalPhone">Tél.</span>
+            <span v-if="!company.additionalPhone">{{ $t("Tel") }}</span>
             {{ company.phone }}
             <br>
           </div>
@@ -32,14 +32,14 @@
           </div>
 
           <div v-if="company.vatId">
-            <span>TVA:</span> <span itemprop="vatID">{{ company.vatId }}</span>
+            <span>{{ $t("VAT ID") }}:</span> <span itemprop="vatID">{{ company.vatId }}</span>
             <br>
           </div>
           {{ company.iban }}
         </div>
 
       </div>
-      <div class="col" id="content">
+      <div class="col-9" id="content">
         <div class="row justify-content-end">
           <section class="col-12 text-right" id="logo" v-if="logo">
             <img :src="logo">
@@ -57,7 +57,7 @@
         <section id="invoice-content">
           <h3>{{ invoice.title }}</h3>
           <p>{{ invoice.description }}</p>
-          <p>Travaux effectués entre le {{ invoice.period_start }} et le {{ invoice.period_end }}</p>
+          <p>{{ $t("workDone", {start: invoice.period_start, end: invoice.period_end})}}</p>
 
           <dl class="row">
             <dt class="col-3">{{ $t("Invoice ID") }}</dt>
@@ -120,7 +120,7 @@
         <section class="row">
           <div :class="{'col-6': hasSignature, 'col': !hasSignature}">
             <span v-if="thanksMessage" v-html="thanksMessage"></span>
-            <span v-else>{{ $t("Thank you for your continued confidence.") }}</span>
+            <span v-else>{{ $t("defaultInvoiceThanks") }}</span>
           </div>
           <div v-if="hasSignature" class="col-6" id="signature">
             <img v-if="signatureImage" :src="signatureImage" id="signature-image">

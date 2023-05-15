@@ -30,7 +30,7 @@
 
   <div class="form-container" ref="container" :class="activeSection" :style="gridStyle">
     <div v-show="activeSection === 'form' || activeSection === 'both'" class="invoice-form" ref="form">
-      <FileInput v-model="logo" @input="handleLogoInput" label="Logo"></FileInput>
+      <FileInput v-model="logo" @input="handleLogoInput" :label="$t('Logo')"></FileInput>
       <p v-if="logoFileName"><i class="bi bi-file-earmark-image"></i> {{ logoFileName }}</p>
 
       <div id="div_id_contrast_color" class="form-group">
@@ -41,28 +41,28 @@
       </div>
 
       <div id="div_id_invoice_note" class="form-group">
-        <label for="id_invoice_note">Remarques</label>
+        <label for="id_invoice_note">{{ $t("Notes") }}</label>
         <Editor v-model="invoiceNote"
                 api-key="nf16mminr724hh5tj7jgizwldbt3wy1rhmriy9trfwefr4wq"
                 :init="tinyMCEConfig"/>
-        <small id="hint_id_invoice_note" class="form-text text-muted">Affiché entre les coordonnées bancaires et la
-          signature</small>
+        <small id="hint_id_invoice_note" class="form-text text-muted">
+          {{ $t("Displayed between banking details and signature") }}
+        </small>
       </div>
 
       <div id="div_id_thanks" class="form-group">
-        <label for="id_thanks">Merci</label>
+        <label for="id_thanks">{{ $t("Thanks") }}</label>
         <Editor v-model="thanksMessage"
                 api-key="nf16mminr724hh5tj7jgizwldbt3wy1rhmriy9trfwefr4wq"
                 :init="tinyMCEConfig"/>
 
         <small id="hint_id_thanks" class="form-text text-muted">
-          Remerciements au bas de la facture. Si cette option est activée, elle figurera sur toutes les factures,
-          quelle que soit la langue
+          {{ $t("thanksMessageHelptext") }}
         </small>
       </div>
 
       <div id="div_id_signature_text" class="form-group">
-        <label for="id_signature_text">Signature sous forme de texte</label>
+        <label for="id_signature_text">{{ $t("Signature (text)") }}</label>
         <input type="text" name="signature_text" maxlength="100" id="id_signature_text"
                class="textinput textInput form-control"
                v-model="signatureText">
@@ -71,12 +71,12 @@
       <div id="div_id_signature_image" class="form-group">
         <FileInput v-model="signatureImage"
                    @input="handleSignatureImageInput"
-                   :label="$t('Signature image')"></FileInput>
+                   :label="$t('Signature (image)')"></FileInput>
         <p v-if="signatureFileName"><i class="bi bi-file-earmark-image"></i> {{ signatureFileName }}</p>
       </div>
 
       <div id="div_id_email_signature" class="form-group">
-        <label for="id_email_signature">Signature e-mail</label>
+        <label for="id_email_signature">{{ $t("Signature (email)") }}</label>
         <textarea name="email_signature" cols="40" rows="10" id="id_email_signature"
                   class="textarea form-control"
                   v-model="emailSignature"
@@ -85,30 +85,29 @@
 
       <div id="div_id_from_email" class="form-group">
         <label for="id_from_email" class="requiredField">
-          Email de l’expéditeur<span class="asteriskField">*</span>
+          {{ $t("Reply-to sender email") }}<span class="asteriskField">*</span>
         </label>
         <input type="text" name="from_email" maxlength="255" required="required"
                id="id_from_email" class="textinput textInput form-control"
                v-model="fromEmail">
-
       </div>
 
       <div id="div_id_bcc_email" class="form-group">
-        <label for="id_bcc_email">Copie des factures</label>
+        <label for="id_bcc_email">{{ $t("BCC email") }}</label>
         <input type="email" name="bcc_email" maxlength="254" id="id_bcc_email" class="emailinput form-control"
                v-model="bccEmail"
         >
         <small id="hint_id_bcc_email" class="form-text text-muted">
-          Adresse e-mail qui recevra chaque facture envoyée en bcc
+          {{ $t("Address that would receive a copy of every outgoing email") }}
         </small>
       </div>
 
 
       <div class="buttonHolder">
-        <input type="button" name="prev-3" value="Précédent" class="btn btn btn-secondary white"
+        <input type="button" name="prev-3" :value="$t('Previous')" class="btn btn btn-secondary white"
                @click="handleSubmit(-1)"
         />
-        <input type="submit" value="Enregistrer" class="btn btn btn-primary white"
+        <input type="submit" :value="$t('Save company')" class="btn btn btn-primary white"
                @click="handleSubmit()"
         />
       </div>
