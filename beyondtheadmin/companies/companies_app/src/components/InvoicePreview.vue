@@ -171,13 +171,11 @@ export default {
         country: "CH"
       },
       invoice: {
-        title: "Entretien de votre toiture",
+        title: this.$t("invoiceTitle"),
         code: "dupont-003",
         date: "12 octobre 2023",
         due_date: "12 novembre 2023",
-        description: "Les travaux d'entretien de toiture ont inclus le nettoyage, la vérification des gouttières, " +
-          "la réparation de la cheminée, le remplacement de tuiles endommagées et l'application d'un traitement " +
-          "hydrofuge. Ils ont été effectués par un couvreur qualifié.",
+        description: this.$t("invoiceDescription"),
         period_start: "1er septembre 2023",
         period_end: "15 septembre 2023",
         lines: [

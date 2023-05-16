@@ -54,5 +54,16 @@
   "BCC email": "Adresse e-mail pour les copies cachées",
   "Address that would receive a copy of every outgoing email": "Adresse qui recevra une copie de chaque e-mail sortant",
   "Logo": "Logo",
-  "Save company": "Enregistrer"
+  "Save company": "Enregistrer",
+  "invoiceTitle": "Entretien de votre toiture",
+  "invoiceDescription": "Les travaux d'entretien de toiture ont inclus le nettoyage, la vérification des gouttières, la réparation de la cheminée, le remplacement de tuiles endommagées et l'application d'un traitement hydrofuge. Ils ont été effectués par un couvreur qualifié.",
+  "Company": "Entreprise",
+  "Contact informations": "Informations de contact",
+  "Where will you get paid": "Où serez-vous payé ?",
+  "Invoices": "Factures",
+  "What will invoices look like": "À quoi ressembleront les factures",
+  "Emails": "E-mails",
+  "How do you send the invoices": "Comment envoyez-vous les factures?",
+  "Step 4": "Étape 4",
+  "Setup the email used to send invoices": "Configurer l'e-mail utilisé pour envoyer les factures"
 }

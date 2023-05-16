@@ -1,13 +1,65 @@
 <template>
-  <fieldset class="border-left-info shadow" v-if="stepIndex === 1">
-    <legend>{{ $t("Step 1")}}</legend>
-    <p class="lead">{{ $t("Setup your company's contact informations")}}</p>
-    <company-search
-            autocompleteUrl="/api/companies-search/"
-            companyDetailUrl="/api/company-detail/"
-            :placeholder="$t('Search on company register')"
-            @callback="companyDetailLookupResult"></company-search>
 
+  <div class="card-header border-bottom">
+    <!-- Wizard navigation-->
+    <div class="nav nav-pills nav-justified flex-column flex-xl-row nav-wizard" id="wizard-steps" role="tablist">
+      <!-- Wizard navigation item 1-->
+
+      <!-- find a way to add aria-selected="true" -->
+      <a class="nav-item nav-link" href="#wizard1" data-bs-toggle="tab" role="tab"
+         aria-controls="wizard1"
+         :class="{'active': stepIndex === 1}" @click="stepIndex=1">
+        <div class="wizard-step-icon">1</div>
+        <div class="wizard-step-text">
+          <div class="wizard-step-text-name">{{ $t("Company") }}</div>
+          <div class="wizard-step-text-details">{{ $t("Contact informations") }}</div>
+        </div>
+      </a>
+      <!-- Wizard navigation item 2-->
+      <a class="nav-item nav-link" id="wizard2-tab" href="#wizard2" data-bs-toggle="tab" role="tab"
+         aria-controls="wizard2"
+         :class="{'active': stepIndex === 2, disabled: !stepsFinished[1]}" @click="stepIndex=2">
+        <div class="wizard-step-icon">2</div>
+        <div class="wizard-step-text">
+          <div class="wizard-step-text-name">{{ $t("Bank") }}</div>
+          <div class="wizard-step-text-details">{{ $t("Where will you get paid") }}</div>
+        </div>
+      </a>
+      <!-- Wizard navigation item 3-->
+      <a class="nav-item nav-link" id="wizard3-tab" href="#wizard3" data-bs-toggle="tab" role="tab"
+         aria-controls="wizard3"
+         :class="{'active': stepIndex === 3, disabled: !stepsFinished[2]}" @click="stepIndex=3">
+        <div class="wizard-step-icon">3</div>
+        <div class="wizard-step-text">
+          <div class="wizard-step-text-name">{{ $t("Invoices") }}</div>
+          <div class="wizard-step-text-details">{{ $t("What will invoices look like") }}</div>
+        </div>
+      </a>
+
+       <a class="nav-item nav-link" id="wizard3-tab" href="#wizard4" data-bs-toggle="tab" role="tab"
+         aria-controls="wizard3"
+         :class="{'active': stepIndex === 4, disabled: !stepsFinished[3]}" @click="stepIndex=4">
+        <div class="wizard-step-icon">4</div>
+        <div class="wizard-step-text">
+          <div class="wizard-step-text-name">{{ $t("Emails") }}</div>
+          <div class="wizard-step-text-details">{{ $t("How do you send the invoices") }}</div>
+        </div>
+      </a>
+
+
+    </div>
+  </div>
+
+  <fieldset class="border-left-info shadow" v-if="stepIndex === 1">
+    <legend>{{ $t("Step 1") }}</legend>
+    <p class="lead">{{ $t("Setup your company's contact informations") }}</p>
+    <div class="form-group">
+      <company-search
+          autocompleteUrl="/api/companies-search/"
+          companyDetailUrl="/api/company-detail/"
+          :placeholder="$t('Search on company register')"
+          @callback="companyDetailLookupResult"></company-search>
+    </div>
     <CompanyForm ref="companyForm"
                  :company="company"
                  @next="nextStep"
@@ -15,7 +67,7 @@
     />
   </fieldset>
   <fieldset class="border-left-warning shadow" v-if="stepIndex === 2">
-    <legend>{{ $t("Step 2")}}</legend>
+    <legend>{{ $t("Step 2") }}</legend>
     <p class="lead">{{ $t("Setup your banking informations to receive the payments") }}</p>
     <BankingForm ref="bankingForm"
                  :company="company"
@@ -25,8 +77,8 @@
                  @update="onCompanyUpdate"
     />
   </fieldset>
-  <fieldset  class="border-left-primary shadow" v-if="stepIndex === 3">
-    <legend>{{ $t("Step 3")}}</legend>
+  <fieldset class="border-left-primary shadow" v-if="stepIndex === 3">
+    <legend>{{ $t("Step 3") }}</legend>
     <p class="lead">{{ $t("Setup the invoices' look and feel") }}</p>
     <InvoiceSettingsForm ref="invoiceSettingsForm"
                          :company="company"
@@ -38,6 +90,18 @@
                          @update:company="onCompanyUpdate"
     />
   </fieldset>
+
+    <fieldset class="border-left-primary shadow" v-if="stepIndex === 4">
+    <legend>{{ $t("Step 4") }}</legend>
+    <p class="lead">{{ $t("Setup the email used to send invoices") }}</p>
+    <InvoiceEmailForm ref="invoiceEmailForm"
+                         :company="company"
+                         @prev="previousStep"
+                         @submit="submit"
+                         @update:company="onCompanyUpdate"
+    />
+  </fieldset>
+
 </template>
 
 <script>
@@ -46,22 +110,23 @@ import {useI18n} from 'vue-i18n'
 import CompanySearch from "@/components/CompanySearch.vue";
 import BankingForm from "@/components/BankingForm.vue";
 import InvoiceSettingsForm from "@/components/InvoiceSettingsForm.vue";
+import InvoiceEmailForm from "@/components/InvoiceEmailForm.vue";
 
 const localToServerFieldMapping = {
-        "zipCode": "zip_code",
-        "additionalPhone": "additional_phone",
-        "vatId": "vat_id",
-        "nameForBank": "name_for_bank",
-        "swift": "bic",
-        "contrastColor": "contrast_color",
-        "invoiceNote": "invoice_note",
-        "signatureText": "signature_text",
-        "signatureImage": "signature_image",
-        "thanksMessage": "thanks",
-        "emailSignature": "email_signature",
-        "fromEmail": "from_email",
-        "bccEmail": "bcc_email",
-      };
+  "zipCode": "zip_code",
+  "additionalPhone": "additional_phone",
+  "vatId": "vat_id",
+  "nameForBank": "name_for_bank",
+  "swift": "bic",
+  "contrastColor": "contrast_color",
+  "invoiceNote": "invoice_note",
+  "signatureText": "signature_text",
+  "signatureImage": "signature_image",
+  "thanksMessage": "thanks",
+  "emailSignature": "email_signature",
+  "fromEmail": "from_email",
+  "bccEmail": "bcc_email",
+};
 const ServerToLocalFieldMapping = {};
 for (const [key, value] of Object.entries(localToServerFieldMapping)) {
   ServerToLocalFieldMapping[value] = key;
@@ -74,12 +139,13 @@ export default {
     CompanyForm,
     BankingForm,
     InvoiceSettingsForm,
+    InvoiceEmailForm,
   },
   data() {
     return {
       searchTerm: '',
       stepIndex: 1,
-
+      stepsFinished: [false, false, false, false],
       company: {
         id: '',
         name: '',
@@ -131,17 +197,18 @@ export default {
       this.$refs.bankingForm.setCompany(this.company);
     },
     nextStep() {
+      this.stepsFinished[this.stepIndex] = true;
       this.stepIndex += 1;
+
     },
     previousStep() {
       this.stepIndex -= 1;
     },
     submit() {
+      this.stepsFinished[3] = true;
       window.location.href = this.urls.successUrl;
     },
     onCompanyUpdate(fields) {
-      console.log("app is receiving update")
-      console.log(fields)
       let serverFields = {};
       for (const [field, value] of Object.entries(fields)) {
         this.company[field] = value; // update locally (for instant feedback, will be overwritten by server response)
@@ -154,11 +221,9 @@ export default {
         .then(response => {
           this.setCompany(response.data)
         })
-      .catch(error => {
-        // Handle the error
-        console.error('Error:', error);
-        // ... handle the error in a consistent manner ...
-      });
+        .catch(error => {
+          console.error('Error:', error);
+        });
     },
     cleanCompany(companyServerData) {
       return Object.fromEntries(
@@ -169,7 +234,7 @@ export default {
       this.urls.companyUpdateUrl = this.urls.companiesUrl + companyServerData.id + '/';
       this.company = this.cleanCompany(companyServerData);
     },
-    loadCompany(){
+    loadCompany() {
       this.$http.get(this.urls.companyUpdateUrl).then(response => {
         const company = response.data;
         this.setCompany(company)
@@ -178,10 +243,6 @@ export default {
         console.log(error)
       });
     },
-    saveCompany() {
-      console.log("saving company")
-      console.log(this.company)
-    }
   },
   mounted() {
     const mainAppNode = this.$root.$el.parentElement;
@@ -191,10 +252,19 @@ export default {
     this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
     this.urls.companyUpdateUrl = mainAppNode.getAttribute('data-company-update-url');
     this.urls.successUrl = mainAppNode.getAttribute('data-success-url');
+    const userEmail = mainAppNode.getAttribute('data-user-email');
+    const userName = mainAppNode.getAttribute('data-user-name');
+    if (userEmail) {
+      if (userName) {
+        this.company.fromEmail = `${userName} <${userEmail}>`;
+      }
+      this.company.fromEmail = userEmail;
+    }
     if (this.urls.companyUpdateUrl) {
       this.urls.updateLogoUrl = this.urls.companyUpdateUrl + 'update_logo/';
       this.urls.updateSignatureImageUrl = this.urls.companyUpdateUrl + 'update_signature_image/';
       this.loadCompany();
+      this.stepsFinished = [true, true, true, true];
     }
   },
   setup() {

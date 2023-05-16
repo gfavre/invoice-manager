@@ -54,5 +54,16 @@
   "Address that would receive a copy of every outgoing email": "",
   "thanksMessageHelptext": "Thanks at bottom of invoice. If set, this will be on every invoice, regardless of language",
   "Logo": "Logo",
-  "Save company": "Speichern"
+  "Save company": "Speichern",
+  "invoiceTitle": "Dachwartung",
+  "invoiceDescription": "Die Wartungsarbeiten am Dach umfassten Reinigung, Überprüfung der Regenrinnen, Reparatur des Schornsteins, Austausch beschädigter Dachziegel und das Auftragen einer wasserabweisenden Behandlung. Diese Arbeiten wurden von einem qualifizierten Dachdecker durchgeführt.",
+  "Company": "Unternehmen",
+  "Contact informations": "Kontaktdaten",
+  "Where will you get paid": "Wo werden Sie bezahlt?",
+  "Invoices": "Rechnungen",
+  "What will invoices look like": "Wie werden die Rechnungen aussehen?",
+  "Emails": "E-Mails",
+  "How do you send the invoices": "Wie senden Sie die Rechnungen?",
+  "Step 4": "Schritt 4",
+  "Setup the email used to send invoices": "Richten Sie die E-Mail ein, mit der Rechnungen gesendet werden"
 }

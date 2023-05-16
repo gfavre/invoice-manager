@@ -24,7 +24,6 @@
   "Step 2": "The le step 2",
   "Setup your banking informations to receive the payments": "Setup your banking informations to receive the payments",
   "Setup the invoices' look and feel": "Setup the invoices' look and feel",
-  "VAT": "VAT",
   "The IBAN seems invalid": "The IBAN seems invalid",
   "Often displayed on the back of your bank card, or in your ebanking": "Often displayed on the back of your bank card, or in your ebanking",
   "Bank account's owner name": "Bank account's owner name",
@@ -54,5 +53,17 @@
   "BCC email": "BCC email",
   "Address that would receive a copy of every outgoing email": "Address that would receive a copy of every outgoing email",
   "Logo": "Logo",
-  "Save company": "Save"
+  "Save company": "Save",
+  "VAT ID": "VAT",
+  "invoiceTitle": "Roof Maintenance",
+  "invoiceDescription": "The roof maintenance works included cleaning, checking the gutters, repairing the chimney, replacing damaged tiles, and applying a waterproofing treatment. They were carried out by a qualified roofer.",
+  "Company": "Company",
+  "Contact informations": "Contact informations",
+  "Where will you get paid": "Where will you get paid?",
+  "Invoices": "Invoices",
+  "What will invoices look like": "What will invoices look like?",
+  "Emails": "Emails",
+  "How do you send the invoices": "How do you send the invoices?",
+  "Step 4": "Step 4",
+  "Setup the email used to send invoices": "Setup the email used to send invoices"
 }

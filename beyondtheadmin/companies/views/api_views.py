@@ -75,6 +75,10 @@ class CompaniesViewSet(viewsets.ModelViewSet):
     #    user:User = self.request.user
     #    return user.companies.all()
 
+    def perform_create(self, serializer):
+        company = serializer.save()
+        company.users.add(self.request.user)
+
     def _update_file_for_field(self, request, field_name):
         company = self.get_object()
         file_name = request.META.get("HTTP_X_FILE_NAME")

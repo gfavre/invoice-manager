@@ -19,7 +19,7 @@ module.exports = defineConfig({
   outputDir: path.resolve(__dirname, '../static/', 'companies_app'),
   publicPath: process.env.VUE_APP_STATIC_URL,
 
-  //transpileDependencies: true,
+  // transpileDependencies: true,
 
   pluginOptions: {
     i18n: {
