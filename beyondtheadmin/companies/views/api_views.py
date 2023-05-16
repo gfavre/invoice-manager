@@ -2,9 +2,11 @@ from django.core.files.base import ContentFile
 
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny  # , IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from beyondtheadmin.users.models import User
 
 from ..models import Company
 from ..serializers import CompanyListSerializer, CompanySerializer, IDECompanySerializer
@@ -12,15 +14,12 @@ from ..utils.iban import OpenIban
 from ..utils.zefix import get_detail, search_zefix
 
 
-# from beyondtheadmin.users.models import User
-
-
 MAX_NB_SEARCH_RESULTS = 15
 QUERY_MIN_LENGTH = 3
 
 
 class CompanySearchView(APIView):
-    permission_classes = []  # IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("q")
@@ -37,7 +36,7 @@ class CompanySearchView(APIView):
 
 
 class IBANSearchView(APIView):
-    permission_classes = []  # IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("q")
@@ -48,7 +47,7 @@ class IBANSearchView(APIView):
 
 
 class CompanyDetailView(APIView):
-    permission_classes = []  # IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         query_string = request.query_params.get("uid")
@@ -62,7 +61,7 @@ class CompanyDetailView(APIView):
 
 
 class CompaniesViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]  # [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
 
@@ -71,9 +70,9 @@ class CompaniesViewSet(viewsets.ModelViewSet):
             return CompanyListSerializer
         return self.serializer_class
 
-    # def get_queryset(self):
-    #    user:User = self.request.user
-    #    return user.companies.all()
+    def get_queryset(self):
+        user: User = self.request.user
+        return user.companies.all()
 
     def perform_create(self, serializer):
         company = serializer.save()
