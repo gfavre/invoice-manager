@@ -65,5 +65,8 @@
   "Emails": "E-mails",
   "How do you send the invoices": "Comment envoyez-vous les factures?",
   "Step 4": "Étape 4",
-  "Setup the email used to send invoices": "Configurer l'e-mail utilisé pour envoyer les factures"
+  "Setup the email used to send invoices": "Configurer l'e-mail utilisé pour envoyer les factures",
+  "Provide your company's VAT number to enable VAT-related functionalities in invoices and other relevant areas": {
+    "": "Indiquer le numéro de TVA de votre entreprise pour activer les fonctionnalités liées à la TVA sur les factures"
+  }
 }

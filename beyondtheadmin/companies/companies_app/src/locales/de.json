@@ -65,5 +65,8 @@
   "Emails": "E-Mails",
   "How do you send the invoices": "Wie senden Sie die Rechnungen?",
   "Step 4": "Schritt 4",
-  "Setup the email used to send invoices": "Richten Sie die E-Mail ein, mit der Rechnungen gesendet werden"
+  "Setup the email used to send invoices": "Richten Sie die E-Mail ein, mit der Rechnungen gesendet werden",
+  "Provide your company's VAT number to enable VAT-related functionalities in invoices and other relevant areas": {
+    "": "Geben Sie die MwSt-Identifikationsnummer Ihres Unternehmens ein, um die Mehrwertsteuer-bezogenen Funktionen in Rechnungen und anderen relevanten Bereichen zu aktivieren"
+  }
 }

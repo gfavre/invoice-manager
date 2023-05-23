@@ -4,6 +4,10 @@
     <input type="text" name="vatId" maxlength="20" id="id_vat_id" class="textinput textInput form-control"
            placeholder="CHE-123.456.789"
            v-model="vatId" />
+    <small id="emailHelp" class="form-text text-muted">
+      {{ $t("Provide your company's VAT number to enable VAT-related functionalities in invoices and other relevant areas.") }}
+    </small>
+
   </div>
 
   <div class="form-row">
