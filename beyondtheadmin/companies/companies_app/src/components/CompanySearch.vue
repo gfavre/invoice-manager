@@ -1,6 +1,6 @@
 <template>
   <div class="input-group">
-    <input type="text" class="form-control"
+    <input type="text" class="form-control" autocomplete="off"
            v-model="searchTerm"
            :placeholder="placeholder"
            @input="companyLookup"
