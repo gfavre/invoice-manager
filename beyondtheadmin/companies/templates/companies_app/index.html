@@ -8,21 +8,24 @@
         <div class="row align-items-center justify-content-between">
           <div class="col-auto mt-4">
             <h1 class="page-header-title">
-              {% trans "Create company" %}
-
+              {% if company %}{% trans "Edit company" %}{% else %}{% trans "Create company" %}{% endif %}
             </h1>
             <div class="page-header-subtitle">
-              {% blocktrans %}Here you will create the company that will manage the invoices.{% endblocktrans %}
+              {% if company %}
+                {% blocktrans %}Here you update the company that manages the invoices.{% endblocktrans %}
+              {% else %}
+                {% blocktrans %}Here you will create the company that will manage the invoices.{% endblocktrans %}
+              {% endif %}
             </div>
           </div>
         </div>
       </div>
     </div>
   </header>
-<section class="card card-header-actions mb-4">
-    <header class="card-header ">
+  <section class="card card-header-actions mb-4">
+  <header class="card-header ">
 
-    </header>
+  </header>
   <noscript>
     <strong>{% blocktrans %}We're sorry but this app doesn't work properly without JavaScript enabled.
       Please enable it to continue.{% endblocktrans %}</strong>
@@ -35,7 +38,7 @@
        {% if company %}data-company-update-url="{{ company.api_url }}"{% endif %}
        data-success-url="{% url 'dashboard' %}"
        data-user-email="{{ user.email }}"
-        data-user-name="{{ user.name }}"
+       data-user-name="{{ user.name }}"
   ></div>
 
 {% endblock %}
