@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ckeditor.fields import RichTextField
 from colorfield.fields import ColorField
@@ -62,7 +62,7 @@ class Company(UUIDModel):
     from_email = models.CharField(
         _("From email"),
         max_length=255,
-        default="{} <{}>".format(settings.ADMINS[0][0], settings.ADMINS[0][1]),
+        default=f"{settings.ADMINS[0][0]} <{settings.ADMINS[0][1]}>",
     )
     bcc_email = models.EmailField(
         _("Copy of invoices"),

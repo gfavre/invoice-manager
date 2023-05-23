@@ -15,7 +15,6 @@ class CompanyInline(admin.TabularInline):
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-
     form = UserChangeForm
     add_form = UserCreationForm
     fieldsets = (("User", {"fields": ("name",)}),) + tuple(auth_admin.UserAdmin.fieldsets)

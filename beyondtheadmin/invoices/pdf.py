@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 import logging
 
@@ -52,7 +51,6 @@ def build_content_for_pdf(invoice: Invoice, domain_name=None, use_https=True):
 
 
 def generate_pdf(content):
-
     phantomjs_conf = PHANTOMJS_CONF.copy()
     phantomjs_conf["content"] = content
     try:

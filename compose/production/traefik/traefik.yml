@@ -27,7 +27,7 @@ http:
   routers:
     web-router:
       rule: "Host(`beyondthewall.ch`) || Host(`www.beyondthewall.ch`)"
-      
+
       entryPoints:
         - web
       middlewares:
@@ -37,7 +37,7 @@ http:
 
     web-secure-router:
       rule: "Host(`beyondthewall.ch`) || Host(`www.beyondthewall.ch`)"
-      
+
       entryPoints:
         - web-secure
       middlewares:

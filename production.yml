@@ -61,5 +61,3 @@ services:
     <<: *django
     image: beyondtheadmin_production_flower
     command: /start-flower
-
-  

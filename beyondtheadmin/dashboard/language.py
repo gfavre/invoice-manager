@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from functools import lru_cache
 
 from django.conf import settings
@@ -42,15 +41,16 @@ def reverse(
         activate(lang)
     else:
         deactivate()
-    url = lang_implied_reverse(view_name, args=args, kwargs=kwargs)
+    url = lang_implied_reverse(view_name, args=args, kwargs=kwargs)  #
     if not use_lang_prefix:
-        if not url.startswith("/{0}".format(settings.LANGUAGE_CODE)):
+        if not url.startswith(f"/{settings.LANGUAGE_CODE}"):
             raise NoReverseMatch(
-                'could not find reverse match for "{}" with language "{}"'.format(view_name, lang)
+                f'could not find reverse match for "{view_name}" with language "{lang}"'
             )
-        url = url[len(settings.LANGUAGE_CODE) + 1 :]
+        pos = len(settings.LANGUAGE_CODE) + 1
+        url = url[pos:]
     activate(cur_language)
-    return url
+    return url  # noqa: R504
 
 
 def get_hreflang_info(path, default=True):
@@ -91,15 +91,15 @@ def get_hreflang_info(path, default=True):
     return info
 
 
-@lru_cache()
+@lru_cache
 def languages():
     """
     Get language and regionale codes and names of all languages that are supported as a dictionary.
     """
-    return {key: name for key, name in settings.LANGUAGES}
+    return dict(settings.LANGUAGES)
 
 
-@lru_cache()
+@lru_cache
 def language_codes():
     """
     Get language with regionale codes of all languages that are supported.

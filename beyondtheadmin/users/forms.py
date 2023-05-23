@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from allauth.account.forms import SignupForm as BaseSignupForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import HTML, Button, Column, Div, Hidden, Layout, Row, Submit
+from crispy_forms.layout import Column, Layout, Row, Submit
 
 
 User = get_user_model()
@@ -18,7 +18,6 @@ class UserChangeForm(admin_forms.UserChangeForm):
 
 
 class UserCreationForm(admin_forms.UserCreationForm):
-
     error_message = admin_forms.UserCreationForm.error_messages.update(
         {"duplicate_username": _("This username has already been taken.")}
     )

@@ -34,7 +34,7 @@ def convert_search_item_to_company_data(result_item):
             address = ""
         else:
             if house_number:
-                address = "{} {}".format(street, house_number)
+                address = f"{street} {house_number}"
             else:
                 address = street
     except AttributeError:
@@ -83,9 +83,8 @@ def search_company(company_name, client_url=UID_PROD_URL):
             "searchNameAndAddressHistory": False,
         },
     )
-    companies = []
     if result is not None:
-        companies = [
+        return [
             convert_search_item_to_company_data(item) for item in result.uidEntitySearchResultItem
         ]
-    return companies
+    return []

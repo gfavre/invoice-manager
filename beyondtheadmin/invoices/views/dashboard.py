@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils.timezone import now
 from django.utils.translation import activate, get_language
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import (
     CreateView,

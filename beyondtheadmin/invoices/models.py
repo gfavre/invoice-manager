@@ -154,7 +154,7 @@ class Invoice(UUIDModel, StatusModel):
 
     def add_pdf(self, content, version):
         invoice_pdf, created = InvoicePDF.objects.get_or_create(invoice=self, version=version)
-        invoice_pdf.pdf.save("{}.pdf".format(self.code), ContentFile(content), save=False)
+        invoice_pdf.pdf.save(f"{self.code}.pdf", ContentFile(content), save=False)
         invoice_pdf.status = InvoicePDF.STATUS.ready
         invoice_pdf.save()
 
@@ -194,7 +194,7 @@ class Invoice(UUIDModel, StatusModel):
         return reverse("invoices:cancel", kwargs={"pk": self.pk})
 
     def get_code(self):
-        return "{}-{}".format(self.client.slug, self.client.invoice_current_count + 1)
+        return f"{self.client.slug}-{self.client.invoice_current_count + 1}"
 
     def get_duplicate_url(self):
         return reverse("invoices:duplicate", kwargs={"pk": self.pk})
@@ -218,7 +218,7 @@ class Invoice(UUIDModel, StatusModel):
     def get_qrbill(self):
         if not (self.due_date and self.company and self.client):
             raise ValueError
-        qr_bill = QRBill(
+        return QRBill(
             account=self.company.iban,
             debtor={
                 "name": self.client.name,
@@ -238,8 +238,6 @@ class Invoice(UUIDModel, StatusModel):
             due_date=self.due_date.strftime("%Y-%m-%d"),
             amount=self.get_total(),
         )
-
-        return qr_bill
 
     def get_qrbill_url(self):
         return reverse("qrbill", kwargs={"pk": self.pk})
@@ -307,8 +305,7 @@ class Invoice(UUIDModel, StatusModel):
     def get_overdue_query_params(values):
         if values and values[0] == "overdue":
             return {"status": Invoice.STATUS.sent, "due_date__lt": now().date()}
-        else:
-            return {"status": Invoice.STATUS.sent, "due_date__gt": now().date()}
+        return {"status": Invoice.STATUS.sent, "due_date__gt": now().date()}
 
 
 class InvoicePDF(UUIDModel, StatusModel):

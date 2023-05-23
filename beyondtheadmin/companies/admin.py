@@ -14,14 +14,13 @@ class CompanyAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return Company.all_objects.prefetch_related("users")
 
+    @admin.display(description=_("Users"))
     def get_users(self, obj):
         def get_user_link(user):
             url = reverse("admin:users_user_change", args=[user.id])
-            return mark_safe('<a href="{}">{}</a>'.format(url, str(user)))
+            return mark_safe(f'<a href="{url}">{str(user)}</a>')
 
         return mark_safe(", ".join([get_user_link(user) for user in obj.users.all()]))
-
-    get_users.short_description = _("Users")
 
 
 @admin.register(Bank)

@@ -86,5 +86,4 @@ class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
         )
 
     def get_cc(self, obj):
-        breakpoint()
         return obj.country.code

@@ -17,7 +17,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset().filter(company__users=self.request.user)
         if "company_uuid" in self.request.query_params:
             company_uuid = self.request.query_params.get("company_uuid")
-            queryset = queryset.filter(company_id=company_uuid)
+            return queryset.filter(company_id=company_uuid)
         return queryset
 
     def get_serializer_class(self):

@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Func, IntegerField, Sum
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from rest_framework.response import Response
@@ -20,15 +20,14 @@ def dashboard(request):
         nb_companies = 0
     if nb_companies > 1:
         return DashboardView.as_view()(request)
-    elif nb_companies == 1:
+    if nb_companies == 1:
         from beyondtheadmin.companies.views import CompanyDetailView
 
         company = request.user.companies.first()
         return CompanyDetailView.as_view()(request, pk=company.pk)
-    else:
-        from beyondtheadmin.companies.views import CompanyAppView
+    from beyondtheadmin.companies.views import CompanyAppView
 
-        return CompanyAppView.as_view()(request)
+    return CompanyAppView.as_view()(request)
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):

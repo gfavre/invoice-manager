@@ -97,13 +97,14 @@ class Client(UUIDModel):
     @property
     def contact_fullname(self):
         if self.contact_last_name:
-            return "{} {}".format(self.contact_first_name, self.contact_last_name)
+            return f"{self.contact_first_name} {self.contact_last_name}"
         return self.contact_first_name
 
     @property
     def full_contact_email(self):
         if self.contact_fullname:
-            return "{} <{}>".format(self.contact_fullname, self.contact_email)
+            return f"{self.contact_fullname} <{self.contact_email}>"
+        return ""
 
     @property
     def is_company(self):

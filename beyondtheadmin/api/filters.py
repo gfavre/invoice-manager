@@ -16,23 +16,23 @@ def cleanup_value(model_class, accessor, values):
             child_field_name,
             values,
         )
-        return "{}__{}".format(parent_field_name, query_filter), cleaned_values
+        return f"{parent_field_name}__{query_filter}", cleaned_values
     # noinspection PyProtectedMember
     model_field = model_class._meta.get_field(accessor)
 
     if hasattr(model_field, "choices") and model_field.choices:
-        return "{}__in".format(accessor), values
+        return f"{accessor}__in", values
     if model_field.get_internal_type() == "BooleanField":
-        return "{}__in".format(accessor), [bool(int(value)) for value in values]
-    elif model_field.get_internal_type() == "DateTimeField":
+        return f"{accessor}__in", [bool(int(value)) for value in values]
+    if model_field.get_internal_type() == "DateTimeField":
         the_date = parse_datetime(values[0])
         if the_date > now():
-            return "{}__isnull".format(accessor), True
-        return "{}__gte".format(accessor), the_date
-    elif model_field.get_internal_type() == "ForeignKey":
-        return "{}__in".format(accessor), values
-    elif model_field.get_internal_type() == "UUIDField":
-        return "{}".format(accessor), values[0]
+            return f"{accessor}__isnull", True
+        return f"{accessor}__gte", the_date
+    if model_field.get_internal_type() == "ForeignKey":
+        return f"{accessor}__in", values
+    if model_field.get_internal_type() == "UUIDField":
+        return f"{accessor}", values[0]
     return accessor, values
 
 
@@ -51,7 +51,7 @@ class DatatablesFilterAndPanesBackend(DatatablesFilterBackend):
             count = 0
             values = []
             while True:
-                pane_value = getter("searchPanes[{}][{}]".format(pane_name, count))
+                pane_value = getter(f"searchPanes[{pane_name}][{count}]")
                 if not pane_value:
                     break
                 values.append(pane_value)
@@ -68,5 +68,5 @@ class DatatablesFilterAndPanesBackend(DatatablesFilterBackend):
                     queryset = queryset.filter(**params)
 
         filtered_count = queryset.count()
-        setattr(view, "_datatables_filtered_count", filtered_count)
+        view._datatables_filtered_count = filtered_count
         return queryset

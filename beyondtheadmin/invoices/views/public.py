@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 import io
 
 from django.http import FileResponse, Http404
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic import DetailView
 
 from ..models import Invoice
@@ -26,5 +25,5 @@ def qrbill(request, *args, **kwargs):
         buffer,
         content_type="image/svg+xml",
         as_attachment=True,
-        filename="{}-qrbill.svg".format(invoice.code),
+        filename=f"{invoice.code}-qrbill.svg",
     )

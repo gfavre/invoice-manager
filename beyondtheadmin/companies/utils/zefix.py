@@ -55,7 +55,6 @@ def search_zefix(company_name):
 
 
 def get_detail(company_uid):
-
     username = settings.ZEFIX_USERNAME
     password = settings.ZEFIX_PASSWORD
     url = f"https://www.zefix.admin.ch/ZefixPublicREST/api/v1/company/uid/{company_uid}"

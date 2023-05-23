@@ -26,12 +26,7 @@ def add_domain(value):
         number = float(value)
         frac, integer = math.modf(number)
         if frac:
-            return mark_safe(
-                'CHF <span class="value">{:1,.2f}</span>'.format(number).replace(",", "'")
-            )
-        else:
-            return mark_safe(
-                'CHF <span class="value">{:1,.0f}.-</span>'.format(number).replace(",", "'")
-            )
+            return mark_safe(f'CHF <span class="value">{number:1,.2f}</span>'.replace(",", "'"))
+        return mark_safe(f'CHF <span class="value">{number:1,.0f}.-</span>'.replace(",", "'"))
     except (ValueError, TypeError):
         return value

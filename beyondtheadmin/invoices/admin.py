@@ -59,11 +59,12 @@ class InvoiceAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.select_related("created_by", "company", "client")
 
+    @admin.display(
+        description=_("Created by"),
+        ordering="created_by__email",
+    )
     def user_link(self, obj):
         if not obj.created_by:
             return ""
         url = reverse("admin:users_user_change", args=[obj.created_by.id])
         return format_html('<a href="{}">{}</a>', url, obj.created_by)
-
-    user_link.short_description = _("Created by")
-    user_link.admin_order_field = "created_by__email"

@@ -26,7 +26,7 @@ def translate_url(context, lang, view_name=None, *args, **kwargs):
         view_name = reverse_match.view_name
         args = reverse_match.args
         kwargs = reverse_match.kwargs
-    return reverse(view_name, lang=lang, *args, **kwargs)
+    return reverse(view_name, lang=lang, *args, **kwargs)  # noqa: B026
 
 
 @register.simple_tag(takes_context=True)
@@ -39,9 +39,7 @@ def hreflang_tags(context, indent=0):
     hreflang_info = get_hreflang_info(context["request"].path)
     hreflang_html = []
     for lang, url in hreflang_info:
-        hreflang_html.append(
-            '<link rel="alternate" hreflang="{0}" href="{1}" />\n'.format(lang, url)
-        )
+        hreflang_html.append(f'<link rel="alternate" hreflang="{lang}" href="{url}" />\n')
     return mark_safe(("\t" * indent).join(hreflang_html))
 
 
@@ -52,11 +50,11 @@ def _make_list_html(path, incl_current):
         if lang == get_language() and incl_current:
             hreflang_html += (
                 '<li class="hreflang_current_language nav-item">'
-                '<strong class="nav-link">{0}</strong></li>\n'.format(lang)
+                '<strong class="nav-link">{}</strong></li>\n'.format(lang)
             )
         else:
             hreflang_html += (
-                '<li class="nav-item"><a href="{0}" class="nav-link" >{1}</a></li>\n'.format(
+                '<li class="nav-item"><a href="{}" class="nav-link" >{}</a></li>\n'.format(
                     url, lang
                 )
             )

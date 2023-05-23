@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import locale
 
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime

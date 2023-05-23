@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - unreleased
 # Changed
 - Disable autocomplete on company search form
+- Pep8 and pre-commit
 
 # Fixed
 - Redirection upon login

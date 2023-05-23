@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 from decimal import Decimal
 
 from django import forms
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from crispy_forms.bootstrap import InlineRadios
 from crispy_forms.helper import FormHelper
@@ -80,7 +79,7 @@ class ClientForm(forms.ModelForm):
     def clean_vat_rate(self):
         vat_rate = self.cleaned_data.get("vat_rate")
         if vat_rate is None:
-            vat_rate = Decimal("0.0")
+            return Decimal("0.0")
         return vat_rate
 
     def save(self, commit=True):

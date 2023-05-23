@@ -27,11 +27,3 @@ class OpenIban:
             "iban": response_json.get("iban"),
             "bank": bank_data,
         }
-
-
-"""
-from beyondtheadmin.companies.utils.iban import OpenIban
-
-OpenIban.validate_iban("CH5080808008848958461")
-
-"""

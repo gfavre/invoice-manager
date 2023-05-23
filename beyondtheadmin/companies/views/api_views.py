@@ -80,7 +80,7 @@ class CompaniesViewSet(viewsets.ModelViewSet):
 
     def _update_file_for_field(self, request, field_name):
         company = self.get_object()
-        file_name = request.META.get("HTTP_X_FILE_NAME")
+        file_name = request.headers.get("x-file-name")
         file_data = ContentFile(request.body)
         if getattr(company, field_name):
             response_status = status.HTTP_200_OK
