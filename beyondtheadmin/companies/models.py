@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -38,6 +40,13 @@ class Company(UUIDModel):
     email = models.EmailField(_("Email"), blank=True)
     website = models.URLField(_("Web site"), blank=True)
     vat_id = models.CharField(_("VAT ID"), blank=True, max_length=20)
+    vat_rate = models.DecimalField(
+        _("VAT rate"),
+        max_digits=6,
+        decimal_places=4,
+        default=Decimal("0.077"),
+        blank=True,
+    )
 
     name_for_bank = models.CharField(_("Bank account's owner name"), max_length=255, blank=True)
     bank = models.TextField(_("Bank"), blank=True)
