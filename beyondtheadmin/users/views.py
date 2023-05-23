@@ -44,8 +44,8 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self):
         if not self.request.user.companies.exists():
-            return reverse("companies:wizard")
-        return reverse("users:detail", kwargs={"username": self.request.user.username})
+            return reverse("companies:create")
+        return reverse("dashboard")
 
 
 user_redirect_view = UserRedirectView.as_view()
