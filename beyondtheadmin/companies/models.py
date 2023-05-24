@@ -63,6 +63,7 @@ class Company(UUIDModel):
         _("From email"),
         max_length=255,
         default=f"{settings.ADMINS[0][0]} <{settings.ADMINS[0][1]}>",
+        blank=True,
     )
     bcc_email = models.EmailField(
         _("Copy of invoices"),

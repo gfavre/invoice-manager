@@ -59,8 +59,39 @@ export default {
       bccEmail: this.company.bccEmail,
     }
   },
+  computed: {
+    defaultSignature() {
+      let signature = `______________________________________________
+
+${this.company.name}
+`;
+      if (this.company.address) {
+        signature += this.company.address + '\n';
+      }
+      const country = this.company.country === 'CH' ? '' : this.company.country + '-';
+      signature += `${country}${this.company.zipCode} ${this.company.city}\n`;
+      if (this.company.email) {
+        signature += this.company.email + '\n';
+      }
+      if (this.company.website) {
+        signature += this.company.website + '\n';
+      }
+      if (this.company.phone) {
+        signature += this.company.phone;
+      }
+      return signature;
+    }
+  },
+  created() {
+    this.emailSignature = this.company.emailSignature || this.defaultSignature;
+  },
   methods: {
     handleSubmit(step) {
+      this.onUpdate({
+        emailSignature: this.emailSignature,
+        fromEmail: this.fromEmail,
+        bccEmail: this.bccEmail,
+      });
       if (step === -1) {
         this.$emit("prev");
       } else {

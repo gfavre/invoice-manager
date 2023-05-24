@@ -28,7 +28,7 @@
                id="id_client_type_0" required=""
                v-model="clientType"/>
         <label class="custom-control-label" for="id_client_type_0">
-          <i class="bi bi-journal"></i> {{ $t("Company") }}
+          <i class="bi bi-buildings"></i> {{ $t("Company") }}
         </label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">

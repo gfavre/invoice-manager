@@ -72,8 +72,8 @@
     <BankingForm ref="bankingForm"
                  :company="company"
                  :ibanUrl="urls.ibanUrl"
-                 @next="nextStep"
                  @prev="previousStep"
+                 @next="nextStep"
                  @update="onCompanyUpdate"
     />
   </fieldset>
@@ -84,10 +84,9 @@
                          :company="company"
                          :update-logo-url="urls.updateLogoUrl"
                          :update-signature-image-url="urls.updateSignatureImageUrl"
-                         @next="nextStep"
                          @prev="previousStep"
-                         @submit="submit"
-                         @update:company="onCompanyUpdate"
+                         @next="nextStep"
+                         @update="onCompanyUpdate"
     />
   </fieldset>
 
@@ -98,7 +97,7 @@
                          :company="company"
                          @prev="previousStep"
                          @submit="submit"
-                         @update:company="onCompanyUpdate"
+                         @update="onCompanyUpdate"
     />
   </fieldset>
 
@@ -175,6 +174,8 @@ export default {
         fromEmail: '',
         bccEmail: '',
       },
+      userEmail: '',
+      userName: '',
       urls: {
         companiesUrl: '',
         companyUpdateUrl: '',
@@ -225,6 +226,7 @@ export default {
           console.error('Error:', error);
         });
     },
+
     cleanCompany(companyServerData) {
       return Object.fromEntries(
         Object.entries(companyServerData).map(([key, value]) => [ServerToLocalFieldMapping[key] || key, value])
@@ -233,15 +235,27 @@ export default {
     setCompany(companyServerData) {
       this.urls.companyUpdateUrl = this.urls.companiesUrl + companyServerData.id + '/';
       this.company = this.cleanCompany(companyServerData);
+      this.company.fromEmail = this.defaultFromEmail;
     },
     loadCompany() {
       this.$http.get(this.urls.companyUpdateUrl).then(response => {
         const company = response.data;
-        this.setCompany(company)
+        this.setCompany(company);
         this.$refs.companyForm.setCompany(this.company);
       }).catch(error => {
         console.log(error)
       });
+    },
+  },
+  computed: {
+    defaultFromEmail() {
+      if (this.company.fromEmail) {
+        return this.company.fromEmail;
+      }
+      if (this.userName) {
+        return `${this.userName} <${this.userEmail}>`;
+      }
+      return this.userEmail;
     },
   },
   mounted() {
@@ -252,14 +266,9 @@ export default {
     this.urls.ibanUrl = mainAppNode.getAttribute('data-iban-url');
     this.urls.companyUpdateUrl = mainAppNode.getAttribute('data-company-update-url');
     this.urls.successUrl = mainAppNode.getAttribute('data-success-url');
-    const userEmail = mainAppNode.getAttribute('data-user-email');
-    const userName = mainAppNode.getAttribute('data-user-name');
-    if (userEmail) {
-      if (userName) {
-        this.company.fromEmail = `${userName} <${userEmail}>`;
-      }
-      this.company.fromEmail = userEmail;
-    }
+    this.userEmail = mainAppNode.getAttribute('data-user-email');
+    this.userName = mainAppNode.getAttribute('data-user-name');
+
     if (this.urls.companyUpdateUrl) {
       this.urls.updateLogoUrl = this.urls.companyUpdateUrl + 'update_logo/';
       this.urls.updateSignatureImageUrl = this.urls.companyUpdateUrl + 'update_signature_image/';

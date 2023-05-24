@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Fixed
 - Redirection upon login
 - Company edition titles
+- Saving of email and invoice fields on company edition
 
 
 ## [1.5.0] - 2023-05-16
