@@ -1,4 +1,6 @@
 <template>
+  <div class="body">
+
   <div class="container invoice" :style="`--background-color: ${contrastColor}`">
     <div class="row">
       <div class="col-3" id="side">
@@ -9,7 +11,7 @@
           <address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
             <span itemprop="streetAddress">{{ company.address }}</span><br>
             <span itemprop="addressCountry" v-if="company.country">{{ company.country }}-</span><span
-              itemprop="postalCode">{{ company.zipcode }}</span> <span
+              itemprop="postalCode">{{ company.zipCode }}</span> <span
               itemprop="addressLocality">{{ company.city }}</span><br>
           </address>
           <div v-if="company.phone">
@@ -35,7 +37,6 @@
             <span>{{ $t("VAT ID") }}:</span> <span itemprop="vatID">{{ company.vatId }}</span>
             <br>
           </div>
-          {{ company.iban }}
         </div>
 
       </div>
@@ -44,9 +45,14 @@
           <section class="col-12 text-right" id="logo" v-if="logo">
             <img :src="logo">
           </section>
+          <section class="col-12 text-right" id="logo" v-else>
+            <div class="fake-img"></div>
+          </section>
+
           <section class="col-6" id="customer-address">
             <address>
               {{ client.name }}<br>
+              {{ client.contactPerson }}<br>
               {{ client.address }}<br>
               {{ client.country }} - {{ client.zipCode }} {{ client.city }}
             </address>
@@ -130,6 +136,8 @@
       </div>
     </div>
   </div>
+      </div>
+
 </template>
 
 <script>
@@ -164,7 +172,8 @@ export default {
   data() {
     return {
       client: {
-        name: "Jean Dupont SA",
+        name: "Metallic SA",
+        contactPerson: "M. Jean Dupont",
         address: "Route des Acacias 1",
         city: "Genève",
         zipCode: "1211",
@@ -224,26 +233,37 @@ export default {
 </script>
 
 <style scoped>
-body {
+.row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.body {
   font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 11pt;
+  font-size: 9.3pt;
   font-weight: 300;
   position: relative;
+  color: #000;
 
 }
-
+.invoice{
+   padding: 10mm 10mm 0 10mm;
+}
 .invoice a:link, .invoice a:visited, .invoice a:hover, .invoice a:active {
   color: var(--background-color);
 }
 
 .invoice h1 {
-  font-size: 36pt;
+  font-size: 3.25em;
   font-weight: 100;
   margin-top: 5.5cm;
 }
 
 .invoice h3 {
-  font-size: 14pt;
+  font-size: 1.25em;
   font-weight: 500;
 }
 
@@ -253,7 +273,7 @@ body {
 
 .invoice .table {
   font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 11pt;
+  font-size: 1em;
   font-weight: 300;
   width: 100%;
 }
@@ -262,13 +282,13 @@ body {
   background-color: var(--background-color);
   color: white;
   border-right: 0.5px solid white;
-  padding: 4pt;
-  line-height: 12pt;
+  padding: .35em;
+  line-height: 1.1em;
 }
 
 .invoice .table td {
-  padding: 4pt;
-  line-height: 12pt;
+  padding: .35em;
+  line-height: 1.1em;
 }
 
 .invoice .table thead th {
@@ -293,21 +313,24 @@ body {
 
 #company-address {
   position: absolute;
-  top: 12.75cm;
-  font-size: 10pt;
+  top: 11.45cm;
+  font-size: 0.9em;
 }
 
-#logo img {
+#logo img, #logo .fake-img {
   height: 2.5cm;
 }
 
 #customer-address {
-  margin-top: 3.5cm;
-  height: 5cm;
+  margin-top: 3.0cm;
+  height: 4.5cm;
 }
 
 #customer-address address {
-  margin-bottom: 5rem;
+  margin-bottom: 4.5rem;
+}
+#customer-address p {
+  margin-bottom: 0;
 }
 
 #invoice-content {
@@ -342,16 +365,6 @@ section {
   width: 100%;
 }
 
-@media print {
-  @page {
-    size: 210mm 297mm;
-    margin: 10mm 10mm 0mm 10mm;
-  }
-
-  .invoice {
-    width: 210mm;
-    margin-top: 10mm;
-  }
 
   a:not(.btn) {
     text-decoration: none;
@@ -382,5 +395,5 @@ section {
     position: static;
     min-height: 136vh;
   }
-}
+
 </style>

@@ -90,11 +90,13 @@
       <i class="bi bi-arrow-left-right"></i>
     </div>
     <div v-show="activeSection === 'preview' || activeSection === 'both'" class="invoice-preview" ref="preview">
-      <InvoicePreview :company="company"
+      <div class="a4-content" id="a4-content">
+        <InvoicePreview :company="company"
                       :contrast-color="contrastColor" :invoice-note="invoiceNote"
                       :thanks-message="thanksMessage" :logo="logoUrl"
                       :signature-text="signatureText" :signature-image="signatureImageUrl"
-      />
+        />
+      </div>
     </div>
   </div>
 
@@ -215,7 +217,7 @@ export default {
           }
         default:
           return {
-            gridTemplateColumns: '1fr 24px 2fr',
+            gridTemplateColumns: '1fr 24px 2.5fr',
           }
       }
     },
@@ -420,11 +422,20 @@ export default {
   overflow: hidden;
   resize: horizontal;
   min-width: 0;
-  background-color: #fff;
   cursor: auto;
   border: 1px solid lightslategray;
   border-left: none;
-
+  background-color: #f5f5f5;
+}
+.a4-content {
+  width: 210mm;
+  height: 297mm;
+  margin: 0 auto;
+  border: 1px #d3d3d3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transform: scale(0.8);
 }
 
 @media (max-width: 768px) {
