@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable autocomplete on company search form
 - Pep8 and pre-commit
 - Remove IBAN from left column in invoices
+- Pregenerate email signature
 
 # Fixed
 - Redirection upon login
