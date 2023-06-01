@@ -9,7 +9,6 @@
   "Remove": "Remove",
   "Company": "Company",
   "Client": "Client",
-  "Displayed date": "Displayed date",
   "Due date": "Due date",
   "Total": "Total",
   "Select date": "Select date",
@@ -26,5 +25,7 @@
   "Total including tax": "Total including tax",
   "Preview": "Preview",
   "Default VAT rate for {client} is {vatRate}%": "Default VAT rate for {client} is {vatRate}%",
-  "This field is required": "This field is required"
+  "This field is required": "This field is required",
+  "Invoice date": "Invoice date",
+  "period-helptext": "Optional. Select dates if you need to specify the period during which the work was done."
 }

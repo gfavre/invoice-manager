@@ -40,7 +40,7 @@
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_displayed_date" class="form-group">
-                <label for="id_displayed_date" class="">{{ $t("Displayed date") }}</label>
+                <label for="id_displayed_date" class="">{{ $t("Invoice date") }}</label>
                 <VueDatePicker v-model="invoice.displayed_date"
                                :enable-time-picker="false"
                                :format="formatDate"
@@ -106,7 +106,6 @@
           </div>
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
-              <div id="div_id_period_start" class="form-group">
                 <label for="id_period_start" class="">{{ $t("Start of invoice period") }}</label>
                 <VueDatePicker v-model="invoice.period_start"
                                :enable-time-picker="false"
@@ -116,10 +115,8 @@
                                @update:model-value="updatePeriodEnd"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
-              </div>
             </div>
             <div class="form-group col-md-6 mb-0">
-              <div id="div_id_period_end" class="form-group">
                 <label for="id_period_end" class="">{{ $t("End of invoice period") }}</label>
                 <VueDatePicker v-model="invoice.period_end"
                                :enable-time-picker="false"
@@ -130,7 +127,13 @@
                                @update:model-value="saveInvoice"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
-              </div>
+            </div>
+            <div class="form-group col-md-12">
+              <small id="price_help" class="form-text text-muted">
+                  {{
+                    $t("period-helptext")
+                  }}
+                </small>
             </div>
           </div>
           <div class="card border-left-info shadow mb-3">
@@ -345,7 +348,8 @@ export default {
         price_per_unit: this.client.default_hourly_rate, id: null, total: 0
       });
       this.$nextTick(() => {
-        this.$refs.invoiceLines[this.$refs.invoiceLines.length - 1].focus();
+        if (this.$refs.invoiceLines.length > 1)
+          this.$refs.invoiceLines[this.$refs.invoiceLines.length - 1].focus();
       });
     },
     removeLine(index) {

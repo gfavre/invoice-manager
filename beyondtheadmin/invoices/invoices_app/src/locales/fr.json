@@ -10,7 +10,6 @@
   "Unit price": "Prix par unité",
   "Remove": "Supprimer",
   "Client": "Client",
-  "Displayed date": "Date affichée",
   "Due date": "Date d'échéance",
   "Total": "Total",
   "Select date": "Choisir une date",
@@ -26,5 +25,7 @@
   "Total including tax": "Total toutes taxes comprises",
   "Preview": "Aperçu",
   "Default VAT rate for {client} is {vatRate}%": "Le taux de TVA par défaut pour {client} est de {vatRate}%",
-  "This field is required": "Ce champ est obligatoire"
+  "This field is required": "Ce champ est obligatoire",
+  "Invoice date": "Date de facturation",
+  "period-helptext": "Facultatif. Sélectionnez les dates si vous devez préciser la période au cours de laquelle le travail a été effectué."
 }

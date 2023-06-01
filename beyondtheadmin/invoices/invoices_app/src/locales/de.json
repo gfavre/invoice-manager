@@ -10,7 +10,6 @@
   "Unit price": "Einheitpreis",
   "Remove": "Entfernen",
   "Client": "Kunde",
-  "Displayed date": "Anzeigedatum",
   "Due date": "Fälligkeitsdatum",
   "Total": "Gesamt",
   "Select date": "Datum auswählen",
@@ -26,5 +25,7 @@
   "Total including tax": "Gesamtsumme inklusive Steuern",
   "Preview": "Vorschau",
   "Default VAT rate for {client} is {vatRate}%": "Standard-MwSt.-Satz für {client} beträgt {vatRate}%",
-  "This field is required": "Dieses Feld ist erforderlich"
+  "This field is required": "Dieses Feld ist erforderlich",
+  "Invoice date": "Rechnungsdatum",
+  "period-helptext": "Optional. Wählen Sie Daten, wenn Sie den Zeitraum angeben müssen, in dem die Arbeit ausgeführt wurde."
 }
