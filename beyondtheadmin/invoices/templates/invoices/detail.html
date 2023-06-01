@@ -254,7 +254,7 @@
           itemprop="addressLocality">{{ invoice.company.city }}</span><br>
         </address>
         {% if invoice.company.phone %}
-          {% if not invoice.company.additional_phone %}<span>Tél.</span>{% endif %}
+          {% if not invoice.company.additional_phone %}<span>{% trans "Tel" %}</span>{% endif %}
           <a href="{{ invoice.company.phone|phone:'RFC3966' }}"
              itemprop="telephone">{{ invoice.company.phone|phone }}</a>
           <br>{% endif %}
@@ -266,7 +266,7 @@
           <a href="mailto:{{ invoice.company.email }}" itemprop="email">{{ invoice.company.email }}</a><br>{% endif %}
         {% if invoice.company.website_url %}
           <a href="{{ invoice.company.website_url }}">{{ invoice.company.website_url }}</a><br>{% endif %}
-        {% if invoice.company.vat_id %}<span>TVA:</span> <span itemprop="vatID">{{ invoice.company.vat_id }}</span>
+        {% if invoice.company.vat_id %}<span>{% trans "UID" %}:</span> <span itemprop="vatID">{{ invoice.company.vat_id }}</span>
           <br>{% endif %}
       </div>
 
@@ -324,6 +324,7 @@
           {% endfor %}
           </tbody>
           <tfoot>
+          {% if invoice.vat_rate %}
           <tr>
             <td colspan="4" class="text-right">{% trans "Subtotal" %}</td>
             <td class="text-nowrap">{{ invoice.subtotal|money_html }}</td>
@@ -333,6 +334,7 @@
             <td class="text-nowrap">{{ invoice.vat_rate|percentage }}</td>
             <td class="text-nowrap">{{ invoice.get_vat|money_html }}</td>
           </tr>
+          {% endif %}
           <tr>
             <th colspan="4" class="text-right">{% trans "Total" %}</th>
             <th class="text-nowrap">{{ invoice.get_total|money_html }}</th>

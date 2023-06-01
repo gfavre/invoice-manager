@@ -34,7 +34,7 @@
           </div>
 
           <div v-if="company.vatEnabled && company.vatId">
-            <span>{{ $t("VAT ID") }}:</span> <span itemprop="vatID">{{ company.vatId }}</span>
+            <span>{{ $t("UID") }}:</span> <span itemprop="vatID">{{ company.vatId }}</span>
             <br>
           </div>
           <div v-else-if="company.vatId">

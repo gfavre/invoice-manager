@@ -25,8 +25,8 @@
           <i class="bi bi-exclamation-triangle" v-if="vatWarning"></i>
           {{
             $t("Default VAT rate for {company} is {vatRate}%", {
-                "company": company.name,
-                "vatRate": company.vat_rate * 100
+              "company": company.name,
+              "vatRate": company.vat_rate * 100
             })
           }}
         </small>
@@ -149,8 +149,8 @@ export default {
   methods: {
     isFormComplete() {
       return this.currency && this.validateNumberInput(this.defaultHourlyRate) &&
-        this.language && this.paymentDelayDays !== "" && this.slug &&
-        this.validateNumberInput(this.vatRate);
+          this.language && this.paymentDelayDays !== "" && this.slug &&
+          this.validateNumberInput(this.vatRate);
     },
     limitSlugify(text) {
       const slug = slugify(text, {lower: true, remove: /[*+~.()'"!:@]/g});
@@ -181,7 +181,7 @@ export default {
       this.defaultHourlyRate = client.default_hourly_rate;
     },
     setDefaults() {
-      if (!this.isVatEnabled){
+      if (!this.isVatEnabled) {
         this.vatRatePercent = 0;
       } else {
         if (!this.vatRate) {
@@ -241,7 +241,7 @@ export default {
   },
   watch: {
     defaultLanguage: function (value) {
-      if (!this.language){
+      if (!this.language) {
         this.language = value
       }
     },

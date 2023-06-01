@@ -168,7 +168,7 @@
             </div>
           </div>
 
-          <div id="div_id_vat_rate" class="form-group col-3" v-if="vatEnabled">
+          <div id="div_id_vat_rate" class="form-group col-6" v-if="vatEnabled">
             <label for="id_vat_rate">{{ $t("VAT rate") }}</label>
             <div class="input-group">
               <input type="text" id="id_vat_rate" class="form-control"
@@ -177,6 +177,15 @@
                 <span class="input-group-text">%</span>
               </div>
             </div>
+            <small id="hint_id_vat_rate" class="form-text" :class="vatWarning ? 'text-warning': 'text-muted'">
+              <i class="bi bi-exclamation-triangle" v-if="vatWarning"></i>
+              {{
+                $t("Default VAT rate for {client} is {vatRate}%", {
+                  "client": client.name,
+                  "vatRate": client.vat_rate * 100
+                })
+              }}
+            </small>
           </div>
           <hr>
           <dl class="row" v-if="vatEnabled">
@@ -199,9 +208,11 @@
 </template>
 
 <script>
+import Decimal from 'decimal.js';
 import moment from 'moment';
 import {v4 as uuidv4} from 'uuid';
 import {useI18n} from 'vue-i18n'
+
 import Editor from '@tinymce/tinymce-vue'
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -243,6 +254,9 @@ export default {
         default:
           return 'en_US';
       }
+    },
+    vatWarning() {
+      return this.vatEnabled && this.client && (this.invoice.vat_rate !== this.client.vat_rate);
     },
   },
   data() {
@@ -362,7 +376,7 @@ export default {
             line.localPrice = this.client.default_hourly_rate;
           }
         });
-        this.invoice.vat_rate = this.client.vat_rate;
+        this.regenVat();
         this.vatRatePercent = this.invoice.vat_rate * 100;
         this.updateTotal();
         this.saveInvoice();
@@ -375,6 +389,7 @@ export default {
         return;
       }
       this.fetchCompany(company.id).then(() => {
+        this.regenVat();
         this.updateClientsList();
         this.saveInvoice();
       });
@@ -383,16 +398,11 @@ export default {
       const response = await this.$http.get(`${this.urls.companiesUrl}${companyId}/`);
       this.company = response.data;
       this.selectedCompany = this.company.name;
-      this.vatEnabled = this.company.enable_vat;
-      this.vatRate = this.company.vat_rate;
-      console.log("updating based on company's vat rate, new rate is", this.vatRate);
     },
     async fetchClient(clientId) {
       const response = await this.$http.get(`${this.urls.clientsUrl}${clientId}/`);
       this.client = response.data;
       this.selectedClient = this.client.name;
-      this.vatRate = this.client.vat_rate;
-      console.log("updating based on clients's vat rate, new rate is", this.vatRate);
     },
     async fetchInvoice() {
       await this.$http.get(this.urls.invoiceUrl).then(response => {
@@ -432,7 +442,7 @@ export default {
         console.error(error)
       });
     },
-    async preview(){
+    async preview() {
       if (this.saving) {
         // create a Promise that resolves when isHandlingClick becomes false
         const waitPromise = new Promise(resolve => {
@@ -468,6 +478,20 @@ export default {
           this.waitResolve();
         }
       });
+    },
+    regenVat() {
+      this.vatEnabled = this.company.enable_vat;
+      if (this.vatEnabled) {
+        if (!this.invoice.vat_rate) {
+          if (this.client.vat_rate) {
+            this.invoice.vat_rate = this.client.vat_rate;
+          } else {
+            this.invoice.vat_rate = this.company.vat_rate;
+          }
+        }
+      } else {
+        this.invoice.vat_rate = 0.0;
+      }
     },
     updateCompaniesList() {
       let url = this.urls.companiesUrl;
@@ -508,9 +532,9 @@ export default {
 
         if (this.invoice.period_start.getDate() === 1) {
           this.invoice.period_end = new Date(
-            this.invoice.period_start.getFullYear(),
-            this.invoice.period_start.getMonth() + 1,
-            0
+              this.invoice.period_start.getFullYear(),
+              this.invoice.period_start.getMonth() + 1,
+              0
           );
         } else {
           let endYear, endMonth;
@@ -530,7 +554,6 @@ export default {
       this.invoice.subtotal = this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
       if (this.vatEnabled) {
         this.invoice.vat = this.invoice.subtotal * this.invoice.vat_rate;
-
       } else {
         this.invoice.vat = 0;
       }
@@ -545,9 +568,8 @@ export default {
       if (decimalIndex !== -1) {
         value = value.slice(0, decimalIndex + 1) + value.slice(decimalIndex + 1).replace(/\./g, '');
       }
-
-      // Set the validated value back to the component
       this.vatRatePercent = value;
+      return value;
     },
   },
 
@@ -565,7 +587,9 @@ export default {
   },
   watch: {
     vatRatePercent: function (value) {
-      this.invoice.vat_rate = value / 100;
+      // Convert the value to a float and use toFixed(2) to limit decimal places to 4
+      const decimalValue = new Decimal(value / 100);
+      this.invoice.vat_rate = decimalValue.toFixed(4);
       this.updateTotal();
     }
   },
@@ -600,6 +624,6 @@ export default {
 }
 
 .tox-tinymce .tox-statusbar__branding {
-  display: none!important;
+  display: none !important;
 }
 </style>

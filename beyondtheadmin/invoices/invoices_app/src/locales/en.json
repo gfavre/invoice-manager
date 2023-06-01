@@ -1,5 +1,4 @@
 {
-  "Client for": "Client for",
   "Invoice": "Invoice",
   "Hour": "Hour",
   "Description": "Description",
@@ -25,5 +24,6 @@
   "Total before tax": "Total before tax",
   "VAT": "VAT",
   "Total including tax": "Total including tax",
-  "Preview": "Preview"
+  "Preview": "Preview",
+  "Default VAT rate for {client} is {vatRate}%": "Default VAT rate for {client} is {vatRate}%"
 }
