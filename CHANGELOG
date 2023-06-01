@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Fixed
 - Missing translations in invoice edition
+- Added remove company button in company edition
 
 
 ## [1.6.0]
