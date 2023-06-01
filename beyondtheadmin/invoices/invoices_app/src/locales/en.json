@@ -25,5 +25,6 @@
   "VAT": "VAT",
   "Total including tax": "Total including tax",
   "Preview": "Preview",
-  "Default VAT rate for {client} is {vatRate}%": "Default VAT rate for {client} is {vatRate}%"
+  "Default VAT rate for {client} is {vatRate}%": "Default VAT rate for {client} is {vatRate}%",
+  "This field is required": "This field is required"
 }

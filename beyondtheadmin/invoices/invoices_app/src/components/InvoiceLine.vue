@@ -141,7 +141,7 @@ export default {
           field.classList.add('is-invalid');
           const errorEl = document.createElement('div');
           errorEl.classList.add('invalid-feedback');
-          errorEl.innerText = 'This field is required';
+          errorEl.innerText = this.$t('This field is required');
           field.parentNode.insertBefore(errorEl, field.nextSibling);
         }
       });

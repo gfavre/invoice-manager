@@ -25,5 +25,6 @@
   "VAT": "TVA",
   "Total including tax": "Total toutes taxes comprises",
   "Preview": "Aperçu",
-  "Default VAT rate for {client} is {vatRate}%": "Le taux de TVA par défaut pour {client} est de {vatRate}%"
+  "Default VAT rate for {client} is {vatRate}%": "Le taux de TVA par défaut pour {client} est de {vatRate}%",
+  "This field is required": "Ce champ est obligatoire"
 }

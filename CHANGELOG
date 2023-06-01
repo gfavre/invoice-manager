@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Changed
 - Simplified navigation if only one company
 
+# Fixed
+- Missing translations in invoice edition
+
 
 ## [1.6.0]
 # Added

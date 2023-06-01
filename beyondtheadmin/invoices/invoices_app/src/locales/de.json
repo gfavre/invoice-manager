@@ -25,5 +25,6 @@
   "VAT": "MwSt.",
   "Total including tax": "Gesamtsumme inklusive Steuern",
   "Preview": "Vorschau",
-  "Default VAT rate for {client} is {vatRate}%": "Standard-MwSt.-Satz für {client} beträgt {vatRate}%"
+  "Default VAT rate for {client} is {vatRate}%": "Standard-MwSt.-Satz für {client} beträgt {vatRate}%",
+  "This field is required": "Dieses Feld ist erforderlich"
 }
