@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## unreleased
 # Changed
 - Simplified navigation if only one company
+- Removed company name on clients lists if not relevant
 
 # Fixed
 - Missing translations in invoice edition

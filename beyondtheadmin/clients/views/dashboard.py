@@ -45,6 +45,11 @@ class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = "clients/list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["has_multiple_companies"] = self.request.user.companies.count() > 1
+        return context
+
     def get_queryset(self):
         return Client.objects.filter(company__users=self.request.user)
 
