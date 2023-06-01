@@ -27,28 +27,6 @@
         <span>{% trans "Add invoice" %}</span>
       </a>
     </li>
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <div class="sidebar-heading">
-      {% trans "Companies" %}
-    </div>
-     <!-- Heading -->
-
-      {% for company in companies %}
-        <li class="nav-item">
-        <a class="nav-link" href="{{ company.get_absolute_url }}" >
-          <i class="bi bi-journal"></i>
-          <span>{{ company }}</span>
-        </a>
-      </li>
-      {% endfor %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'companies:create' %}" >
-        <i class="bi bi-journal-plus"></i>
-        <span>{% trans "Add company" %}</span>
-      </a>
-    </li>
 
       <!-- Divider -->
     <hr class="sidebar-divider">
@@ -68,6 +46,35 @@
         <span>{% trans "Add Client" %}</span>
       </a>
     </li>
+
+     <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    {% if companies.count > 1 %}
+      <div class="sidebar-heading">
+      {% trans "Companies" %}
+    </div>
+     <!-- Heading -->
+
+      {% for company in companies %}
+        <li class="nav-item">
+        <a class="nav-link" href="{{ company.get_absolute_url }}" >
+          <i class="bi bi-building"></i>
+          <span>{{ company }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    {% endif %}
+
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'companies:create' %}" >
+        <i class="bi bi-building-add"></i>
+
+        <span>{% trans "Add company" %}</span>
+      </a>
+    </li>
+
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
