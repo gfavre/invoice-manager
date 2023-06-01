@@ -114,7 +114,9 @@ import InvoiceEmailForm from "@/components/InvoiceEmailForm.vue";
 const localToServerFieldMapping = {
   "zipCode": "zip_code",
   "additionalPhone": "additional_phone",
+  "vatEnabled": "enable_vat",
   "vatId": "vat_id",
+  "vatRate": "vat_rate",
   "nameForBank": "name_for_bank",
   "swift": "bic",
   "contrastColor": "contrast_color",
@@ -158,6 +160,8 @@ export default {
         website: '',
 
         vatId: '',
+        vatEnabled: true,
+        vatRate: 0,
         iban: '',
         nameForBank: '',
         bank: '',

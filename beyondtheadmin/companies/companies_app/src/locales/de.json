@@ -66,5 +66,9 @@
   "How do you send the invoices": "Wie senden Sie die Rechnungen?",
   "Step 4": "Schritt 4",
   "Setup the email used to send invoices": "Richten Sie die E-Mail ein, mit der Rechnungen gesendet werden",
-  "vatNumberHelptext": "Geben Sie die MwSt-Identifikationsnummer Ihres Unternehmens ein, um die Mehrwertsteuer-bezogenen Funktionen in Rechnungen und anderen relevanten Bereichen zu aktivieren."
+  "vatNumberHelptext": "Unternehmens-Identifikationsnummer",
+  "Enable VAT": "MwSt. aktivieren",
+  "If checked, VAT rates and calculations will be setup on invoices": "Wenn aktiviert, werden MwSt.-Sätze und -Berechnungen in Rechnungen eingerichtet",
+  "VAT rate": "MwSt.-Satz",
+  "IDE": "UID"
 }

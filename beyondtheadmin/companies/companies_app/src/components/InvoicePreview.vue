@@ -33,8 +33,12 @@
             <a href="{{ company.website_url }}">{{ company.website }}</a><br>
           </div>
 
-          <div v-if="company.vatId">
+          <div v-if="company.vatEnabled && company.vatId">
             <span>{{ $t("VAT ID") }}:</span> <span itemprop="vatID">{{ company.vatId }}</span>
+            <br>
+          </div>
+          <div v-else-if="company.vatId">
+            <span>{{ $t("IDE") }}:</span> <span itemprop="vatID">{{ company.vatId }}</span>
             <br>
           </div>
         </div>
@@ -96,11 +100,11 @@
             </tr>
             </tbody>
             <tfoot>
-            <tr>
+            <tr v-if="company.vatEnabled && vat_rate">
               <td colspan="4" class="text-right">{{ $t("Subtotal") }}</td>
               <td class="text-nowrap">CHF {{ $formatAmount(invoice.subtotal) }}</td>
             </tr>
-            <tr v-if="vat_rate">
+            <tr v-if="company.vatEnabled && vat_rate">
               <td colspan="3" class="text-right">{{ $t("VAT") }}</td>
               <td class="text-nowrap">{{ vat_rate }}%</td>
               <td class="text-nowrap">CHF {{ $formatAmount(vat) }}</td>
@@ -116,9 +120,9 @@
         <section class="row" id="bank">
           <div class="col-6">{{ $t("Bank details") }}</div>
           <div class="col-6">
-            {{ company.nameForBank }}, {{ company.zipcode }} {{ company.city }}<br>
-            <span v-if="company.bank">{{ company.bank }}<br></span>
-            <span v-if="company.swift">BIC: {{ company.swift }}<br></span>
+            {{ company.nameForBank }}, {{ company.zipCode }} {{ company.city }}<br>
+            <span v-if="company.bank" v-html="formattedBank"></span>
+            <span v-if="company.swift"><br>BIC: {{ company.swift }}<br></span>
             {{ company.iban }}
           </div>
         </section>
@@ -163,11 +167,17 @@ export default {
       return this.invoice.subtotal * this.vat_rate / 100;
     },
     total() {
-      return this.invoice.subtotal + this.vat;
+      if (this.vatEnabled){
+        return this.invoice.subtotal + this.vat;
+      }
+      return this.invoice.subtotal;
     },
     hasSignature() {
       return Boolean(this.signatureText || this.signatureImage)
     },
+    formattedBank() {
+      return this.company.bank.replace(/\n/g, "<br>");
+    }
   },
   data() {
     return {

@@ -1,9 +1,33 @@
 <template>
+  <div class="form-row">
+    <div class="col-md">
+      <div id="div_id_enable_vat" class="form-check">
+        <input class="form-check-input" type="checkbox" id="vatCheckbox" v-model="vatEnabled">
+        <label for="vatCheckbox">{{ $t("Enable VAT") }}</label>
+        <small id="emailHelp" class="form-text text-muted">
+          {{ $t("If checked, VAT rates and calculations will be setup on invoices") }}
+        </small>
+      </div>
+    </div>
+    <div class="col-md" v-if="vatEnabled">
+      <div id="div_id_vat_rate" class="form-group">
+        <label for="id_vat_rate" class="">{{ $t('VAT rate') }}</label>
+        <div class="input-group">
+          <input type="text" id="id_vat_rate" class="form-control"
+                 v-model="vatRatePercent" @input="validateFloatValue">
+          <div class="input-group-append">
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="div_id_vat_id" class="form-group">
-    <label for="id_vat_id">{{ $t("VAT ID")}}</label>
+    <label for="id_vat_id">{{ $t("VAT ID") }}</label>
     <input type="text" name="vatId" maxlength="20" id="id_vat_id" class="textinput textInput form-control"
            placeholder="CHE-123.456.789"
-           v-model="vatId" />
+           v-model="vatId"/>
     <small id="emailHelp" class="form-text text-muted">
       {{ $t("vatNumberHelptext") }}
     </small>
@@ -21,7 +45,7 @@
                v-model="iban" :class="classIbanValid"
         >
         <span class="invalid-feedback" v-if="ibanInvalid">{{ $t("The IBAN seems invalid") }}</span>
-        <span class="invalid-feedback" v-if="v$.iban.$error">{{ $t("This field is required")}}</span>
+        <span class="invalid-feedback" v-if="v$.iban.$error">{{ $t("This field is required") }}</span>
         <small id="emailHelp" class="form-text text-muted">
           {{ $t("Often displayed on the back of your bank card, or in your ebanking") }}
         </small>
@@ -30,7 +54,7 @@
     <div class="col-md-6">
       <div id="div_id_name_for_bank" class="form-group">
         <label for="id_name_for_bank">
-          {{ $t("Bank account's owner name")}}<span class="asteriskField">*</span>
+          {{ $t("Bank account's owner name") }}<span class="asteriskField">*</span>
         </label>
         <input type="text" name="nameForBank" maxlength="255" id="id_name_for_bank"
                class="textinput textInput form-control"
@@ -38,7 +62,7 @@
                v-model="nameForBank" ref="nameForBankField"
                :class="{ 'is-invalid': v$.nameForBank.$error }"
         >
-        <span class="invalid-feedback" v-if="v$.nameForBank.$error">{{ $t("This field is required")}}</span>
+        <span class="invalid-feedback" v-if="v$.nameForBank.$error">{{ $t("This field is required") }}</span>
 
       </div>
     </div>
@@ -47,7 +71,7 @@
   <div class="form-row">
     <div class="col-9">
       <div id="div_id_bank" class="form-group">
-        <label for="id_bank">{{ $t("Bank")}}</label>
+        <label for="id_bank">{{ $t("Bank") }}</label>
         <textarea name="bank" cols="40" rows="3" id="id_bank" class="textarea form-control"
                   v-model="bank"
         ></textarea>
@@ -75,7 +99,8 @@
 </template>
 
 <script>
-import { required } from '@vuelidate/validators'
+import Decimal from 'decimal.js';
+import {required} from '@vuelidate/validators'
 import useValidate from "@vuelidate/core";
 
 export default {
@@ -98,8 +123,12 @@ export default {
   data() {
     return {
       vatId: this.company.vatId,
+      vatEnabled: this.company.vatEnabled,
+      vatRate: this.company.vatRate,
+      vatRatePercent: this.company.vatRate * 100,
+
       iban: this.company.iban,
-      nameForBank: this.company.nameForBank? this.company.nameForBank : this.company.name ,
+      nameForBank: this.company.nameForBank ? this.company.nameForBank : this.company.name,
       bank: this.company.bank,
       swift: this.company.swift,
 
@@ -122,7 +151,7 @@ export default {
       return this.ibanValid === false;
     },
   },
-  methods:{
+  methods: {
     focusFirstInvalidField() {
       const invalidFields = document.querySelectorAll('.is-invalid');
       if (invalidFields.length > 0) {
@@ -154,7 +183,7 @@ export default {
       const response = await fetch(url);
       const finalRes = await response.json();
       this.ibanValid = finalRes.valid;
-      if (this.ibanValid){
+      if (this.ibanValid) {
         this.bank = `${finalRes.bank.name}
 ${finalRes.bank.address}
 ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
@@ -171,6 +200,8 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
         if (success) {
           this.onUpdate({
             vatId: this.vatId,
+            vatEnabled: this.vatEnabled,
+            vatRate: this.vatRate,
             iban: this.iban,
             nameForBank: this.nameForBank,
             bank: this.bank,
@@ -187,25 +218,43 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
       });
     },
     setCompany(company) {
-      this.vatId = this.vatId? this.vatId: company.vatId;
-      this.bank = this.bank? this.bank: company.bank;
-      this.swift = this.swift? this.swift: company.swift;
-      this.iban = this.iban? this.iban: company.iban;
+      this.vatId = this.vatId ? this.vatId : company.vatId;
+      this.bank = this.bank ? this.bank : company.bank;
+      this.swift = this.swift ? this.swift : company.swift;
+      this.iban = this.iban ? this.iban : company.iban;
       if (!this.nameForBank) {
-        this.nameForBank = company.nameForBank? company.nameForBank: company.name;
+        this.nameForBank = company.nameForBank ? company.nameForBank : company.name;
       }
     },
+    validateFloatValue() {
+      // Remove any non-digit or non-decimal characters
+      let value = this.vatRatePercent.replace(/[^0-9.]/g, '');
+
+      // Only allow one decimal point
+      const decimalIndex = value.indexOf('.');
+      if (decimalIndex !== -1) {
+        value = value.slice(0, decimalIndex + 1) + value.slice(decimalIndex + 1).replace(/\./g, '');
+      }
+      this.vatRatePercent = value;
+      return value;
+    }
+
   },
 
   validations() {
     return {
-      iban: { required },
-      nameForBank: { required },
+      iban: {required},
+      nameForBank: {required},
     }
   },
   watch: {
-    iban: function() {
+    iban: function () {
       this.ibanLookup();
+    },
+    vatRatePercent: function (value) {
+      // Convert the value to a float and use toFixed(2) to limit decimal places to 4
+      const decimalValue = new Decimal(value / 100);
+      this.vatRate = decimalValue.toFixed(4);
     }
   }
 

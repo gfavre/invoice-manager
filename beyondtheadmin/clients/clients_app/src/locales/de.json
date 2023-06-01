@@ -4,20 +4,17 @@
   "Company": "Firma",
   "Person": "Person",
   "Invoices": "Rechnungen",
-
   "First name": "Vorname",
   "Last name": "Nachname",
   "Address": "Adresse",
   "Country": "Land",
   "City": "Stadt",
   "Postal code": "Postleitzahl",
-
   "Search on company register": "Suche im Firmenregister",
   "Company name": "Firmenname",
   "Contact's first name": "Vorname des Ansprechpartners",
   "Contact's last name": "Nachname des Ansprechpartners",
   "Contact's email": "E-Mail-Adresse des Ansprechpartners",
-
   "Currency": "Währung",
   "VAT rate": "Mehrwertsteuersatz",
   "Default hourly rate": "Standard-Stundensatz",
@@ -28,10 +25,9 @@
   "Slug": "Kunden-Code",
   "Used to generate invoice code": "Zur Generierung des Rechnungscodes verwendet",
   "Current count of invoices": "Aktuelle Anzahl von Rechnungen",
-
   "English": "Englisch",
   "French": "Französisch",
   "German": "Deutsch",
-  "Italian": "Italienisch"
-
+  "Italian": "Italienisch",
+  "Default VAT rate for {company} is {vatRate}%": "Standard-Mehrwertsteuersatz für {company} ist {vatRate}%"
 }

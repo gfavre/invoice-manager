@@ -39,6 +39,7 @@ class Company(UUIDModel):
 
     email = models.EmailField(_("Email"), blank=True)
     website = models.URLField(_("Web site"), blank=True)
+    enable_vat = models.BooleanField(_("Enable VAT"), default=True)
     vat_id = models.CharField(_("VAT ID"), blank=True, max_length=20)
     vat_rate = models.DecimalField(
         _("VAT rate"),

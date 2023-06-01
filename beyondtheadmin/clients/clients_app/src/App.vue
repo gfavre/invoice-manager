@@ -66,7 +66,10 @@
       <legend class=" mb-1">{{ $t("Invoices") }}</legend>
       <InvoiceForm ref="invoiceForm"
                    @saved="handleComponentSaved"
+                   :company="selectedCompany"
                    :default-language="defaultLanguage"
+                   :default-vat-rate="vatRate"
+                   :is-vat-enabled="vatEnabled"
                    :updated-slug="slug"></InvoiceForm>
     </fieldset>
   </section>
@@ -122,6 +125,9 @@ export default {
       clientId: null,
       companies: [],
       company: "",
+      selectedCompany: {},
+      vatRate: 0,
+      vatEnabled: true,
       savedComponentCount: 0,
       expectedComponentCount: 2,
       defaultLanguage: '',
@@ -204,7 +210,7 @@ export default {
       this.$http.patch(this.urls.clientUpdateUrl, data).then(() => {
         this.handleComponentSaved();
       }).catch(error => {
-        console.error(error)
+        console.error(error);
       });
     },
     slugUpdate(name) {
@@ -228,7 +234,7 @@ export default {
         this.company = this.companies[0].id
       }
     }).catch(error => {
-      console.log(error)
+      console.error(error);
     });
 
     if (this.urls.clientUpdateUrl) {
@@ -241,11 +247,18 @@ export default {
         this.$refs.invoiceForm.setClient(this.client);
         this.$refs.personForm.setClient(this.client);
       }).catch(error => {
-        console.log(error)
+        console.error(error);
       });
     }
   },
-
+  watch:{
+    company(companyId) {
+      this.selectedCompany = this.companies.find(company => company.id === companyId);
+      if (this.selectedCompany !== undefined) {
+        this.vatEnabled = this.selectedCompany.enable_vat;
+        this.vatRate = this.selectedCompany.vat_rate;      }
+    }
+  },
   setup() {
     const {t} = useI18n({
       inheritLocale: true,

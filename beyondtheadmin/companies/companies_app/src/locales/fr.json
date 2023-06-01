@@ -66,5 +66,9 @@
   "How do you send the invoices": "Comment envoyez-vous les factures?",
   "Step 4": "Étape 4",
   "Setup the email used to send invoices": "Configurer l'e-mail utilisé pour envoyer les factures",
-  "vatNumberHelptext": "Indiquez le numéro de TVA de votre entreprise pour activer les fonctionnalités liées à la TVA sur les factures."
+  "vatNumberHelptext": "Numéro d’identification des entreprises",
+  "Enable VAT": "Activer la TVA",
+  "If checked, VAT rates and calculations will be setup on invoices": "Si coché, les taux et les calculs de TVA seront configurés sur les factures",
+  "VAT rate": "Taux de TVA",
+  "IDE": "IDE"
 }

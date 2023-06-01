@@ -49,6 +49,8 @@ class CompanyListSerializer(serializers.ModelSerializer):
             "name",
             "id",
             "url",
+            "enable_vat",
+            "vat_rate",
         )
 
     def get_url(self, obj: Company):
@@ -69,6 +71,8 @@ class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
             "additional_phone",
             "email",
             "website",
+            "enable_vat",
+            "vat_rate",
             "vat_id",
             "name_for_bank",
             "bank",

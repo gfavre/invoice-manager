@@ -18,6 +18,7 @@ def convert_search_item_to_company_data(result_item):
     address = ""
     zip_code = ""
     city = result_item.get("legalSeat")
+    print(result_item)
     if "address" in result_item:
         city = result_item["address"].get("city")
         address = (

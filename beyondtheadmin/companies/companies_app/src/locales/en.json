@@ -66,5 +66,9 @@
   "How do you send the invoices": "How do you send the invoices?",
   "Step 4": "Step 4",
   "Setup the email used to send invoices": "Setup the email used to send invoices",
-  "vatNumberHelptext": "Provide your company's VAT number to enable VAT-related functionalities in invoices and other relevant areas."
+  "vatNumberHelptext": "Standardised business identification number",
+  "Enable VAT": "Enable VAT",
+  "If checked, VAT rates and calculations will be setup on invoices": "If checked, VAT rates and calculations will be setup on invoices",
+  "VAT rate": "VAT rate",
+  "IDE": "UID"
 }

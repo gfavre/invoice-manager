@@ -10,7 +10,7 @@
         </select>
       </div>
     </div>
-    <div class="col-md ">
+    <div class="col-md " v-if="isVatEnabled">
       <div id="div_id_vat_rate" class="form-group">
         <label for="id_vat_rate" class="">{{ $t('VAT rate') }}</label>
         <div class="input-group">
@@ -19,7 +19,17 @@
           <div class="input-group-append">
             <span class="input-group-text">%</span>
           </div>
+
         </div>
+        <small id="hint_id_vat_rate" class="form-text" :class="vatWarning ? 'text-warning': 'text-muted'">
+          <i class="bi bi-exclamation-triangle" v-if="vatWarning"></i>
+          {{
+            $t("Default VAT rate for {company} is {vatRate}%", {
+                "company": company.name,
+                "vatRate": company.vat_rate * 100
+            })
+          }}
+        </small>
       </div>
     </div>
     <div class="col-md ">
@@ -116,13 +126,23 @@ export default {
       language: "",
       paymentDelayDays: 30,
       slug: '',
-      vatRate: 0.077,
-      vatRatePercent: 7.7,
+      vatRate: 0,
+      vatRatePercent: 0,
       currencies: [
         {value: 'CHF', text: 'CHF'},
         {value: 'EUR', text: 'Euro'},
       ],
 
+    }
+  },
+  computed: {
+    vatWarning() {
+      return this.isVatEnabled && this.company && (this.vatRate !== parseFloat(this.company.vat_rate));
+    },
+  },
+  created() {
+    if (!this.vatRate && this.isVatEnabled) {
+      this.vatRate = this.defaultVatRate;
     }
   },
   methods: {
@@ -159,6 +179,15 @@ export default {
       this.vatRatePercent = this.vatRate * 100;
       this.defaultHourlyRate = client.default_hourly_rate;
     },
+    setDefaults() {
+      if (!this.isVatEnabled){
+        this.vatRatePercent = 0;
+      } else {
+        if (!this.vatRate) {
+          this.vatRate = this.defaultVatRate * 100;
+        }
+      }
+    },
     save(clientUpdateUrl) {
       this.$http.patch(clientUpdateUrl, {
         currency: this.currency,
@@ -192,12 +221,22 @@ export default {
     }
   },
   props: {
+    company: {
+      type: Object,
+      required: true,
+    },
     updatedSlug: {
       type: String,
       default: '',
     },
     defaultLanguage: {
       type: String,
+    },
+    defaultVatRate: {
+      type: Number,
+    },
+    isVatEnabled: {
+      type: Boolean,
     },
   },
   watch: {
@@ -208,6 +247,12 @@ export default {
     },
     updatedSlug: function (newSlug) {
       this.slug = this.limitSlugify(newSlug);
+    },
+    defaultVatRate: function () {
+      this.setDefaults();
+    },
+    isVatEnabled: function () {
+      this.setDefaults();
     },
     vatRatePercent: function (value) {
       this.vatRate = value / 100;

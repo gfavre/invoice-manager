@@ -15,6 +15,7 @@
     "@vuelidate/validators": "^2.0.2",
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "decimal.js": "^10.4.3",
     "html-webpack-plugin": "^5.5.1",
     "libphonenumber-js": "^1.10.30",
     "swiss-zipcodes": "^1.0.9",
