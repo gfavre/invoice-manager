@@ -256,7 +256,8 @@ export default {
       this.selectedCompany = this.companies.find(company => company.id === companyId);
       if (this.selectedCompany !== undefined) {
         this.vatEnabled = this.selectedCompany.enable_vat;
-        this.vatRate = this.selectedCompany.vat_rate;      }
+        this.vatRate = this.selectedCompany.vat_rate;
+      }
     }
   },
   setup() {

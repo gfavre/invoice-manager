@@ -12,6 +12,7 @@
     "@vuepic/vue-datepicker": "^4.2.2",
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "decimal.js": "^10.4.3",
     "slugify": "^1.6.5",
     "swiss-zipcodes": "^1.0.9",
     "vue": "^3.2.47",
@@ -30,7 +31,6 @@
     "eslint-plugin-vue": "^8.0.3",
     "vue-cli-plugin-i18n": "~2.3.1",
     "vue-i18n-extract": "^2.0.7"
-
   },
   "eslintConfig": {
     "root": true,

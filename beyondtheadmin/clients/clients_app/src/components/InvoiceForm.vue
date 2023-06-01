@@ -113,6 +113,7 @@
 <script>
 'use strict';
 
+import Decimal from "decimal.js";
 import slugify from "slugify";
 
 
@@ -137,7 +138,7 @@ export default {
   },
   computed: {
     vatWarning() {
-      return this.isVatEnabled && this.company && (this.vatRate !== parseFloat(this.company.vat_rate));
+      return this.isVatEnabled && this.company && (this.vatRate !== this.company.vat_rate);
     },
   },
   created() {
@@ -215,9 +216,8 @@ export default {
       if (decimalIndex !== -1) {
         value = value.slice(0, decimalIndex + 1) + value.slice(decimalIndex + 1).replace(/\./g, '');
       }
-
-      // Set the validated value back to the component
       this.vatRatePercent = value;
+      return value;
     }
   },
   props: {
@@ -255,7 +255,8 @@ export default {
       this.setDefaults();
     },
     vatRatePercent: function (value) {
-      this.vatRate = value / 100;
+      const decimalValue = new Decimal(value / 100);
+      this.vatRate = decimalValue.toFixed(4);
     }
   }
 

@@ -168,7 +168,7 @@
             </div>
           </div>
 
-          <div id="div_id_vat_rate" class="form-group col-3">
+          <div id="div_id_vat_rate" class="form-group col-3" v-if="vatEnabled">
             <label for="id_vat_rate">{{ $t("VAT rate") }}</label>
             <div class="input-group">
               <input type="text" id="id_vat_rate" class="form-control"
@@ -179,12 +179,16 @@
             </div>
           </div>
           <hr>
-          <dl class="row">
+          <dl class="row" v-if="vatEnabled">
             <dt class="col-3 text-right">{{ $t("Total before tax") }}</dt>
             <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.subtotal) }}</dd>
             <dt class="col-3 text-right">{{ $t("VAT") }} ({{ vatRatePercent }}%)</dt>
             <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.vat) }}</dd>
             <dt class="col-3 text-right">{{ $t("Total including tax") }}</dt>
+            <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
+          </dl>
+          <dl class="row" v-else>
+            <dt class="col-3 text-right">{{ $t("Total") }}</dt>
             <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
           </dl>
           <a href="#" @click.prevent="preview" class="btn btn-primary">{{ $t('Preview') }}</a>
@@ -256,7 +260,10 @@ export default {
         additional_phone: '',
         email: '',
         website: '',
+        enable_vat: true,
         vat_id: '',
+        vat_rate: '',
+
 
         name_for_bank: '',
         bank: '',
@@ -284,7 +291,7 @@ export default {
         language: '',
         currency: '',
         payment_delay_days: 30,
-        vat_rate: 0.077,
+        vat_rate: '',
         default_hourly_rate: 0.0,
         slug: '',
       },
@@ -293,7 +300,7 @@ export default {
         code: "",
         due_date: "",
         displayed_date: new Date(),
-        vat_rate: 0.077,
+        vat_rate: 0.0,
         title: "",
         description: "",
         period_start: "",
@@ -303,6 +310,7 @@ export default {
         vat: 0,
         total: 0,
       },
+      vatEnabled: true,
       vatRatePercent: 7.7,
       urls: {
         companiesUrl: "",
@@ -375,11 +383,16 @@ export default {
       const response = await this.$http.get(`${this.urls.companiesUrl}${companyId}/`);
       this.company = response.data;
       this.selectedCompany = this.company.name;
+      this.vatEnabled = this.company.enable_vat;
+      this.vatRate = this.company.vat_rate;
+      console.log("updating based on company's vat rate, new rate is", this.vatRate);
     },
     async fetchClient(clientId) {
       const response = await this.$http.get(`${this.urls.clientsUrl}${clientId}/`);
       this.client = response.data;
       this.selectedClient = this.client.name;
+      this.vatRate = this.client.vat_rate;
+      console.log("updating based on clients's vat rate, new rate is", this.vatRate);
     },
     async fetchInvoice() {
       await this.$http.get(this.urls.invoiceUrl).then(response => {
@@ -515,7 +528,12 @@ export default {
     },
     updateTotal() {
       this.invoice.subtotal = this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
-      this.invoice.vat = this.invoice.subtotal * this.invoice.vat_rate;
+      if (this.vatEnabled) {
+        this.invoice.vat = this.invoice.subtotal * this.invoice.vat_rate;
+
+      } else {
+        this.invoice.vat = 0;
+      }
       this.invoice.total = this.invoice.subtotal + this.invoice.vat;
     },
     validateFloatValue() {
