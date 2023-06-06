@@ -11,9 +11,12 @@
        data-language-code="{{ LANGUAGE_CODE }}"
        data-clients-url="{% url 'api:client-list' %}"
        data-companies-url="{% url 'api:company-list' %}"
-       data-invoice-url="{{ invoice.get_api_url }}"
        data-lines-url="{{ invoice.get_api_lines_url }}"
        data-preview-url="{{ invoice.get_absolute_url }}"
+       {% if company %}data-company-pk="{{ company }}"{% endif %}
+       {% if client %}data-client-pk="{{ client }}"{% endif %}
+       {% if invoice %}data-invoice-url="{{ invoice.get_api_url }}"{% endif %}
+
   ></div>
 {% endblock %}
 

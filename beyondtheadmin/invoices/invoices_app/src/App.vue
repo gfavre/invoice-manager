@@ -1,4 +1,5 @@
 <template>
+
   <div class="container-fluid p-0 p-sm-2">
     <header class="page-header page-header-dark bg-gradient-primary">
       <div class="container">
@@ -18,13 +19,14 @@
       <div class="card">
         <div class="card-body">
           <div class="form-row form-row">
-            <div class="form-group col-md-6 mb-0">
+            <div class="form-group col-md-6 mb-0" v-if="companies.length > 1">
               <div id="div_id_company" class="form-group">
                 <label for="id_company" class=" requiredField">
                   {{ $t("Company") }}<span class="asteriskField">*</span>
                 </label>
                 <typeahead-input :items="companies" @select="handleCompanySelect"
-                                 :value="selectedCompany"></typeahead-input>
+                                 :value="selectedCompanyName"
+                ></typeahead-input>
               </div>
             </div>
             <div class="form-group col-md-6 mb-0">
@@ -33,7 +35,7 @@
                   {{ $t("Client") }}<span class="asteriskField">*</span>
                 </label>
                 <typeahead-input :items="clients" @select="handleClientSelect"
-                                 :value="selectedClient"></typeahead-input>
+                                 :value="selectedClientName"></typeahead-input>
               </div>
             </div>
           </div>
@@ -62,7 +64,6 @@
                                :min-date="invoice.displayed_date"
                                :locale="datePickerLang"
                                :placeholder="$t('Select date')"
-                               @update:model-value="saveInvoice"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
                 <small id="due_date_help" class="form-text text-muted" v-if="client.id">
@@ -84,7 +85,7 @@
             <div>
               <input type="text" name="title" maxlength="100"
                      class="textinput textInput form-control" id="id_title"
-                     v-model="invoice.title" @blur="saveInvoice"/>
+                     v-model="invoice.title" />
             </div>
           </div>
           <div id="div_id_description" class="form-group">
@@ -102,7 +103,7 @@
         'undo redo | bold italic underline strikethrough | forecolor |\
         bullist numlist outdent indent | removeformat'
     }"
-                    @blur="saveInvoice"/>
+                    />
           </div>
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
@@ -124,7 +125,6 @@
                                :min-date="invoice.period_start"
                                :locale="datePickerLang"
                                :placeholder="$t('Select date')"
-                               @update:model-value="saveInvoice"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
             </div>
@@ -152,18 +152,8 @@
 
               <div class="lines">
                 <invoice-line
-                    v-for="line in invoice.lines"
-                    :key="line.uuid"
-                    :description="line.description"
-                    :quantity="line.quantity"
-                    :unit="line.unit"
-                    :price="line.price_per_unit"
-                    :line-id="line.id"
-                    :invoice-id="invoice.id"
-                    :uuid="line.uuid"
-                    :api-url="urls.linesUrl"
-                    @update-line="handleUpdateLine"
-                    @remove="removeLine"
+                    v-for="(line, index) in invoice.lines" :key="index" :line="line"
+                    @remove="removeLine" @update-line="updateLineItem"
                     ref="invoiceLines"
                 />
                 <button type="button" @click="addLine" class="btn btn btn-info">{{ $t("Add line") }}</button>
@@ -175,12 +165,15 @@
             <label for="id_vat_rate">{{ $t("VAT rate") }}</label>
             <div class="input-group">
               <input type="text" id="id_vat_rate" class="form-control"
-                     v-model="vatRatePercent" @input="validateFloatValue" @blur="saveInvoice">
+                     v-model="vatRatePercent" @input="validateFloatValue">
               <div class="input-group-append">
                 <span class="input-group-text">%</span>
               </div>
             </div>
-            <small id="hint_id_vat_rate" class="form-text" :class="vatWarning ? 'text-warning': 'text-muted'">
+            <small id="hint_id_vat_rate" class="form-text"
+                   :class="vatWarning ? 'text-warning': 'text-muted'"
+                   v-if="client.id && company.id"
+            >
               <i class="bi bi-exclamation-triangle" v-if="vatWarning"></i>
               {{
                 $t("Default VAT rate for {client} is {vatRate}%", {
@@ -203,7 +196,8 @@
             <dt class="col-3 text-right">{{ $t("Total") }}</dt>
             <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
           </dl>
-          <a href="#" @click.prevent="preview" class="btn btn-primary">{{ $t('Preview') }}</a>
+          <a href="#" @click.prevent="preview" class="btn btn-primary">{{ $t('Save & Preview') }}</a>&nbsp;
+          <a href="#" @click.prevent="saveInvoice" class="btn btn-secondary">{{ $t('Save draft') }}</a>
         </div>
       </div>
     </section>
@@ -265,53 +259,11 @@ export default {
   data() {
     return {
       companies: [],
-      company: {
-        id: '',
-        name: '',
-        address: '',
-        zip_code: '',
-        city: '',
-        country: '',
-
-        phone: '',
-        additional_phone: '',
-        email: '',
-        website: '',
-        enable_vat: true,
-        vat_id: '',
-        vat_rate: '',
-
-
-        name_for_bank: '',
-        bank: '',
-        bic: '',
-        iban: '',
-
-        logo: '',
-        contrast_color: '',
-
-        signature_text: '',
-        signature_image: '',
-        invoice_note: '',
-        thanks: '',
-      },
-      selectedCompany: '',
+      company: {},
+      selectedCompanyName: '',
       clients: [],
-      selectedClient: '',
-      client: {
-        id: null,
-        name: '',
-        address: '',
-        zip_code: '',
-        city: '',
-        country: '',
-        language: '',
-        currency: '',
-        payment_delay_days: 30,
-        vat_rate: '',
-        default_hourly_rate: 0.0,
-        slug: '',
-      },
+      selectedClientName: '',
+      client: {},
       invoice: {
         id: null,
         code: "",
@@ -336,16 +288,13 @@ export default {
         linesUrl: "",
         previewUrl: "",
       },
-      saving: false,
-      waitResolve: null
-
     }
   },
   methods: {
     addLine() {
       this.invoice.lines.push({
-        uuid: uuidv4(), description: "", quantity: 0.0, unit: "h",
-        price_per_unit: this.client.default_hourly_rate, id: null, total: 0
+        description: "", quantity: 0.0, unit: "h",
+        price_per_unit: this.client.default_hourly_rate, uid: uuidv4(), total: 0
       });
       this.$nextTick(() => {
         if (this.$refs.invoiceLines.length > 1)
@@ -362,15 +311,10 @@ export default {
       const year = date.getFullYear();
       return `${day}.${month}.${year}`;
     },
-    handleUpdateLine(line) {
-      const index = this.invoice.lines.findIndex((l) => l.uuid === line.uuid);
-      this.invoice.lines[index] = line;
-      this.updateTotal()
-    },
+
     handleClientSelect(client) {
       if (!client) {
         this.client = {};
-        this.saveInvoice();
         return;
       }
       // Handle client selection here
@@ -383,30 +327,29 @@ export default {
         this.regenVat();
         this.vatRatePercent = this.invoice.vat_rate * 100;
         this.updateTotal();
-        this.saveInvoice();
       });
     },
     handleCompanySelect(company) {
       if (!company) {
         this.company = {};
-        this.saveInvoice();
         return;
       }
       this.fetchCompany(company.id).then(() => {
         this.regenVat();
         this.updateClientsList();
-        this.saveInvoice();
       });
     },
     async fetchCompany(companyId) {
       const response = await this.$http.get(`${this.urls.companiesUrl}${companyId}/`);
       this.company = response.data;
-      this.selectedCompany = this.company.name;
+      this.selectedCompanyName = this.company.name;
+      this.updateClientsList();
     },
     async fetchClient(clientId) {
       const response = await this.$http.get(`${this.urls.clientsUrl}${clientId}/`);
       this.client = response.data;
-      this.selectedClient = this.client.name;
+      this.selectedClientName = this.client.name;
+      this.updateDueDate();
     },
     async fetchInvoice() {
       await this.$http.get(this.urls.invoiceUrl).then(response => {
@@ -430,7 +373,7 @@ export default {
         }
         this.invoice.lines = response.data.lines;
         this.invoice.lines.forEach((line) => {
-          line.uuid = uuidv4();
+          line.uid = uuidv4();
         });
         if (this.invoice.lines.length === 0) {
           this.addLine();
@@ -447,18 +390,11 @@ export default {
       });
     },
     async preview() {
-      if (this.saving) {
-        // create a Promise that resolves when isHandlingClick becomes false
-        const waitPromise = new Promise(resolve => {
-          this.waitResolve = resolve;
-        });
-        await waitPromise;
-      }
+      await this.saveInvoice();
       window.location.href = this.urls.previewUrl;
     },
 
     async saveInvoice() {
-      this.saving = true;
       const data = {
         company: this.company ? this.company.id : null,
         client: this.client ? this.client.id : null,
@@ -470,18 +406,26 @@ export default {
         period_start: this.invoice.period_start ? moment(this.invoice.period_start).format('YYYY-MM-DD') : null,
         period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
       }
-      await this.$http.patch(this.urls.invoiceUrl, data).then(response => {
-        this.invoice.id = response.data.id;
-        this.invoice.code = response.data.code;
-      }).catch(error => {
-        console.error(error)
-      }).finally(() => {
-        this.saving = false;
-        // resolve the waitPromise if it exists
-        if (this.waitResolve) {
-          this.waitResolve();
-        }
-      });
+      data["lines"] = this.invoice.lines;
+
+      if (this.urls.invoiceUrl) {
+        // Update invoice
+        await this.$http.patch(this.urls.invoiceUrl, data).then(response => {
+          this.invoice.id = response.data.id;
+          this.invoice.code = response.data.code;
+        }).catch(error => {
+          console.error(error)
+        });
+      } else {
+        // Create new invoice
+        await this.$http.post(this.urls.invoicesUrl, data).then(response => {
+          this.urls.invoiceUrl = response.data.url;
+          this.invoice.id = response.data.id;
+          this.invoice.code = response.data.code;
+        }).catch(error => {
+          console.error(error)
+        });
+      }
     },
     regenVat() {
       this.vatEnabled = this.company.enable_vat;
@@ -497,20 +441,10 @@ export default {
         this.invoice.vat_rate = 0.0;
       }
     },
-    updateCompaniesList() {
-      let url = this.urls.companiesUrl;
-      this.$http.get(url).then(response => {
-        this.companies = response.data.results;
-        if (this.companies.length === 1) {
-          this.company = this.companies[0].id
-        }
-      }).catch(error => {
-        console.error(error)
-      });
-    },
+
     updateClientsList() {
       let url = this.urls.clientsUrl;
-      if (this.company.id !== "") {
+      if (this.company.id) {
         url += `?company_uuid=${this.company.id}`;
       }
       this.$http.get(url).then(response => {
@@ -522,12 +456,28 @@ export default {
         console.error(error)
       });
     },
+    updateCompaniesList() {
+      let url = this.urls.companiesUrl;
+      this.$http.get(url).then(response => {
+        this.companies = response.data.results;
+        if (this.companies.length === 1) {
+          this.company = this.companies[0].id
+        }
+      }).catch(error => {
+        console.error(error)
+      });
+    },
     updateDueDate() {
       if (!this.invoice.due_date || this.invoice.due_date < this.invoice.displayed_date) {
         // Calculate the new due date based on the payment_delay_days
         this.invoice.due_date = new Date(this.invoice.displayed_date.getTime() + (this.client.payment_delay_days * 24 * 60 * 60 * 1000));
       }
-      this.saveInvoice()
+    },
+    updateLineItem(updatedLine){
+      const index = this.invoice.lines.findIndex(line => line.uid === updatedLine.uid);
+      if (index !== -1) {
+        this.invoice.lines.splice(index, 1, updatedLine);
+      }
     },
     updatePeriodEnd() {
       if (!this.invoice.period_end || this.invoice.period_end < this.invoice.period_start) {
@@ -552,7 +502,6 @@ export default {
           this.invoice.period_end = new Date(endYear, endMonth, this.invoice.period_start.getDate() - 1);
         }
       }
-      this.saveInvoice()
     },
     updateTotal() {
       this.invoice.subtotal = this.invoice.lines.reduce((acc, line) => acc + line.total, 0);
@@ -584,10 +533,20 @@ export default {
     this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
     this.urls.linesUrl = this.$el.parentNode.dataset.linesUrl;
     this.urls.previewUrl = this.$el.parentNode.dataset.previewUrl;
-    this.fetchInvoice();
+
+    if (this.$el.parentNode.dataset.companyPk) {
+      this.fetchCompany(this.$el.parentNode.dataset.companyPk);
+    } else {
+      this.updateClientsList();
+    }
+    if (this.$el.parentNode.dataset.clientPk) {
+      this.fetchClient(this.$el.parentNode.dataset.clientPk);
+    }
+    if (this.urls.invoiceUrl) {
+      this.fetchInvoice();
+      this.updateTotal();
+    }
     this.updateCompaniesList();
-    this.updateClientsList();
-    this.updateTotal();
   },
   watch: {
     vatRatePercent: function (value) {

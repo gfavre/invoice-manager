@@ -12,21 +12,16 @@ function loadLocaleMessages() {
     true,
     /[A-Za-z0-9-_,\s]+\.json$/i
   );
-  console.log(locales.keys());
 
   const messages = {};
   locales.keys().forEach((key) => {
     const matched = key.match(/([A-Za-z0-9-_]+)\./i);
-    console.log(key, matched);
 
     if (matched && matched.length > 1) {
       const locale = matched[1];
-      console.log(locales(key).default);
-
       messages[locale] = locales(key).default;
     }
   });
-  console.log(messages);
 
   return messages;
 }

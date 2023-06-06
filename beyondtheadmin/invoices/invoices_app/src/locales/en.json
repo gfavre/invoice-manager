@@ -23,9 +23,10 @@
   "Total before tax": "Total before tax",
   "VAT": "VAT",
   "Total including tax": "Total including tax",
-  "Preview": "Preview",
   "Default VAT rate for {client} is {vatRate}%": "Default VAT rate for {client} is {vatRate}%",
   "This field is required": "This field is required",
   "Invoice date": "Invoice date",
-  "period-helptext": "Optional. Select dates if you need to specify the period during which the work was done."
+  "period-helptext": "Optional. Select dates if you need to specify the period during which the work was done.",
+  "Save & Preview": "Save & Preview",
+  "Save draft": "Save draft"
 }

@@ -1,29 +1,18 @@
-from datetime import timedelta
-
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from django.utils.timezone import now
 from django.utils.translation import activate, get_language
 from django.utils.translation import gettext_lazy as _
-from django.views import View
-from django.views.generic import (
-    CreateView,
-    DetailView,
-    FormView,
-    RedirectView,
-    TemplateView,
-    UpdateView,
-)
+from django.views.generic import DetailView, FormView, RedirectView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
 from beyondtheadmin.clients.models import Client
+from beyondtheadmin.companies.models import Company
 from beyondtheadmin.users.models import User
 
-from ..forms import BaseInvoiceForm, EmailForm, InvoiceEditForm, InvoiceStatusForm
+from ..forms import EmailForm, InvoiceStatusForm
 from ..models import Invoice
 from ..tasks import send_invoice_email
 
@@ -54,55 +43,25 @@ class InvoiceCancelView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
         return self.get_object().company.detail_url
 
 
-class CreateOrUpdateDraftInvoiceView(LoginRequiredMixin, View):
-    # noinspection PyMethodMayBeStatic
-    def get(self, request, *args, **kwargs):
-        # Check if there's an existing draft invoice for the current user
-        draft_invoice, created = Invoice.objects.get_or_create(
-            created_by=request.user, status=Invoice.STATUS.draft
-        )
-        # Redirect to the update view for the draft invoice
-        return redirect("invoices:update", pk=draft_invoice.pk, permanent=False)
-
-
-class InvoiceAppView(LoginRequiredMixin, DetailView):
+class InvoiceCreateView(LoginRequiredMixin, TemplateView):
     model = Invoice
     template_name = "invoices_app/index.html"
 
-    def get_queryset(self):
-        return Invoice.objects.filter(status=Invoice.STATUS.draft)
-
-    def get(self, request, *args, **kwargs):
-        # noinspection PyTypeChecker
-        invoice: Invoice = self.get_object()
-        if not invoice.check_rights(request.user):
-            # If the object owner is not the current user, redirect to a custom URL or render a custom template
-            return self.handle_no_permission()
-
-        return super().get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["invoice_id"] = self.kwargs["pk"]
-        context["invoice"] = self.get_object()
+
+        context["company"] = None
+        company = Company.objects.filter(pk=self.request.GET.get("company", None)).first()
+        if company:
+            context["company"] = company.pk
+
+        context["client"] = None
+        client = Client.objects.filter(pk=self.request.GET.get("client", None)).first()
+        if client:
+            context["client"] = client.pk
+            # That way we remain coherent. Client > Company
+            context["company"] = client.company.pk
         return context
-
-
-class InvoiceCreateView(LoginRequiredMixin, CreateView):
-    model = Invoice
-    template_name = "invoices/create.html"
-    form_class = BaseInvoiceForm
-
-    def get_form_kwargs(self):
-        user: User = self.request.user
-        kwargs = super().get_form_kwargs()
-        kwargs["companies"] = user.companies.all()
-        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
-        return kwargs
-
-    def get_success_url(self):
-        # noinspection PyUnresolvedReferences
-        return self.object.get_edit_url()
 
 
 class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
@@ -230,24 +189,24 @@ class InvoiceSnailMailUpdateView(LoginRequiredMixin, UserInvoiceMixin, UpdateVie
         return self.get_object().company.detail_url
 
 
-class InvoiceUpdateView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
-    form_class = InvoiceEditForm
+class InvoiceUpdateView(LoginRequiredMixin, DetailView):
     model = Invoice
-    template_name = "invoices/update.html"
+    template_name = "invoices_app/index.html"
 
-    def get_form_kwargs(self):
-        user: User = self.request.user
-        kwargs = super().get_form_kwargs()
-        kwargs["request"] = self.request
-        kwargs["companies"] = user.companies.all()
-        kwargs["clients"] = Client.objects.filter(company__in=kwargs["companies"])
-        return kwargs
+    def get_queryset(self):
+        return Invoice.objects.filter(status=Invoice.STATUS.draft)
 
-    # noinspection PyUnresolvedReferences
-    def get_initial(self):
-        initial = {}
-        if not self.object.due_date:
-            initial["due_date"] = (now() + timedelta(days=self.object.client.payment_delay_days),)
-        if self.object.vat_rate is None:
-            initial["vat_rate"] = self.object.client.vat_rate
-        return initial
+    def get(self, request, *args, **kwargs):
+        # noinspection PyTypeChecker
+        invoice: Invoice = self.get_object()
+        if not invoice.check_rights(request.user):
+            # If the object owner is not the current user, redirect to a custom URL or render a custom template
+            return self.handle_no_permission()
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["invoice_id"] = self.kwargs["pk"]
+        context["invoice"] = self.get_object()
+        return context

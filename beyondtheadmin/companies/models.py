@@ -72,7 +72,6 @@ class Company(UUIDModel):
     from_email = models.CharField(
         _("From email"),
         max_length=255,
-        default=f"{settings.ADMINS[0][0]} <{settings.ADMINS[0][1]}>",
         blank=True,
     )
     bcc_email = models.EmailField(
@@ -115,6 +114,10 @@ class Company(UUIDModel):
     @property
     def bank_account_name(self):
         return self.name_for_bank or self.name
+
+    @property
+    def create_invoice_url(self):
+        return reverse("invoices:create") + f"?company={self.pk}"
 
     @property
     def delete_url(self):
