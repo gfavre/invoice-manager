@@ -12,6 +12,7 @@ from .models import Invoice, InvoiceLine, InvoicePDF
 
 class InvoiceLineSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
+    id = serializers.UUIDField(required=False)
 
     class Meta:
         model = InvoiceLine
@@ -37,7 +38,8 @@ class InvoiceLineSerializer(serializers.ModelSerializer):
 
 class InvoiceSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="api:invoice-detail", lookup_field="pk")
-    lines = InvoiceLineSerializer(many=True, read_only=True)
+    lines = InvoiceLineSerializer(many=True, required=False)
+    code = serializers.CharField(read_only=True)
 
     class Meta:
         model = Invoice
@@ -59,6 +61,37 @@ class InvoiceSerializer(serializers.ModelSerializer):
             "lines",
             "version",
         )
+
+    def create(self, validated_data):
+        lines_data = validated_data.pop("lines", [])
+        invoice = super().create(validated_data)
+        for line_data in lines_data:
+            InvoiceLine.objects.create(invoice=invoice, **line_data)
+        return invoice
+
+    def update(self, instance, validated_data):
+        lines_data = validated_data.pop("lines", [])
+        instance = super().update(instance, validated_data)
+        for line in instance.lines.all():
+            if line.id not in [line_data.get("id") for line_data in lines_data]:
+                line.delete()
+
+        for line_data in lines_data:
+            line_id = line_data.pop("id")
+            if line_id:
+                try:
+                    line = InvoiceLine.objects.get(id=line_id, invoice=instance)
+                    line_serializer = InvoiceLineSerializer(line, data=line_data)
+                    line_serializer.is_valid(raise_exception=True)
+                    line_serializer.save()
+                except InvoiceLine.DoesNotExist:
+                    continue
+            else:
+                line_serializer = InvoiceLineSerializer(data=line_data)
+                line_serializer.is_valid(raise_exception=True)
+                line_serializer.save(invoice=instance)
+
+        return instance
 
     def get_url(self, obj):
         return obj.get_api_url()

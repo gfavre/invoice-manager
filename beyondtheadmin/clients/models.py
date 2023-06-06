@@ -89,6 +89,10 @@ class Client(UUIDModel):
         return reverse_lazy("api:client-detail", kwargs={"pk": self.pk})
 
     @property
+    def create_invoice_url(self):
+        return reverse_lazy("invoices:create") + f"?client={self.pk}"
+
+    @property
     def name(self):
         if self.is_company:
             return self.company_name

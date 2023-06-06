@@ -7,7 +7,7 @@
       <textarea class="form-control" rows="2"
                 :id="'description-' + uuid"
                 v-model="localDescription" required ref="firstLineField"
-                @blur="updateLine"
+                @input="updateLine"
       ></textarea>
     </div>
     <div class="col-md">
@@ -60,34 +60,17 @@ import { useI18n } from 'vue-i18n';
 
 export default {
   props: {
-    description: String,
-    quantity: {
-      type: Number,
-      validator: (value) => {
-        return !isNaN(parseFloat(value)) && isFinite(value);
-      },
-    },
-    unit: String,
-    price: {
-      type: Number,
-      validator: (value) => {
-        return !isNaN(parseFloat(value)) && isFinite(value);
-      },
-    },
-    lineId: {
-      type: Number,
+    line: {
+      type: Object,
       required: false,
-    },
-    invoiceId: Number,
-    uuid: String,
-    apiUrl: String,
+    }
   },
   data() {
     return {
-      localDescription: this.description || '',
-      localQuantity: this.quantity || 0,
-      localUnit: this.unit || 'h',
-      localPrice: this.price || 0,
+      localDescription: this.line?.description || '',
+      localQuantity: this.line?.quantity || 0,
+      localUnit: this.line?.unit || 'h',
+      localPrice: this.line?.price_per_unit || 0,
     };
   },
   computed: {
@@ -102,21 +85,6 @@ export default {
     }
   },
   methods: {
-    async saveLine() {
-      const data = {
-        description: this.localDescription,
-        quantity: this.localQuantity,
-        unit: this.localUnit,
-        price_per_unit: this.localPrice,
-      };
-      let response;
-      if (!this.lineId) {
-        response = await this.$http.post(this.apiUrl, data);
-      } else {
-        response = await this.$http.put(this.lineUrl, data);
-      }
-      return response;
-    },
     async removeLine() {
       if (this.lineId) {
         await this.$http.delete(this.lineUrl)
@@ -147,20 +115,14 @@ export default {
       });
     },
     updateLine() {
-      if (!this.isSaveable) {
-        return
+     this.$emit('update-line', {
+        description: this.localDescription,
+        quantity: this.localQuantity,
+        unit: this.localUnit,
+        price_per_unit: this.localPrice,
+        uid: this.line.uid
       }
-      this.saveLine().then(response => {
-        this.$emit('update-line', {
-          id: response.data.id,
-          description: this.localDescription,
-          quantity: this.localQuantity,
-          unit: this.localUnit,
-          price: this.localPrice,
-          total: this.total,
-          uuid: this.uuid,
-        });
-      });
+     );
     },
   },
   watch: {

@@ -23,9 +23,10 @@
   "Total before tax": "Total hors taxe",
   "VAT": "TVA",
   "Total including tax": "Total toutes taxes comprises",
-  "Preview": "Aperçu",
   "Default VAT rate for {client} is {vatRate}%": "Le taux de TVA par défaut pour {client} est de {vatRate}%",
   "This field is required": "Ce champ est obligatoire",
   "Invoice date": "Date de facturation",
-  "period-helptext": "Facultatif. Sélectionnez les dates si vous devez préciser la période au cours de laquelle le travail a été effectué."
+  "period-helptext": "Facultatif. Sélectionnez les dates si vous devez préciser la période au cours de laquelle le travail a été effectué.",
+  "Save & Preview": "Enregistrer et prévisualiser",
+  "Save draft": "Enregistrer le brouillon"
 }

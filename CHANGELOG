@@ -4,25 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## unreleased
+## [1.7.0] - 2023-06-06
 # Added
 - Helptexts wherever possible
+- Button to create an invoice from the clients list
 
 # Changed
 - Simplified navigation if only one company
 - Removed company name on clients lists if not relevant
+- No more cache of older invoices
+- Save of invoice is now done by hitting a button
 
 # Fixed
 - Missing translations in invoice edition
 - Added remove company button in company edition
+- Due date calculation more accurate
 
 
-## [1.6.0]
+## [1.6.0] - 2023-06-01
 # Added
 - VAT can now be disabled
 
 
-## [1.5.1] - unreleased
+## [1.5.1]
 # Changed
 - Disable autocomplete on company search form
 - Pep8 and pre-commit

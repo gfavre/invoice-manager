@@ -84,6 +84,11 @@
               {% endif %}
               <td>
                 <ul class="list-unstyled">
+                  <li>
+                    <a href="{{ client.create_invoice_url }}" class="btn btn-sm">
+                      <i class="bi bi-file-earmark-plus"></i> {% trans "New invoice" %}
+                    </a>
+                  </li>
                   <li><a href="{{ client.get_update_url }}" class="btn btn-sm"><i
                     class="bi bi-pencil"></i> {% trans "Edit" %}</a></li>
                   <li><a href="{{ client.get_delete_url }}" class="btn btn-sm"><i

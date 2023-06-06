@@ -23,9 +23,10 @@
   "Total before tax": "Gesamtsumme ohne Steuern",
   "VAT": "MwSt.",
   "Total including tax": "Gesamtsumme inklusive Steuern",
-  "Preview": "Vorschau",
   "Default VAT rate for {client} is {vatRate}%": "Standard-MwSt.-Satz für {client} beträgt {vatRate}%",
   "This field is required": "Dieses Feld ist erforderlich",
   "Invoice date": "Rechnungsdatum",
-  "period-helptext": "Optional. Wählen Sie Daten, wenn Sie den Zeitraum angeben müssen, in dem die Arbeit ausgeführt wurde."
+  "period-helptext": "Optional. Wählen Sie Daten, wenn Sie den Zeitraum angeben müssen, in dem die Arbeit ausgeführt wurde.",
+  "Save & Preview": "Speichern & Vorschau",
+  "Save draft": "Entwurf speichern"
 }

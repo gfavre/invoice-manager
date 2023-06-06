@@ -5,7 +5,7 @@ from .views import dashboard as views
 
 app_name = "invoices"
 urlpatterns = [
-    path("new/", view=views.CreateOrUpdateDraftInvoiceView.as_view(), name="create"),
+    path("new/", view=views.InvoiceCreateView.as_view(), name="create"),
     path("<uuid:pk>/cancel", view=views.InvoiceCancelView.as_view(), name="cancel"),
     path(
         "<uuid:pk>/duplicate",
@@ -28,6 +28,6 @@ urlpatterns = [
         view=views.InvoiceSnailMailUpdateView.as_view(),
         name="mark_sent",
     ),
-    path("<uuid:pk>/update", view=views.InvoiceAppView.as_view(), name="update"),
+    path("<uuid:pk>/update", view=views.InvoiceUpdateView.as_view(), name="update"),
     path("", view=views.InvoiceListView.as_view(), name="list"),
 ]
