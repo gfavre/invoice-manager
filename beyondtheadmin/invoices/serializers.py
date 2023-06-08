@@ -77,7 +77,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 line.delete()
 
         for line_data in lines_data:
-            line_id = line_data.pop("id")
+            line_id = line_data.pop("id", None)
             if line_id:
                 try:
                     line = InvoiceLine.objects.get(id=line_id, invoice=instance)

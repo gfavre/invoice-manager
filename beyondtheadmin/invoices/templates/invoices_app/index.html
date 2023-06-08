@@ -11,6 +11,7 @@
        data-language-code="{{ LANGUAGE_CODE }}"
        data-clients-url="{% url 'api:client-list' %}"
        data-companies-url="{% url 'api:company-list' %}"
+       data-invoices-url="{% url 'api:invoice-list' %}"
        data-lines-url="{{ invoice.get_api_lines_url }}"
        data-preview-url="{{ invoice.get_absolute_url }}"
        {% if company %}data-company-pk="{{ company }}"{% endif %}

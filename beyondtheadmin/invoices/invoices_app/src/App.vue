@@ -285,6 +285,7 @@ export default {
         companiesUrl: "",
         clientsUrl: "",
         invoiceUrl: "",
+        invoicesUrl: "",
         linesUrl: "",
         previewUrl: "",
       },
@@ -319,11 +320,13 @@ export default {
       }
       // Handle client selection here
       this.fetchClient(client.id).then(() => {
-        this.$refs.invoiceLines.forEach((line) => {
-          if (line.localQuantity === 0) {
-            line.localPrice = this.client.default_hourly_rate;
-          }
-        });
+        if (this.$refs.invoiceLines) {
+          this.$refs.invoiceLines.forEach((line) => {
+            if (line.localQuantity === 0) {
+              line.localPrice = this.client.default_hourly_rate;
+            }
+          });
+        }
         this.regenVat();
         this.vatRatePercent = this.invoice.vat_rate * 100;
         this.updateTotal();
@@ -478,6 +481,7 @@ export default {
       if (index !== -1) {
         this.invoice.lines.splice(index, 1, updatedLine);
       }
+      this.updateTotal();
     },
     updatePeriodEnd() {
       if (!this.invoice.period_end || this.invoice.period_end < this.invoice.period_start) {
@@ -530,6 +534,7 @@ export default {
     this.$i18n.locale = this.$el.parentNode.dataset.languageCode;
     this.urls.companiesUrl = this.$el.parentNode.dataset.companiesUrl;
     this.urls.clientsUrl = this.$el.parentNode.dataset.clientsUrl;
+    this.urls.invoicesUrl = this.$el.parentNode.dataset.invoicesUrl;
     this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
     this.urls.linesUrl = this.$el.parentNode.dataset.linesUrl;
     this.urls.previewUrl = this.$el.parentNode.dataset.previewUrl;

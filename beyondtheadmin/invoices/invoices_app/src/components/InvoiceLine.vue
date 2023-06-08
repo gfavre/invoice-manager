@@ -120,7 +120,8 @@ export default {
         quantity: this.localQuantity,
         unit: this.localUnit,
         price_per_unit: this.localPrice,
-        uid: this.line.uid
+        uid: this.line.uid,
+        total: this.total,
       }
      );
     },
