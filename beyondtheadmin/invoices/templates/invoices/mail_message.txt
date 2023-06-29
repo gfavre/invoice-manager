@@ -1,4 +1,4 @@
-{% load i18n switzerland %}{% blocktrans with contact_first_name=invoice.client.contact_first_name contact_last_name=invoice.client.contact_last_name invoice_nb=invoice.code due_date=invoice.due_date|date your_name=invoice.company.signature_text %}Dear {{ contact_first_name }},
+{% load i18n switzerland %}{% blocktrans with contact_first_name=invoice.client.contact_first_name contact_last_name=invoice.client.contact_last_name invoice_nb=invoice.code due_date=invoice.due_date|swiss_date your_name=invoice.company.signature_text %}Dear {{ contact_first_name }},
 
 I hope you are well. Please see invoice {{ invoice_nb }} attached. The invoice is due by {{ due_date }}.
 
