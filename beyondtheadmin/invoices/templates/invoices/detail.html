@@ -290,7 +290,7 @@
         <h3>{{ invoice.title }}</h3>
         <p>{{ invoice.description|safe }}</p>
         {% if invoice.period_start and invoice.period_end %}
-          <p>{% blocktrans with start=invoice.period_start|date end=invoice.period_end|date %}Work done between
+          <p>{% blocktrans with start=invoice.period_start|swiss_date end=invoice.period_end|swiss_date %}Work done between
             {{ start }} and {{ end }}{% endblocktrans %}</p>
         {% endif %}
         <dl class="row">
