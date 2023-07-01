@@ -152,8 +152,8 @@
 
               <div class="lines">
                 <invoice-line
-                    v-for="(line, index) in invoice.lines" :key="index" :line="line"
-                    @remove="removeLine" @update-line="updateLineItem"
+                    v-for="line in invoice.lines" :key="line.uid" :line="line"
+                    @remove="removeLine(line.uid)" @update-line="updateLineItem"
                     ref="invoiceLines"
                 />
                 <button type="button" @click="addLine" class="btn btn btn-info">{{ $t("Add line") }}</button>
@@ -302,8 +302,12 @@ export default {
           this.$refs.invoiceLines[this.$refs.invoiceLines.length - 1].focus();
       });
     },
-    removeLine(index) {
-      this.invoice.lines.splice(index, 1);
+    removeLine(uid) {
+      const index = this.invoice.lines.findIndex(line => line.uid === uid);
+       if (index !== -1) {
+        // Remove the line from the invoice.lines array
+        this.invoice.lines.splice(index, 1);
+      }
       this.updateTotal();
     },
     formatDate(date) {

@@ -77,18 +77,12 @@ export default {
     total() {
       return Math.round(this.localQuantity * this.localPrice * 100) / 100;
     },
-    lineUrl() {
-      return `${this.apiUrl}${this.lineId}/`
-    },
     isSaveable() {
       return this.localDescription && this.localQuantity && this.localUnit && this.localPrice;
     }
   },
   methods: {
     async removeLine() {
-      if (this.lineId) {
-        await this.$http.delete(this.lineUrl)
-      }
       this.$emit('remove');
     },
     focus() {
