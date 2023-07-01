@@ -37,6 +37,7 @@ class InvoiceLineSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
+    preview_url = serializers.SerializerMethodField()
     url = serializers.HyperlinkedIdentityField(view_name="api:invoice-detail", lookup_field="pk")
     lines = InvoiceLineSerializer(many=True, required=False)
     code = serializers.CharField(read_only=True)
@@ -57,6 +58,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
             "period_start",
             "period_end",
             "url",
+            "preview_url",
             "total",
             "lines",
             "version",
@@ -95,6 +97,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return obj.get_api_url()
+
+    def get_preview_url(self, obj):
+        return obj.get_absolute_url()
 
 
 # noinspection PyMethodMayBeStatic

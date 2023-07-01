@@ -196,8 +196,8 @@
             <dt class="col-3 text-right">{{ $t("Total") }}</dt>
             <dd class="col-9 text-left">{{ currency }} {{ $formatAmount(invoice.total) }}</dd>
           </dl>
-          <a href="#" @click.prevent="preview" class="btn btn-primary">{{ $t('Save & Preview') }}</a>&nbsp;
-          <a href="#" @click.prevent="saveInvoice" class="btn btn-secondary">{{ $t('Save draft') }}</a>
+          <a href="#" @click.prevent="saveInvoice(true)" class="btn btn-primary">{{ $t('Save & Preview') }}</a>&nbsp;
+          <a href="#" @click.prevent="saveInvoice(false)" class="btn btn-secondary">{{ $t('Save draft') }}</a>
         </div>
       </div>
     </section>
@@ -360,6 +360,7 @@ export default {
     },
     async fetchInvoice() {
       await this.$http.get(this.urls.invoiceUrl).then(response => {
+        this.urls.previewUrl = response.data.preview_url;
         this.invoice.id = response.data.id;
         this.invoice.code = response.data.code;
         if (response.data.due_date) {
@@ -396,12 +397,7 @@ export default {
         console.error(error)
       });
     },
-    async preview() {
-      await this.saveInvoice();
-      window.location.href = this.urls.previewUrl;
-    },
-
-    async saveInvoice() {
+    async saveInvoice(redirect) {
       const data = {
         company: this.company ? this.company.id : null,
         client: this.client ? this.client.id : null,
@@ -414,12 +410,13 @@ export default {
         period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
       }
       data["lines"] = this.invoice.lines;
-
+      let success = false;
       if (this.urls.invoiceUrl) {
         // Update invoice
         await this.$http.patch(this.urls.invoiceUrl, data).then(response => {
           this.invoice.id = response.data.id;
           this.invoice.code = response.data.code;
+          success = true;
         }).catch(error => {
           console.error(error)
         });
@@ -427,11 +424,16 @@ export default {
         // Create new invoice
         await this.$http.post(this.urls.invoicesUrl, data).then(response => {
           this.urls.invoiceUrl = response.data.url;
+          this.urls.previewUrl = response.data.preview_url;
           this.invoice.id = response.data.id;
           this.invoice.code = response.data.code;
+          success = true;
         }).catch(error => {
           console.error(error)
         });
+        if (success && redirect) {
+            window.location.href = this.urls.previewUrl;
+        }
       }
     },
     regenVat() {
@@ -541,7 +543,6 @@ export default {
     this.urls.invoicesUrl = this.$el.parentNode.dataset.invoicesUrl;
     this.urls.invoiceUrl = this.$el.parentNode.dataset.invoiceUrl;
     this.urls.linesUrl = this.$el.parentNode.dataset.linesUrl;
-    this.urls.previewUrl = this.$el.parentNode.dataset.previewUrl;
 
     if (this.$el.parentNode.dataset.companyPk) {
       this.fetchCompany(this.$el.parentNode.dataset.companyPk);

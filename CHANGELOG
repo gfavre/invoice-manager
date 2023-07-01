@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Could not save new invoice
 - Total was not calculated correctly when adding a new invoice line
 - Line removal always removed visually the last line of invoice
-
+- Preview url is now loaded correctly when creating an invoice
 
 ## [1.7.0] - 2023-06-06
 # Added
