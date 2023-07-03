@@ -16,12 +16,8 @@
       {{ $t("Company name") }}
       <span class="asteriskField">*</span>
     </label>
-    <input type="text" name="company_name" maxlength="255"
-           class="textinput textInput form-control" id="id_company_name" required=""
-           v-model="name"
-           @blur="nameChanged"
-    />
-
+    <textarea name="company_name" cols="40" rows="2" class="textarea form-control" id="id_company_name"
+              v-model="name" required="required" @blur="nameChanged"></textarea>
   </div>
   <div id="div_id_address" class="form-group">
     <label for="id_address">{{ $t("Address") }}</label>

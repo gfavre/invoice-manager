@@ -75,7 +75,7 @@
           <tbody>
           {% for client in client_list %}
             <tr>
-              <td>{{ client }}</td>
+              <td>{{ client | linebreaksbr }}</td>
               <td>{{ client.last_invoice_date|default:"n/a" }}</td>
               {% if has_multiple_companies %}
                 <td>

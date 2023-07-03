@@ -153,7 +153,8 @@ export default {
           this.validateNumberInput(this.vatRate);
     },
     limitSlugify(text) {
-      const slug = slugify(text, {lower: true, remove: /[*+~.()'"!:@]/g});
+      const sanitizedText = text.replace(/\n/g, '-')
+      const slug = slugify(sanitizedText, {lower: true, remove: /[*+~.()'"!:@]/g});
       // Check if the slug is longer than 15 characters
       if (slug.length > 15) {
         // Find the first dash (-) in the slug

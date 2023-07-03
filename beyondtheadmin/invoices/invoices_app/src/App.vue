@@ -28,6 +28,7 @@
                                  :value="selectedCompanyName"
                 ></typeahead-input>
               </div>
+
             </div>
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_client" class="form-group">
@@ -470,7 +471,7 @@ export default {
       this.$http.get(url).then(response => {
         this.companies = response.data.results;
         if (this.companies.length === 1) {
-          this.company = this.companies[0].id
+          this.company = this.companies[0]
         }
       }).catch(error => {
         console.error(error)
