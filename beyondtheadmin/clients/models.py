@@ -16,7 +16,7 @@ class Client(UUIDModel):
         _("Client type"), choices=TYPES, default=TYPES.company, max_length=10
     )
 
-    company_name = models.CharField(_("Name"), max_length=255, blank=True)
+    company_name = models.TextField(_("Name"), blank=True)
 
     contact_first_name = models.CharField(_("Contact first name"), max_length=255, blank=True)
     contact_last_name = models.CharField(_("Contact last name"), max_length=255, blank=True)

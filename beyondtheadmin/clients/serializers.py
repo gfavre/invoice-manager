@@ -11,6 +11,7 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = (
+            "id",
             "client_type",
             "company_name",
             "contact_first_name",
@@ -38,7 +39,7 @@ class ClientSerializer(serializers.ModelSerializer):
         return obj.get_absolute_url()
 
     def get_name(self, obj: Client):
-        return obj.name
+        return obj.name.replace("\n", " / ")
 
     def get_url(self, obj: Client):
         return obj.api_url
@@ -53,10 +54,14 @@ class ClientSerializer(serializers.ModelSerializer):
 class ClientListSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
     dashboard_url = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = Client
         fields = ("id", "name", "slug", "language", "currency", "url", "dashboard_url")
+
+    def get_name(self, obj: Client):
+        return obj.name.replace("\n", " / ")
 
     def get_url(self, obj: Client):
         return obj.api_url
