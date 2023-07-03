@@ -244,7 +244,7 @@
     <div class="col-3" id="side">
       <h1>{% trans "Invoice" %}</h1>
       <div itemscope itemtype="http://schema.org/LocalBusiness" id="company-address">
-        <span itemprop="name">{{ invoice.company.name }}</span> <br>
+        <span itemprop="name">{{ invoice.company.name|linebreaksbr }}</span> <br>
 
         <address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
           <span itemprop="streetAddress">{{ invoice.company.address }}</span><br>
