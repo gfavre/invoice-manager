@@ -74,6 +74,7 @@ class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
             "enable_vat",
             "vat_rate",
             "vat_id",
+            "default_hourly_rate",
             "name_for_bank",
             "bank",
             "bic",
