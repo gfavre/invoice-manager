@@ -29,5 +29,6 @@
   "French": "Français",
   "German": "Allemand",
   "Italian": "Italien",
-  "Default VAT rate for {company} is {vatRate}%": "Le taux de TVA par défaut pour {company} est {vatRate}%"
+  "Default VAT rate for {company} is {vatRate}%": "Le taux de TVA par défaut pour {company} est {vatRate}%",
+  "Default hourly rate for {company} is {hourlyRate}": "Le tarif horaire par défaut pour {company} est {hourlyRate}"
 }

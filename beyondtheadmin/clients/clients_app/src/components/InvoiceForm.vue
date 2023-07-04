@@ -19,9 +19,8 @@
           <div class="input-group-append">
             <span class="input-group-text">%</span>
           </div>
-
         </div>
-        <small id="hint_id_vat_rate" class="form-text" :class="vatWarning ? 'text-warning': 'text-muted'">
+        <small id="hint_id_vat_rate" class="form-text" :class="vatWarning ? 'text-warning': 'text-muted'" v-if="company">
           <i class="bi bi-exclamation-triangle" v-if="vatWarning"></i>
           {{
             $t("Default VAT rate for {company} is {vatRate}%", {
@@ -40,12 +39,21 @@
         <div class="input-group">
           <input type="number" name="default_hourly_rate" step="0.01"
                  class="numberinput form-control" required="" id="id_default_hourly_rate"
-                 v-model.number="defaultHourlyRate"
+                 v-model="defaultHourlyRate"
           >
           <div class="input-group-append">
             <span class="input-group-text">{{ currency }}</span>
           </div>
         </div>
+        <small id="hint_id_hourly_rate" class="form-text text-muted"
+               v-if="company">
+          {{
+            $t("Default hourly rate for {company} is {hourlyRate}", {
+              "company": company.name,
+              "hourlyRate": company.default_hourly_rate
+            })
+          }}
+        </small>
       </div>
     </div>
   </div>
@@ -122,13 +130,13 @@ export default {
   data() {
     return {
       currency: 'CHF',
-      defaultHourlyRate: 0.0,
+      defaultHourlyRate: null,
       invoiceCurrentCount: 0,
       language: "",
-      paymentDelayDays: 30,
+      paymentDelayDays: null,
       slug: '',
-      vatRate: 0,
-      vatRatePercent: 0,
+      vatRate: null,
+      vatRatePercent: null,
       currencies: [
         {value: 'CHF', text: 'CHF'},
         {value: 'EUR', text: 'Euro'},
@@ -140,11 +148,6 @@ export default {
     vatWarning() {
       return this.isVatEnabled && this.company && (this.vatRate !== this.company.vat_rate);
     },
-  },
-  created() {
-    if (!this.vatRate && this.isVatEnabled) {
-      this.vatRate = this.defaultVatRate;
-    }
   },
   methods: {
     isFormComplete() {
@@ -185,8 +188,8 @@ export default {
       if (!this.isVatEnabled) {
         this.vatRatePercent = 0;
       } else {
-        if (!this.vatRate) {
-          this.vatRate = this.defaultVatRate * 100;
+        if (this.vatRate === null) {
+          this.vatRate = this.company.vat_rate * 100;
         }
       }
     },
@@ -221,6 +224,7 @@ export default {
       return value;
     }
   },
+
   props: {
     company: {
       type: Object,
@@ -233,24 +237,30 @@ export default {
     defaultLanguage: {
       type: String,
     },
-    defaultVatRate: {
-      type: Number,
-    },
     isVatEnabled: {
       type: Boolean,
     },
   },
+
   watch: {
     defaultLanguage: function (value) {
       if (!this.language) {
         this.language = value
       }
     },
+    company: function(value){
+      if (this.defaultHourlyRate === null) {
+        this.defaultHourlyRate = value.default_hourly_rate;
+      }
+      if (this.paymentDelayDays === null) {
+        this.paymentDelayDays = value.payment_delay_days;
+      }
+      if (this.vatRatePercent === null) {
+        this.vatRatePercent = new Decimal(value.vat_rate * 100);
+      }
+    },
     updatedSlug: function (newSlug) {
       this.slug = this.limitSlugify(newSlug);
-    },
-    defaultVatRate: function () {
-      this.setDefaults();
     },
     isVatEnabled: function () {
       this.setDefaults();

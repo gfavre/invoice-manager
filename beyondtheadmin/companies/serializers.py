@@ -51,6 +51,8 @@ class CompanyListSerializer(serializers.ModelSerializer):
             "url",
             "enable_vat",
             "vat_rate",
+            "default_hourly_rate",
+            "payment_delay_days",
         )
 
     def get_url(self, obj: Company):

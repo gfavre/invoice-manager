@@ -29,5 +29,6 @@
   "Current count of invoices": "Current count of invoices",
   "First name": "First name",
   "Last name": "Last name",
-  "Default VAT rate for {company} is {vatRate}%": "Default VAT rate for {company} is {vatRate}%"
+  "Default VAT rate for {company} is {vatRate}%": "Default VAT rate for {company} is {vatRate}%",
+  "Default hourly rate for {company} is {hourlyRate}": "Default hourly rate for {company} is {hourlyRate}"
 }
