@@ -68,7 +68,6 @@
                    @saved="handleComponentSaved"
                    :company="selectedCompany"
                    :default-language="defaultLanguage"
-                   :default-vat-rate="vatRate"
                    :is-vat-enabled="vatEnabled"
                    :updated-slug="slug"></InvoiceForm>
     </fieldset>
@@ -128,6 +127,7 @@ export default {
       selectedCompany: {},
       vatRate: 0,
       vatEnabled: true,
+
       savedComponentCount: 0,
       expectedComponentCount: 2,
       defaultLanguage: '',
@@ -242,6 +242,7 @@ export default {
         this.client = response.data;
         this.clientType = this.client.client_type;
         this.company = this.client.company;
+        this.selectedCompany = this.companies.find(company => company.id === this.company);
         this.slug = this.client.slug;
         this.$refs.companyForm.setClient(this.client);
         this.$refs.invoiceForm.setClient(this.client);

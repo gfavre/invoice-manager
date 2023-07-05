@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load i18n static %}
 
+{% block title %}{% if invoice %}{% trans "Edit invoice" %}{% if invoice.code %} - {{  invoice.code }}{% endif %}{% else %}{% trans "New invoice" %}{% endif %}{% endblock title %}
+
 {% block content %}
   <noscript>
     <strong>{% blocktrans %}We're sorry but this app doesn't work properly without JavaScript enabled.

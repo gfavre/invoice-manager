@@ -29,5 +29,6 @@
   "French": "Französisch",
   "German": "Deutsch",
   "Italian": "Italienisch",
-  "Default VAT rate for {company} is {vatRate}%": "Standard-Mehrwertsteuersatz für {company} ist {vatRate}%"
+  "Default VAT rate for {company} is {vatRate}%": "Standard-Mehrwertsteuersatz für {company} ist {vatRate}%",
+  "Default hourly rate for {company} is {hourlyRate}": "Standard-Stundensatz für {company} ist {hourlyRate}"
 }

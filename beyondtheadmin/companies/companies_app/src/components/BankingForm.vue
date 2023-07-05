@@ -3,10 +3,7 @@
     <div class="col-md">
       <div id="div_id_enable_vat" class="form-check">
         <input class="form-check-input" type="checkbox" id="vatCheckbox" v-model="vatEnabled">
-        <label for="vatCheckbox">{{ $t("Enable VAT") }}</label>
-        <small id="emailHelp" class="form-text text-muted">
-          {{ $t("If checked, VAT rates and calculations will be setup on invoices") }}
-        </small>
+        <label for="vatCheckbox">{{ $t("Enable VAT calculation") }}</label>
       </div>
     </div>
     <div class="col-md" v-if="vatEnabled">
@@ -21,8 +18,8 @@
         </div>
       </div>
     </div>
+    <div class="col-md" v-else></div>
   </div>
-
   <div id="div_id_vat_id" class="form-group">
     <label for="id_vat_id">{{ $t("VAT ID") }}</label>
     <input type="text" name="vatId" maxlength="20" id="id_vat_id" class="textinput textInput form-control"
@@ -33,7 +30,41 @@
     </small>
 
   </div>
+  <hr>
+  <h4>{{ $t("Payment defaults") }}</h4>
+  <p>{{ $t("paymentDefaultsText") }}</p>
+  <div class="form-row">
+    <div class="col-md ">
+      <div id="div_id_default_hourly_rate" class="form-group">
+        <label for="id_default_hourly_rate" class=" requiredField">
+          {{ $t('Default hourly rate') }}<span class="asteriskField">*</span>
+        </label>
+        <div class="input-group">
+          <input type="number" name="default_hourly_rate" step="0.01"
+                 class="numberinput form-control" required="" id="id_default_hourly_rate"
+                 v-model.number="hourlyRate"
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div id="div_id_payment_delay_days" class="form-group">
+        <label for="id_payment_delay_days" class="requiredField">
+          {{ $t('Payment delay') }}<span class="asteriskField">*</span>
+        </label>
+        <input type="number" name="payment_delay_days" class="numberinput form-control"
+               required="" id="id_payment_delay_days"
+               v-model="paymentDelay"
+        >
+        <small id="hint_id_payment_delay_days" class="form-text text-muted">
+          {{ $t('Default delay in days to due date') }}
+        </small>
+      </div>
+    </div>
+  </div>
+  <hr>
 
+  <h4>{{ $t("Banking informations") }}</h4>
   <div class="form-row">
     <div class="col-md-6">
       <div id="div_id_iban" class="form-group">
@@ -127,6 +158,9 @@ export default {
       vatRate: this.company.vatRate,
       vatRatePercent: this.company.vatRate * 100,
 
+      paymentDelay: this.company.paymentDelay,
+      hourlyRate: this.company.hourlyRate,
+
       iban: this.company.iban,
       nameForBank: this.company.nameForBank ? this.company.nameForBank : this.company.name,
       bank: this.company.bank,
@@ -202,6 +236,10 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
             vatId: this.vatId,
             vatEnabled: this.vatEnabled,
             vatRate: this.vatRate,
+
+            paymentDelay: this.paymentDelay,
+            hourlyRate: this.hourlyRate,
+
             iban: this.iban,
             nameForBank: this.nameForBank,
             bank: this.bank,
@@ -218,7 +256,11 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
       });
     },
     setCompany(company) {
+      /* Data used by this component has been updated on the app.vue, we need to update our data. This occurs when
+      the user selected a company from the search dropdown results. In this case data is received via a webservice
+      */
       this.vatId = this.vatId ? this.vatId : company.vatId;
+
       this.bank = this.bank ? this.bank : company.bank;
       this.swift = this.swift ? this.swift : company.swift;
       this.iban = this.iban ? this.iban : company.iban;
@@ -262,5 +304,7 @@ ${finalRes.bank.zip_code} ${finalRes.bank.city}`;
 </script>
 
 <style scoped>
-
+h4 {
+  font-size: 1.3rem;
+}
 </style>

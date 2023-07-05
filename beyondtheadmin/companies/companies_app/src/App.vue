@@ -21,8 +21,8 @@
          :class="{'active': stepIndex === 2, disabled: !stepsFinished[1]}" @click="stepIndex=2">
         <div class="wizard-step-icon">2</div>
         <div class="wizard-step-text">
-          <div class="wizard-step-text-name">{{ $t("Bank") }}</div>
-          <div class="wizard-step-text-details">{{ $t("Where will you get paid") }}</div>
+          <div class="wizard-step-text-name">{{ $t("Payment") }}</div>
+          <div class="wizard-step-text-details">{{ $t("How you will get paid") }}</div>
         </div>
       </a>
       <!-- Wizard navigation item 3-->
@@ -32,7 +32,7 @@
         <div class="wizard-step-icon">3</div>
         <div class="wizard-step-text">
           <div class="wizard-step-text-name">{{ $t("Invoices") }}</div>
-          <div class="wizard-step-text-details">{{ $t("What will invoices look like") }}</div>
+          <div class="wizard-step-text-details">{{ $t("What invoices will look like") }}</div>
         </div>
       </a>
 
@@ -42,7 +42,7 @@
         <div class="wizard-step-icon">4</div>
         <div class="wizard-step-text">
           <div class="wizard-step-text-name">{{ $t("Emails") }}</div>
-          <div class="wizard-step-text-details">{{ $t("How do you send the invoices") }}</div>
+          <div class="wizard-step-text-details">{{ $t("How are the invoices sent") }}</div>
         </div>
       </a>
 
@@ -68,7 +68,7 @@
   </fieldset>
   <fieldset class="border-left-warning shadow" v-if="stepIndex === 2">
     <legend>{{ $t("Step 2") }}</legend>
-    <p class="lead">{{ $t("Setup your banking informations to receive the payments") }}</p>
+    <p class="lead">{{ $t("Setup your payment and banking informations") }}</p>
     <BankingForm ref="bankingForm"
                  :company="company"
                  :ibanUrl="urls.ibanUrl"
@@ -104,6 +104,23 @@
 </template>
 
 <script>
+
+/* How does this thing work?
+1. The main app.vue includes 4 components: CompanyForm, BankingForm, InvoiceSettingsForm, InvoiceEmailForm for
+the for steps of the wizard. Actions on one component do not touch data for other components at the exception to
+search company (see 4.)
+
+2. In the mounted() section of the app.vue, the company object is initialized with the data from the server. The
+incoming data is mapped to the local company object using the localToServerFieldMapping object (mostly because
+the python serializers outputs snake_case whereas JS is more friendly with camelCase).
+
+3. When the user hits a next/prev button, the component calls a callback function via @update (function is named
+onCompanyUpdate here). The component will then fire a prev/next event, which modifies the stepIndex.
+
+4. Selecting a company in the search box will trigger the update of the company object and its transmission to
+components via the setCompany method.
+ */
+
 import CompanyForm from './components/CompanyForm.vue'
 import {useI18n} from 'vue-i18n'
 import CompanySearch from "@/components/CompanySearch.vue";
@@ -114,11 +131,17 @@ import InvoiceEmailForm from "@/components/InvoiceEmailForm.vue";
 const localToServerFieldMapping = {
   "zipCode": "zip_code",
   "additionalPhone": "additional_phone",
+
   "vatEnabled": "enable_vat",
   "vatId": "vat_id",
   "vatRate": "vat_rate",
+
+  "hourlyRate": "default_hourly_rate",
+  "paymentDelay": "payment_delay_days",
+
   "nameForBank": "name_for_bank",
   "swift": "bic",
+
   "contrastColor": "contrast_color",
   "invoiceNote": "invoice_note",
   "signatureText": "signature_text",
@@ -162,6 +185,10 @@ export default {
         vatId: '',
         vatEnabled: true,
         vatRate: 0,
+
+        hourlyRate: 0.0,
+        paymentDelay: 30,
+
         iban: '',
         nameForBank: '',
         bank: '',
@@ -192,6 +219,7 @@ export default {
   },
   methods: {
     companyDetailLookupResult(company) {
+      /* This method is called when the user selects a company from the search results, to update our local fields */
       this.company.name = company.name;
       this.company.address = company.address;
       this.company.country = company.country;
@@ -204,7 +232,6 @@ export default {
     nextStep() {
       this.stepsFinished[this.stepIndex] = true;
       this.stepIndex += 1;
-
     },
     previousStep() {
       this.stepIndex -= 1;
