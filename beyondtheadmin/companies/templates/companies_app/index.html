@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n static %}
 
+{% block title %}{% if company %}{% trans "Edit company" %}: {{  company.name }}{% else %}{% trans "Add company" %}{% endif %}{% endblock title %}
+
+
 {% block content %}
   <header class="page-header page-header-dark bg-gradient-primary pb-10">
     <div class="container-xl px-4">

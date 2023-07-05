@@ -51,6 +51,8 @@ class CompanyListSerializer(serializers.ModelSerializer):
             "url",
             "enable_vat",
             "vat_rate",
+            "default_hourly_rate",
+            "payment_delay_days",
         )
 
     def get_url(self, obj: Company):
@@ -74,6 +76,8 @@ class CompanySerializer(CountryFieldMixin, serializers.ModelSerializer):
             "enable_vat",
             "vat_rate",
             "vat_id",
+            "default_hourly_rate",
+            "payment_delay_days",
             "name_for_bank",
             "bank",
             "bic",

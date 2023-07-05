@@ -59,7 +59,7 @@ export default {
             this.data = response.data
           })
           .catch(error => {
-            console.log(error)
+            console.error(error)
           });
     },
     companyDetailLookup(companyUid) {

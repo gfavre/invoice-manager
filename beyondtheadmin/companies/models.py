@@ -48,6 +48,12 @@ class Company(UUIDModel):
         default=Decimal("0.077"),
         blank=True,
     )
+    default_hourly_rate = models.DecimalField(
+        _("Hourly rate"), max_digits=6, decimal_places=2, default=Decimal("0.00")
+    )
+    payment_delay_days = models.IntegerField(
+        _("Payment delay"), help_text=_("Default delay in days to due date"), default=30
+    )
 
     name_for_bank = models.CharField(_("Bank account's owner name"), max_length=255, blank=True)
     bank = models.TextField(_("Bank"), blank=True)

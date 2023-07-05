@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n static %}
 
+{% block title %}{% if client %}{% trans "Edit client" %}: {{  client.name }}{% else %}{% trans "Add client" %}{% endif %}{% endblock title %}
+
+
 {% block content %}
 <section class="card card-header-actions mb-4">
   <header class="card-header ">
