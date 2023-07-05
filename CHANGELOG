@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Added
 - Client names can take 2 lines
 - Default hourly rate and payment delay on company creation / update.
+- Titles on company / invoice/ client pages
 
 # Fixed
 - Client list was not refreshed after client creation
