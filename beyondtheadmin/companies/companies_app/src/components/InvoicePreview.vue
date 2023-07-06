@@ -10,7 +10,7 @@
 
           <address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
             <span itemprop="streetAddress">{{ company.address }}</span><br>
-            <span itemprop="addressCountry" v-if="company.country">{{ company.country }}-</span><span
+            <span itemprop="addressCountry" v-if="displayCountry">{{ company.country }}-</span><span
               itemprop="postalCode">{{ company.zipCode }}</span> <span
               itemprop="addressLocality">{{ company.city }}</span><br>
           </address>
@@ -58,7 +58,7 @@
               {{ client.name }}<br>
               {{ client.contactPerson }}<br>
               {{ client.address }}<br>
-              {{ client.country }} - {{ client.zipCode }} {{ client.city }}
+              <span v-if="displayCountry">{{ client.country }} - </span>{{ client.zipCode }} {{ client.city }}
             </address>
             <p>{{ company.city }}, {{ invoice.date }}</p>
           </section>
@@ -157,6 +157,9 @@ export default {
     "signatureImage",
   ],
   computed: {
+    displayCountry() {
+      return this.company.country !== "CH";
+    },
     vat_rate() {
       if (!this.company.vatId) {
         return 0;

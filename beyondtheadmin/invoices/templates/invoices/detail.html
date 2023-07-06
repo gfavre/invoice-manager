@@ -248,7 +248,7 @@
 
         <address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
           <span itemprop="streetAddress">{{ invoice.company.address }}</span><br>
-          {% if invoice.company.country %}
+          {% if invoice.display_country %}
             <span itemprop="addressCountry">{{ invoice.company.country.code }}</span>-{% endif %}<span
           itemprop="postalCode">{{ invoice.company.zip_code }}</span> <span
           itemprop="addressLocality">{{ invoice.company.city }}</span><br>
@@ -280,7 +280,7 @@
           <address>
             {{ invoice.client.name }}<br>
             {{ invoice.client.address | linebreaksbr }}<br>
-            {{ invoice.client.country.code }} - {{ invoice.client.zip_code }} {{ invoice.client.city }}
+            {% if invoice.display_country %}{{ invoice.client.country.code }} - {% endif %}{{ invoice.client.zip_code }} {{ invoice.client.city }}
           </address>
           <p>{% blocktrans with place=invoice.company.city date=invoice.displayed_date|swiss_date %}{{ place }},
             {{ date }}{% endblocktrans %}</p>

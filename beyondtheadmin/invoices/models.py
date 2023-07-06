@@ -94,6 +94,14 @@ class Invoice(UUIDModel, StatusModel):
         return self.code
 
     @property
+    def display_country(self):
+        return (
+            self.company.country
+            and self.client.country
+            and self.company.country != self.client.country
+        )
+
+    @property
     def displayed_datetime(self):
         if self.due_date:
             return datetime.datetime(
