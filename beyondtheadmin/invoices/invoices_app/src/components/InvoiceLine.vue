@@ -7,44 +7,59 @@
       <textarea class="form-control" rows="2"
                 :id="'description-' + uuid"
                 v-model="localDescription" required ref="firstLineField"
+                :class="{'is-invalid': v$.localDescription.$error}"
                 @input="updateLine"
       ></textarea>
+      <span class="invalid-feedback" v-if="v$.localDescription.$error">{{ $t("This field is required") }}</span>
     </div>
     <div class="col-md">
       <label :for="'quantity-' + uuid" class="form-label">
         {{$t("Quantity")}}<span class="asteriskField">*</span>
       </label>
       <input type="number" class="form-control"
-             :id="'quantity-' + uuid" v-model.number="localQuantity" required
+             :id="'quantity-' + uuid" v-model.number="localQuantity"
+             :class="{'is-invalid': v$.localQuantity.$error}"
              @change="updateLine"
       />
+       <span class="invalid-feedback" v-if="v$.localQuantity.required.$invalid">
+         {{ $t("This field is required") }}
+       </span>
+       <span class="invalid-feedback" v-if="v$.localQuantity.minValue.$invalid">
+         {{ $t("Should be > 0") }}
+       </span>
     </div>
     <div class="col-md">
       <label :for="'unit-' + uuid" class="form-label">
         {{$t("Unit")}}<span class="asteriskField">*</span>
       </label>
       <select class="form-control"
-              v-model="localUnit" :id="'unit-' + uuid" required
+              v-model="localUnit" :id="'unit-' + uuid"
+              :class="{'is-invalid': v$.localUnit.$error}"
               @change="updateLine"
       >
         <option value="h">{{ $t('Hour') }}</option>
         <option value="nb">{{$t("Number")}}</option>
       </select>
+      <span class="invalid-feedback" v-if="v$.localUnit.required.$invalid">
+        {{ $t("This field is required") }}
+      </span>
     </div>
     <div class="col-md">
       <label :for="'price-' + uuid" class="form-label">
         {{$t("Unit price")}}<span class="asteriskField">*</span>
       </label>
-      <div class="input-group">
-        <input type="number" class="form-control" step="0.01"
-               v-model.number="localPrice" :id="'price-' + uuid" required
-               @input="updateLine"
-        />
-      </div>
+      <input type="number" class="form-control" step="0.01"
+             v-model.number="localPrice" :id="'price-' + uuid"
+              :class="{'is-invalid': v$.localPrice.$error}"
+             @input="updateLine"
+      />
+      <span class="invalid-feedback" v-if="v$.localPrice.required.$invalid">
+        {{ $t("This field is required") }}
+      </span>
     </div>
     <div class="col-md">
       <label class="form-label" :for="'total-' + uuid">
-        {{$t("Total")}}
+        {{ $t("Total" )}}
       </label>
       <span class="form-text total" :id="'total-' + uuid">{{ $formatAmount(total) }}</span>
     </div>
@@ -57,6 +72,8 @@
 
 <script>
 import { useI18n } from 'vue-i18n';
+import { useVuelidate } from '@vuelidate/core'
+import {required, minValue} from '@vuelidate/validators'
 
 export default {
   props: {
@@ -77,9 +94,6 @@ export default {
     total() {
       return Math.round(this.localQuantity * this.localPrice * 100) / 100;
     },
-    isSaveable() {
-      return this.localDescription && this.localQuantity && this.localUnit && this.localPrice;
-    }
   },
   methods: {
     async removeLine() {
@@ -87,26 +101,6 @@ export default {
     },
     focus() {
       this.$refs.firstLineField.focus();
-    },
-    markRequiredFields() {
-      this.$el.querySelectorAll('.is-invalid').forEach((el) => {
-        el.classList.remove('is-invalid');
-      });
-      this.$el.querySelectorAll('.invalid-feedback').forEach((el) => {
-        el.remove();
-      });
-
-      // Add error messages for missing required fields
-      const requiredFields = this.$el.querySelectorAll('.form-control[required]');
-      requiredFields.forEach((field) => {
-        if (!field.value) {
-          field.classList.add('is-invalid');
-          const errorEl = document.createElement('div');
-          errorEl.classList.add('invalid-feedback');
-          errorEl.innerText = this.$t('This field is required');
-          field.parentNode.insertBefore(errorEl, field.nextSibling);
-        }
-      });
     },
     updateLine() {
      this.$emit('update-line', {
@@ -120,19 +114,19 @@ export default {
      );
     },
   },
-  watch: {
-    isSaveable() {
-      this.markRequiredFields();
-    },
-    total() {
-      this.markRequiredFields();
-    }
+  validations: {
+    localDescription: { required },
+    localQuantity: { required, minValue: minValue(0.1) },
+    localUnit: { required },
+    localPrice: { required },
   },
   setup(){
     const { t } = useI18n();
-    return { t }
+    return {
+      t,
+      v$: useVuelidate(),
+    }
   }
-
 };
 
 </script>

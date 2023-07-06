@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.2] unreleased
+## [1.8.0] 2023-07-06
 # Added
 - Client names can take 2 lines
 - Default hourly rate and payment delay on company creation / update.
 - Titles on company / invoice/ client pages
+- Validation of all inputs in invoices to avoid user errors and offer immediate feedback
 
 # Fixed
 - Client list was not refreshed after client creation

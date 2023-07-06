@@ -1,5 +1,4 @@
 <template>
-
   <div class="container-fluid p-0 p-sm-2">
     <header class="page-header page-header-dark bg-gradient-primary">
       <div class="container">
@@ -26,7 +25,11 @@
                 </label>
                 <typeahead-input :items="companies" @select="handleCompanySelect"
                                  :value="selectedCompanyName"
+                                 :class="{ 'is-invalid': v$.company.$error }"
                 ></typeahead-input>
+                <span class="invalid-feedback" v-if="v$.company.required.$invalid">
+                  {{ $t("This field is required") }}
+                </span>
               </div>
 
             </div>
@@ -36,22 +39,34 @@
                   {{ $t("Client") }}<span class="asteriskField">*</span>
                 </label>
                 <typeahead-input :items="clients" @select="handleClientSelect"
-                                 :value="selectedClientName"></typeahead-input>
+                                 :value="selectedClientName"
+                                 :class="{ 'is-invalid': v$.client.$error }"
+                ></typeahead-input>
+                <span class="invalid-feedback" v-if="v$.client.required.$invalid">
+                  {{ $t("This field is required") }}
+                </span>
               </div>
             </div>
           </div>
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
               <div id="div_id_displayed_date" class="form-group">
-                <label for="id_displayed_date" class="">{{ $t("Invoice date") }}</label>
+                <label for="id_displayed_date" class="">
+                  {{ $t("Invoice date") }}<span class="asteriskField">*</span>
+                </label>
                 <VueDatePicker v-model="invoice.displayed_date"
+                               :class="{ 'is-invalid': v$.invoice.displayed_date.$error }"
                                :enable-time-picker="false"
                                :format="formatDate"
                                :locale="datePickerLang"
                                :placeholder="$t('Select date')"
+
                                @update:model-value="updateDueDate"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
+                <span class="invalid-feedback" v-if="v$.invoice.displayed_date.required.$invalid">
+                  {{ $t("This field is required") }}
+                </span>
               </div>
             </div>
             <div class="form-group col-md-6 mb-0">
@@ -65,6 +80,7 @@
                                :min-date="invoice.displayed_date"
                                :locale="datePickerLang"
                                :placeholder="$t('Select date')"
+                               :class="{ 'is-invalid': v$.invoice.due_date.$error }"
                                close-on-scroll auto-apply
                 ></VueDatePicker>
                 <small id="due_date_help" class="form-text text-muted" v-if="client.id">
@@ -75,19 +91,25 @@
                     })
                   }}
                 </small>
-
+                <span class="invalid-feedback" v-if="v$.invoice.due_date.required.$invalid">
+                  {{ $t("This field is required") }}
+                </span>
+                <span class="invalid-feedback" v-if="v$.invoice.due_date.later_than_displayed_date.$invalid">
+                  {{ $t("Due date should happen later than displayed date") }}
+                </span>
               </div>
             </div>
           </div>
           <div id="div_id_title" class="form-group">
             <label for="id_title" class="">
-              {{ $t("Title") }}
+              {{ $t("Title") }}<span class="asteriskField">*</span>
             </label>
-            <div>
-              <input type="text" name="title" maxlength="100"
-                     class="textinput textInput form-control" id="id_title"
-                     v-model="invoice.title" />
-            </div>
+            <input type="text" name="title" maxlength="100"
+                   class="textinput textInput form-control" id="id_title"
+                   v-model="invoice.title"
+                   :class="{ 'is-invalid': v$.invoice.title.$error }"
+            />
+            <span class="invalid-feedback" v-if="v$.invoice.title.$error">{{ $t("This field is required") }}</span>
           </div>
           <div id="div_id_description" class="form-group">
             <label for="id_description" class="">{{ $t("Description") }}</label>
@@ -104,37 +126,45 @@
         'undo redo | bold italic underline strikethrough | forecolor |\
         bullist numlist outdent indent | removeformat'
     }"
-                    />
+            />
           </div>
           <div class="form-row form-row">
             <div class="form-group col-md-6 mb-0">
-                <label for="id_period_start" class="">{{ $t("Start of invoice period") }}</label>
-                <VueDatePicker v-model="invoice.period_start"
-                               :enable-time-picker="false"
-                               :format="formatDate"
-                               :locale="datePickerLang"
-                               :placeholder="$t('Select date')"
-                               @update:model-value="updatePeriodEnd"
-                               close-on-scroll auto-apply
-                ></VueDatePicker>
+              <label for="id_period_start" class="">{{ $t("Start of invoice period") }}</label>
+              <VueDatePicker v-model="invoice.period_start"
+                             :class="{ 'is-invalid': v$.invoice.period_start.$error }"
+                             :enable-time-picker="false"
+                             :format="formatDate"
+                             :locale="datePickerLang"
+                             :placeholder="$t('Select date')"
+                             @update:model-value="updatePeriodEnd"
+                             close-on-scroll auto-apply
+              ></VueDatePicker>
+              <span class="invalid-feedback" v-if="v$.invoice.period_start.required_if_period_end.$invalid">
+                {{ $t("This field is required as end of invoice period has been set") }}
+              </span>
             </div>
             <div class="form-group col-md-6 mb-0">
-                <label for="id_period_end" class="">{{ $t("End of invoice period") }}</label>
-                <VueDatePicker v-model="invoice.period_end"
-                               :enable-time-picker="false"
-                               :format="formatDate"
-                               :min-date="invoice.period_start"
-                               :locale="datePickerLang"
-                               :placeholder="$t('Select date')"
-                               close-on-scroll auto-apply
-                ></VueDatePicker>
+              <label for="id_period_end" class="">{{ $t("End of invoice period") }}</label>
+              <VueDatePicker v-model="invoice.period_end"
+                             :class="{ 'is-invalid': v$.invoice.period_end.$error }"
+                             :enable-time-picker="false"
+                             :format="formatDate"
+                             :min-date="invoice.period_start"
+                             :locale="datePickerLang"
+                             :placeholder="$t('Select date')"
+                             close-on-scroll auto-apply
+              ></VueDatePicker>
+              <span class="invalid-feedback" v-if="v$.invoice.period_end.required_if_period_start.$invalid">
+                {{ $t("This field is required as start of invoice period has been set") }}
+              </span>
             </div>
             <div class="form-group col-md-12">
               <small id="price_help" class="form-text text-muted">
-                  {{
-                    $t("period-helptext")
-                  }}
-                </small>
+                {{
+                  $t("period-helptext")
+                }}
+              </small>
             </div>
           </div>
           <div class="card border-left-info shadow mb-3">
@@ -157,6 +187,10 @@
                     @remove="removeLine(line.uid)" @update-line="updateLineItem"
                     ref="invoiceLines"
                 />
+                <input type="hidden" :class="{ 'is-invalid': v$.invoice.lines.$error }">
+                <span class="invalid-feedback" v-if="v$.invoice.lines.required.$invalid">
+                  {{ $t("At least one line is required") }}
+                </span>
                 <button type="button" @click="addLine" class="btn btn btn-info">{{ $t("Add line") }}</button>
               </div>
             </div>
@@ -206,10 +240,14 @@
 </template>
 
 <script>
+import {nextTick} from 'vue'
+
 import Decimal from 'decimal.js';
 import moment from 'moment';
 import {v4 as uuidv4} from 'uuid';
 import {useI18n} from 'vue-i18n'
+import {required, minValue, requiredIf, minLength} from '@vuelidate/validators'
+import useValidate from "@vuelidate/core";
 
 import Editor from '@tinymce/tinymce-vue'
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -217,6 +255,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 import InvoiceLine from '@/components/InvoiceLine.vue'
 import TypeaheadInput from '@/components/TypeaheadInput.vue';
+
 
 export default {
   name: 'App',
@@ -290,6 +329,7 @@ export default {
         linesUrl: "",
         previewUrl: "",
       },
+      v$: useValidate(),
     }
   },
   methods: {
@@ -305,11 +345,23 @@ export default {
     },
     removeLine(uid) {
       const index = this.invoice.lines.findIndex(line => line.uid === uid);
-       if (index !== -1) {
+      if (index !== -1) {
         // Remove the line from the invoice.lines array
         this.invoice.lines.splice(index, 1);
       }
       this.updateTotal();
+    },
+
+    focusFirstInvalidField() {
+      const invalidContainers = document.querySelectorAll('.is-invalid');
+      if (invalidContainers.length) {
+        let input = invalidContainers[0].querySelector("input")
+        if (input) {
+          input.focus();
+        } else {
+          invalidContainers[0].focus();
+        }
+      }
     },
     formatDate(date) {
       const day = date.getDate();
@@ -398,44 +450,53 @@ export default {
         console.error(error)
       });
     },
+
     async saveInvoice(redirect) {
-      const data = {
-        company: this.company ? this.company.id : null,
-        client: this.client ? this.client.id : null,
-        due_date: this.invoice.due_date ? moment(this.invoice.due_date).format('YYYY-MM-DD') : null,
-        displayed_date: this.invoice.displayed_date ? moment(this.invoice.displayed_date).format('YYYY-MM-DD') : null,
-        vat_rate: this.invoice.vat_rate,
-        title: this.invoice.title,
-        description: this.invoice.description,
-        period_start: this.invoice.period_start ? moment(this.invoice.period_start).format('YYYY-MM-DD') : null,
-        period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
-      }
-      data["lines"] = this.invoice.lines;
-      let success = false;
-      if (this.urls.invoiceUrl) {
-        // Update invoice
-        await this.$http.patch(this.urls.invoiceUrl, data).then(response => {
-          this.invoice.id = response.data.id;
-          this.invoice.code = response.data.code;
-          success = true;
-        }).catch(error => {
-          console.error(error)
+      const validationResult = await this.v$.$validate();
+      if (!validationResult) {
+        nextTick(() => {
+          this.focusFirstInvalidField();
         });
       } else {
-        // Create new invoice
-        await this.$http.post(this.urls.invoicesUrl, data).then(response => {
-          this.urls.invoiceUrl = response.data.url;
-          this.urls.previewUrl = response.data.preview_url;
-          this.invoice.id = response.data.id;
-          this.invoice.code = response.data.code;
-          success = true;
-        }).catch(error => {
-          console.error(error)
-        });
-        if (success && redirect) {
+        const data = {
+          company: this.company ? this.company.id : null,
+          client: this.client ? this.client.id : null,
+          due_date: this.invoice.due_date ? moment(this.invoice.due_date).format('YYYY-MM-DD') : null,
+          displayed_date: this.invoice.displayed_date ? moment(this.invoice.displayed_date).format('YYYY-MM-DD') : null,
+          vat_rate: this.invoice.vat_rate,
+          title: this.invoice.title,
+          description: this.invoice.description,
+          period_start: this.invoice.period_start ? moment(this.invoice.period_start).format('YYYY-MM-DD') : null,
+          period_end: this.invoice.period_end ? moment(this.invoice.period_end).format('YYYY-MM-DD') : null,
+        }
+        data["lines"] = this.invoice.lines;
+        let success = false;
+        if (this.urls.invoiceUrl) {
+          // Update invoice
+          await this.$http.patch(this.urls.invoiceUrl, data).then(response => {
+            this.invoice.id = response.data.id;
+            this.invoice.code = response.data.code;
+            success = true;
+          }).catch(error => {
+            console.error(error)
+          });
+        } else {
+          // Create new invoice
+          await this.$http.post(this.urls.invoicesUrl, data).then(response => {
+            this.urls.invoiceUrl = response.data.url;
+            this.urls.previewUrl = response.data.preview_url;
+            this.invoice.id = response.data.id;
+            this.invoice.code = response.data.code;
+            success = true;
+          }).catch(error => {
+            console.error(error)
+          });
+          if (success && redirect) {
             window.location.href = this.urls.previewUrl;
+          }
         }
       }
+
     },
     regenVat() {
       this.vatEnabled = this.company.enable_vat;
@@ -461,6 +522,8 @@ export default {
         this.clients = response.data.results;
         if (this.clients.length === 1) {
           this.client = this.clients[0].id
+          this.fetchClient(this.clients[0].id);
+          this.regenVat();
         }
       }).catch(error => {
         console.error(error)
@@ -472,6 +535,7 @@ export default {
         this.companies = response.data.results;
         if (this.companies.length === 1) {
           this.company = this.companies[0]
+          this.selectedCompanyName = this.companies[0].name;
         }
       }).catch(error => {
         console.error(error)
@@ -483,7 +547,7 @@ export default {
         this.invoice.due_date = new Date(this.invoice.displayed_date.getTime() + (this.client.payment_delay_days * 24 * 60 * 60 * 1000));
       }
     },
-    updateLineItem(updatedLine){
+    updateLineItem(updatedLine) {
       const index = this.invoice.lines.findIndex(line => line.uid === updatedLine.uid);
       if (index !== -1) {
         this.invoice.lines.splice(index, 1, updatedLine);
@@ -559,6 +623,33 @@ export default {
     }
     this.updateCompaniesList();
   },
+
+  validations() {
+    return {
+      client: {required},
+      company: {required},
+      invoice: {
+        displayed_date: {required},
+        due_date: {
+          required,
+          later_than_displayed_date: minValue(this.invoice.displayed_date)
+        },
+        lines: {
+          required,
+          minLength: minLength(1)
+        },
+        period_start: {
+          required_if_period_end: requiredIf(this.invoice.period_end)
+        },
+        period_end: {
+          later_than_period_start: minValue(this.invoice.period_start),
+          required_if_period_start: requiredIf(this.invoice.period_start),
+        },
+        title: {required},
+      }
+    }
+  },
+
   watch: {
     vatRatePercent: function (value) {
       // Convert the value to a float and use toFixed(2) to limit decimal places to 4
@@ -581,6 +672,15 @@ export default {
 <style>
 :root {
   --dp-text-color: #6e707e;
+}
+
+.is-invalid input.dp__input {
+  border-color: var(--red);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23e74a3b' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23e74a3b' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  padding-right: calc(1.5em + 0.75rem) !important;
 }
 
 .dp__theme_light {

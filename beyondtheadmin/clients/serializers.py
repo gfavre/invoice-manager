@@ -58,7 +58,7 @@ class ClientListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ("id", "name", "slug", "language", "currency", "url", "dashboard_url")
+        fields = ("id", "name", "slug", "language", "currency", "vat_rate", "url", "dashboard_url")
 
     def get_name(self, obj: Client):
         return obj.name.replace("\n", " / ")

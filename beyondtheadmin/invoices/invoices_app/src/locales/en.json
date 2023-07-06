@@ -28,5 +28,10 @@
   "Invoice date": "Invoice date",
   "period-helptext": "Optional. Select dates if you need to specify the period during which the work was done.",
   "Save & Preview": "Save & Preview",
-  "Save draft": "Save draft"
+  "Save draft": "Save draft",
+  "Due date should happen later than displayed date": "Due date should happen later than displayed date",
+  "This field is required as end of invoice period has been set": "This field is required as end of invoice period has been set",
+  "This field is required as start of invoice period has been set": "This field is required as start of invoice period has been set",
+  "At least one line is required": "At least one line is required",
+  "Should be > 0": "Should be > 0"
 }
