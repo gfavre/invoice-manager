@@ -28,5 +28,10 @@
   "Invoice date": "Rechnungsdatum",
   "period-helptext": "Optional. Wählen Sie Daten, wenn Sie den Zeitraum angeben müssen, in dem die Arbeit ausgeführt wurde.",
   "Save & Preview": "Speichern & Vorschau",
-  "Save draft": "Entwurf speichern"
+  "Save draft": "Entwurf speichern",
+  "Due date should happen later than displayed date": "Das Fälligkeitsdatum sollte später als das angezeigte Datum liegen",
+  "This field is required as end of invoice period has been set": "Dieses Feld ist erforderlich, da das Ende des Rechnungszeitraums festgelegt wurde.",
+  "This field is required as start of invoice period has been set": "Dieses Feld ist erforderlich, da der Beginn des Rechnungszeitraums festgelegt wurde.",
+  "At least one line is required": "Mindestens eine Zeile ist erforderlich",
+  "Should be > 0": "Sollte > 0 sein"
 }

@@ -28,5 +28,10 @@
   "Invoice date": "Date de facturation",
   "period-helptext": "Facultatif. Sélectionnez les dates si vous devez préciser la période au cours de laquelle le travail a été effectué.",
   "Save & Preview": "Enregistrer et prévisualiser",
-  "Save draft": "Enregistrer le brouillon"
+  "Save draft": "Enregistrer le brouillon",
+  "Due date should happen later than displayed date": "La date d'échéance doit être postérieure à la date affichée",
+  "This field is required as end of invoice period has been set": "Ce champ est obligatoire puisque la fin de la période de facturation a été définie",
+  "This field is required as start of invoice period has been set": "Ce champ est obligatoire puisque le début de la période de facturation a été défini",
+  "At least one line is required": "Au moins une ligne est requise",
+  "Should be > 0": "Doit être > 0"
 }
