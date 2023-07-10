@@ -14,6 +14,10 @@ class User(AbstractUser):
     )
 
     @property
+    def has_company(self):
+        return self.companies.exists()
+
+    @property
     def email_from(self) -> str:
         """Return email address for sending emails.
 

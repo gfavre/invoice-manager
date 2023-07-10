@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.1] unreleased
 # Changed
 - Do not display country if both client and company are Swiss.
+- Access to clients and invoices pages is impossible if user has not defined a company yet.
+
 
 ## [1.8.0] 2023-07-06
 # Added

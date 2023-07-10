@@ -12,9 +12,10 @@
         <span>{% trans "Dashboard" %}</span></a>
     </li>
 
+
+    {% if user.has_company %}
     <!-- Divider -->
     <hr class="sidebar-divider">
-
     <!-- Heading -->
     <div class="sidebar-heading">
       {% trans "Invoices" %}
@@ -46,7 +47,7 @@
         <span>{% trans "Add Client" %}</span>
       </a>
     </li>
-
+    {% endif %}
      <!-- Divider -->
     <hr class="sidebar-divider">
 

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.template.loader import render_to_string
@@ -10,6 +11,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from beyondtheadmin.clients.models import Client
 from beyondtheadmin.companies.models import Company
+from beyondtheadmin.dashboard.permissions import HasCompanyMixin
 from beyondtheadmin.users.models import User
 
 from ..forms import EmailForm, InvoiceStatusForm
@@ -29,7 +31,7 @@ class UserInvoiceMixin(InvoiceSingletonMixin):
         return Invoice.objects.filter(Q(company__users=user) | Q(created_by=user)).distinct()
 
 
-class InvoiceCancelView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
+class InvoiceCancelView(LoginRequiredMixin, HasCompanyMixin, UserInvoiceMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_cancel.html"
     form_class = InvoiceStatusForm
@@ -43,7 +45,7 @@ class InvoiceCancelView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
         return self.get_object().company.detail_url
 
 
-class InvoiceCreateView(LoginRequiredMixin, TemplateView):
+class InvoiceCreateView(LoginRequiredMixin, HasCompanyMixin, TemplateView):
     model = Invoice
     template_name = "invoices_app/index.html"
 
@@ -51,20 +53,30 @@ class InvoiceCreateView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         context["company"] = None
+        # noinspection PyUnresolvedReferences
+        companies = self.request.user.companies.all()
         company = Company.objects.filter(pk=self.request.GET.get("company", None)).first()
         if company:
+            if company not in companies:
+                raise PermissionDenied(
+                    _("You are not allowed to create invoices for this company.")
+                )
             context["company"] = company.pk
 
         context["client"] = None
         client = Client.objects.filter(pk=self.request.GET.get("client", None)).first()
         if client:
+            if client.company not in companies:
+                raise PermissionDenied(
+                    _("You are not allowed to create invoices for this client.")
+                )
             context["client"] = client.pk
             # That way we remain coherent. Client > Company
             context["company"] = client.company.pk
         return context
 
 
-class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
+class InvoiceDuplicateView(LoginRequiredMixin, HasCompanyMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = "pk"
@@ -80,11 +92,11 @@ class InvoiceDuplicateView(LoginRequiredMixin, RedirectView):
         return duplicata.get_edit_url()
 
 
-class InvoiceListView(LoginRequiredMixin, TemplateView):
+class InvoiceListView(LoginRequiredMixin, HasCompanyMixin, TemplateView):
     template_name = "invoices/list.html"
 
 
-class InvoiceMarkPaidView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
+class InvoiceMarkPaidView(LoginRequiredMixin, HasCompanyMixin, UserInvoiceMixin, UpdateView):
     model = Invoice
     template_name = "invoices/confirm_paid.html"
     form_class = InvoiceStatusForm
@@ -98,7 +110,7 @@ class InvoiceMarkPaidView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
         return self.get_object().company.detail_url
 
 
-class InvoiceSendMailView(LoginRequiredMixin, UserInvoiceMixin, FormView):
+class InvoiceSendMailView(LoginRequiredMixin, HasCompanyMixin, UserInvoiceMixin, FormView):
     """
     GET: Form with mail text and invoice as PDF
     POST: send
@@ -175,7 +187,9 @@ class InvoiceSendReminderEmailView(InvoiceSendMailView):
         }
 
 
-class InvoiceSnailMailUpdateView(LoginRequiredMixin, UserInvoiceMixin, UpdateView):
+class InvoiceSnailMailUpdateView(
+    LoginRequiredMixin, HasCompanyMixin, UserInvoiceMixin, UpdateView
+):
     model = Invoice
     template_name = "invoices/confirm_print.html"
     form_class = InvoiceStatusForm
@@ -189,7 +203,7 @@ class InvoiceSnailMailUpdateView(LoginRequiredMixin, UserInvoiceMixin, UpdateVie
         return self.get_object().company.detail_url
 
 
-class InvoiceUpdateView(LoginRequiredMixin, DetailView):
+class InvoiceUpdateView(LoginRequiredMixin, HasCompanyMixin, DetailView):
     model = Invoice
     template_name = "invoices_app/index.html"
 
