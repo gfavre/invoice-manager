@@ -33,5 +33,6 @@
   "This field is required as end of invoice period has been set": "Dieses Feld ist erforderlich, da das Ende des Rechnungszeitraums festgelegt wurde.",
   "This field is required as start of invoice period has been set": "Dieses Feld ist erforderlich, da der Beginn des Rechnungszeitraums festgelegt wurde.",
   "At least one line is required": "Mindestens eine Zeile ist erforderlich",
-  "Should be > 0": "Sollte > 0 sein"
+  "Should be > 0": "Sollte > 0 sein",
+  "Has to be later than start of invoice period": "Muss später als der Beginn des Rechnungszeitraums sein"
 }

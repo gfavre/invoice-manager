@@ -158,6 +158,9 @@
               <span class="invalid-feedback" v-if="v$.invoice.period_end.required_if_period_start.$invalid">
                 {{ $t("This field is required as start of invoice period has been set") }}
               </span>
+              <span class="invalid-feedback" v-if="v$.invoice.period_end.later_than_period_start.$invalid">
+                {{ $t("Has to be later than start of invoice period") }}
+              </span>
             </div>
             <div class="form-group col-md-12">
               <small id="price_help" class="form-text text-muted">
@@ -427,10 +430,10 @@ export default {
         this.invoice.title = response.data.title;
         this.invoice.description = response.data.description;
         if (response.data.period_start) {
-          this.invoice.period_start = response.data.period_start;
+          this.invoice.period_start = new Date(response.data.period_start);
         }
         if (response.data.period_end) {
-          this.invoice.period_end = response.data.period_end;
+          this.invoice.period_end = new Date(response.data.period_end);
         }
         this.invoice.lines = response.data.lines;
         this.invoice.lines.forEach((line) => {
@@ -452,6 +455,7 @@ export default {
     },
 
     async saveInvoice(redirect) {
+
       const validationResult = await this.v$.$validate();
       if (!validationResult) {
         nextTick(() => {
@@ -491,9 +495,9 @@ export default {
           }).catch(error => {
             console.error(error)
           });
-          if (success && redirect) {
+        }
+        if (success && redirect) {
             window.location.href = this.urls.previewUrl;
-          }
         }
       }
 
@@ -642,8 +646,8 @@ export default {
           required_if_period_end: requiredIf(this.invoice.period_end)
         },
         period_end: {
-          later_than_period_start: minValue(this.invoice.period_start),
           required_if_period_start: requiredIf(this.invoice.period_start),
+          later_than_period_start: minValue(this.invoice.period_start),
         },
         title: {required},
       }
