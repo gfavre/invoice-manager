@@ -4,11 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] 2023-08-03
+# Added
+- Ability to create client from invoice
+
 
 ## [1.8.1] 2023-08-03
 # Changed
 - Do not display country if both client and company are Swiss.
 - Access to clients and invoices pages is impossible if user has not defined a company yet.
+- Add default 7.7% VAT Rate for new companies
 
 # Fixed
 - Could not save edited invoice

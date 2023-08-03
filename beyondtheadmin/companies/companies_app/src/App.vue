@@ -184,7 +184,7 @@ export default {
 
         vatId: '',
         vatEnabled: true,
-        vatRate: 0,
+        vatRate: 0.077,
 
         hourlyRate: 0.0,
         paymentDelay: 30,

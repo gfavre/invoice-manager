@@ -1,21 +1,22 @@
 <template>
-  <div class="typeahead-wrap" :class="$attrs.class">
-  <div class="input-wrap" >
-    <input type="text" class="form-control typeahead"
-           v-model="searchQuery"
-           @input="searchItems" @focus="searchItems" />
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search tp-icon search-icon" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path></svg>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" class="tp-icon clear-icon" :class="$attrs.class" @click="clearSearchQuery"><path d="M23.057 7.057l-16 16c-0.52 0.52-0.52 1.365 0 1.885s1.365 0.52 1.885 0l16-16c0.52-0.52 0.52-1.365 0-1.885s-1.365-0.52-1.885 0z"></path><path d="M7.057 8.943l16 16c0.52 0.52 1.365 0.52 1.885 0s0.52-1.365 0-1.885l-16-16c-0.52-0.52-1.365-0.52-1.885 0s-0.52 1.365 0 1.885z"></path></svg>
-  </div>
-  <div class="dropdown">
-    <ul class="dropdown-menu show" :class="{ 'd-none': !isDropdownOpen }" ref="dropdownMenu">
-      <li v-for="(item, index) in highlightedItems" :key="item.id" class="dropdown-item"
-          @click="selectItem(item)" :class="{ 'bg-light': index === highlightedIndex }">
-        <span v-html="item.highlightedName"></span>
-      </li>
-    </ul>
-  </div>
+  <div class="typeahead-wrap" :class="containerClass" >
+    <div class="input-wrap" >
+      <input type="text" class="form-control typeahead"
+             v-model="searchQuery"
+             @input="searchItems" @focus="searchItems"
+      />
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search tp-icon search-icon" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" class="tp-icon clear-icon" :class="$attrs.class" @click="clearSearchQuery"><path d="M23.057 7.057l-16 16c-0.52 0.52-0.52 1.365 0 1.885s1.365 0.52 1.885 0l16-16c0.52-0.52 0.52-1.365 0-1.885s-1.365-0.52-1.885 0z"></path><path d="M7.057 8.943l16 16c0.52 0.52 1.365 0.52 1.885 0s0.52-1.365 0-1.885l-16-16c-0.52-0.52-1.365-0.52-1.885 0s-0.52 1.365 0 1.885z"></path></svg>
     </div>
+    <div class="dropdown">
+      <ul class="dropdown-menu show" :class="{ 'd-none': !isDropdownOpen }" ref="dropdownMenu">
+        <li v-for="(item, index) in highlightedItems" :key="item.id" class="dropdown-item"
+            @click="selectItem(item)" :class="{ 'bg-light': index === highlightedIndex }">
+          <span v-html="item.highlightedName"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -28,6 +29,10 @@ export default {
     value: {
       type: String,
       default: '',
+    },
+    isGrouped: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -51,6 +56,10 @@ export default {
       reactive. By using the spread operator (...), it creates a new array with the same elements as items, which can
       be modified without affecting the original array. */
       return [...this.items];
+    },
+    containerClass(){
+      const additionalClass = this.isGrouped ? 'grouped' : '';
+      return `${this.$attrs.class} ${additionalClass}`;
     },
   },
   methods: {
@@ -133,6 +142,13 @@ export default {
 };
 </script>
 <style>
+.grouped {
+  flex: 1 1 auto;
+}
+.grouped .form-control{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
 .bi {
   display: inline-block;
   font-size: 1rem;

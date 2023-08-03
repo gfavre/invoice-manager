@@ -11,6 +11,7 @@
 
   <div id="app"
        data-language-code="{{ LANGUAGE_CODE }}"
+       data-create-client-url="{% url 'clients:create' %}"
        data-clients-url="{% url 'api:client-list' %}"
        data-companies-url="{% url 'api:company-list' %}"
        data-invoices-url="{% url 'api:invoice-list' %}"

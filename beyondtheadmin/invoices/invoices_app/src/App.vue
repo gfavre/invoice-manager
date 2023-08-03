@@ -38,10 +38,18 @@
                 <label for="id_client" class=" requiredField">
                   {{ $t("Client") }}<span class="asteriskField">*</span>
                 </label>
-                <typeahead-input :items="clients" @select="handleClientSelect"
-                                 :value="selectedClientName"
-                                 :class="{ 'is-invalid': v$.client.$error }"
-                ></typeahead-input>
+                <div class="input-group">
+                  <typeahead-input :items="clients" @select="handleClientSelect"
+                                   :value="selectedClientName"
+                                   :class="{ 'is-invalid': v$.client.$error }"
+                                   :is-grouped="true"
+                  ></typeahead-input>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" @click.prevent="createClient">
+                      {{ $t("New client")}}
+                    </button>
+                  </div>
+                </div>
                 <span class="invalid-feedback" v-if="v$.client.required.$invalid">
                   {{ $t("This field is required") }}
                 </span>
@@ -326,6 +334,7 @@ export default {
       vatRatePercent: 7.7,
       urls: {
         companiesUrl: "",
+        createClientUrl: "",
         clientsUrl: "",
         invoiceUrl: "",
         invoicesUrl: "",
@@ -453,7 +462,14 @@ export default {
         console.error(error)
       });
     },
-
+    async createClient() {
+      if (this.invoice.id) {
+        await this.saveInvoice(false);
+        window.location.href = this.urls.createClientUrl + `?invoice=${this.invoice.id}`;
+      } else {
+        window.location.href = this.urls.createClientUrl + `?invoice=new`;
+      }
+    },
     async saveInvoice(redirect) {
 
       const validationResult = await this.v$.$validate();
@@ -607,6 +623,7 @@ export default {
 
   mounted() {
     this.$i18n.locale = this.$el.parentNode.dataset.languageCode;
+    this.urls.createClientUrl = this.$el.parentNode.dataset.createClientUrl;
     this.urls.companiesUrl = this.$el.parentNode.dataset.companiesUrl;
     this.urls.clientsUrl = this.$el.parentNode.dataset.clientsUrl;
     this.urls.invoicesUrl = this.$el.parentNode.dataset.invoicesUrl;
