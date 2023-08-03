@@ -20,7 +20,8 @@
          data-client-id="{{ client.id|default_if_none:"" }}"
          data-client-create-url="{% url 'api:client-list' %}"
          data-client-update-url="{{ client.api_url|default_if_none:"" }}"
-         data-client-redirect-url="{% url 'clients:list' %}"
+         data-client-redirect-url="{{ success_url }}"
+         data-redirect-to-invoice="{{ redirect_to_invoice }}"
          data-companies-url="{% url 'api:company-list' %}"
     ></div>
   </article>

@@ -136,7 +136,8 @@ export default {
         clientUpdateUrl: '',
         clientRedirectUrl: '',
         companiesUrl: '',
-      }
+      },
+      redirectToInvoice: false,
     }
   },
   methods: {
@@ -158,7 +159,11 @@ export default {
       */
       this.savedComponentCount ++;
       if (this.savedComponentCount === this.expectedComponentCount) {
-        window.location = this.urls.clientRedirectUrl;
+        let newLocation = this.urls.clientRedirectUrl;
+        if (this.redirectToInvoice) {
+          newLocation += `?client=${this.clientId}`
+        }
+        window.location = newLocation
       }
     },
     focusFirstError(){
@@ -227,6 +232,9 @@ export default {
     this.urls.clientRedirectUrl = this.$el.parentNode.dataset.clientRedirectUrl;
     this.urls.companiesUrl = this.$el.parentNode.dataset.companiesUrl;
     this.clientId = this.$el.parentNode.dataset.clientId;
+    if (this.$el.parentNode.dataset.redirectToInvoice === '1') {
+      this.redirectToInvoice = true;
+    }
 
     this.$http.get(this.urls.companiesUrl).then(response => {
       this.companies = response.data.results;
